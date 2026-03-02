@@ -13,6 +13,8 @@ A SaaS application that helps organizations run effective, data-driven 1:1 meeti
 
 ## Documentation
 
+Full project documentation is available on the [GitHub Wiki](https://github.com/dobrician/1on1/wiki).
+
 | Document | Description |
 |----------|-------------|
 | [Architecture](docs/architecture.md) | Tech stack, project structure, deployment strategy |
@@ -22,6 +24,16 @@ A SaaS application that helps organizations run effective, data-driven 1:1 meeti
 | [Questionnaires](docs/questionnaires.md) | Question types, answer formats, template system design |
 | [Analytics](docs/analytics.md) | Metrics, KPIs, charting strategy, data aggregation |
 | [Security & Multi-tenancy](docs/security.md) | Authentication, authorization, data isolation, GDPR |
+
+### Wiki Sync
+
+The wiki source of truth lives in `docs/wiki/`. Changes are automatically synced to the GitHub Wiki via the `sync-wiki` GitHub Actions workflow on every push to `main` that modifies `docs/wiki/**`. You can also trigger it manually from the Actions tab.
+
+For local sync (requires SSH key or PAT — the `gh` CLI OAuth token does not support wiki repos):
+
+```bash
+./scripts/sync-wiki.sh
+```
 
 ## License
 

@@ -19,12 +19,16 @@ export const users = pgTable(
     tenantId: uuid("tenant_id")
       .notNull()
       .references(() => tenants.id),
+    name: varchar("name", { length: 255 }),
     email: varchar("email", { length: 255 }).notNull(),
+    emailVerified: timestamp("email_verified", { withTimezone: true }),
+    image: varchar("image", { length: 500 }),
     firstName: varchar("first_name", { length: 100 }).notNull(),
     lastName: varchar("last_name", { length: 100 }).notNull(),
     role: userRoleEnum("role").notNull().default("member"),
     jobTitle: varchar("job_title", { length: 200 }),
     avatarUrl: varchar("avatar_url", { length: 500 }),
+    passwordHash: varchar("password_hash", { length: 255 }),
     managerId: uuid("manager_id"),
     isActive: boolean("is_active").notNull().default(true),
     notificationPreferences: jsonb("notification_preferences")

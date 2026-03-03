@@ -7,6 +7,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## [Unreleased]
 
 ### Added
+- Auth.js v5 (next-auth@beta) with Credentials provider, Google OAuth, and Microsoft Entra ID
+- Drizzle adapter integration with custom user table mapping (`@auth/drizzle-adapter`)
+- JWT session strategy with `tenantId`, `role`, and `userId` on session token
+- Auth schema tables: `account`, `auth_session`, `verification_token`, `email_verification_token`, `password_reset_token`
+- User table extended with `name`, `email_verified`, `image`, and `password_hash` columns
+- TypeScript type augmentation for Auth.js session/JWT custom fields (`src/types/next-auth.d.ts`)
+- Zod validation schemas for sign-in, register, forgot-password, reset-password (`src/lib/validations/auth.ts`)
+- Auth.js route handler at `/api/auth/[...nextauth]`
+- OAuth sign-in callback blocks users without existing records (must be invited or register org first)
+- Environment variables for AUTH_SECRET, OAuth providers, and Resend email in `.env.example`
 - Next.js 15 project scaffolded with Bun, TypeScript strict mode, Tailwind CSS v4, and shadcn/ui
 - Drizzle ORM configuration with Neon serverless driver and WebSocket fallback
 - Package scripts: `dev` (port 4300), `build`, `lint`, `typecheck`, `db:generate`, `db:migrate`, `db:seed`, `db:studio`

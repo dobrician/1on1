@@ -14,6 +14,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Zod validation schemas for team management: `createTeamSchema`, `updateTeamSchema`, `addTeamMembersSchema`, `removeTeamMemberSchema`
 - npm packages: `@tanstack/react-table`, `@tanstack/react-query`, `react-hook-form`, `@hookform/resolvers`
 - 15 shadcn/ui components: table, dialog, dropdown-menu, tabs, avatar, sonner, sheet, textarea, checkbox, command, popover, tooltip, skeleton, form, pagination
+- RBAC helper (`src/lib/auth/rbac.ts`) with `requireRole`, `canManageTeams`, `isAdmin` utilities
+- Audit log helper (`src/lib/audit/log.ts`) with transactional `logAuditEvent` function
+- TanStack Query provider (`src/providers/query-provider.tsx`) wrapping dashboard layout
+- Sidebar navigation with Overview, People, and Settings links
+- Toast notifications (Sonner) in dashboard layout
+
+### Changed
+- Dashboard layout now includes sidebar navigation and TanStack Query provider
+- `proxy.ts` allows unauthenticated access to `/invite/*` paths for invite acceptance flow
+- `TransactionClient` type exported from `tenant-context.ts` for use by audit log helper
 
 ### Changed
 - Wiki overhauled: replaced 15-sprint tracking with 10-phase roadmap matching GSD workflow

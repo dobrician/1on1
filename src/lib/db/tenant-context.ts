@@ -1,7 +1,7 @@
 import { sql } from "drizzle-orm";
 import { db, type Database } from "./index";
 
-type TransactionClient = Parameters<Parameters<Database["transaction"]>[0]>[0];
+export type TransactionClient = Parameters<Parameters<Database["transaction"]>[0]>[0];
 
 /**
  * Wraps a database operation in a transaction with tenant context.

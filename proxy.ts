@@ -17,7 +17,8 @@ export const proxy = auth((req) => {
     req.nextUrl.pathname.startsWith("/register") ||
     req.nextUrl.pathname.startsWith("/verify-email") ||
     req.nextUrl.pathname.startsWith("/forgot-password") ||
-    req.nextUrl.pathname.startsWith("/reset-password");
+    req.nextUrl.pathname.startsWith("/reset-password") ||
+    req.nextUrl.pathname.startsWith("/invite");
 
   const baseUrl = getBaseUrl(req);
 

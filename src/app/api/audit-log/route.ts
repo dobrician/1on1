@@ -44,7 +44,8 @@ export async function GET(request: NextRequest) {
           conditions.push(lte(auditLog.createdAt, toDate));
         }
         if (search) {
-          const searchPattern = `%${search}%`;
+          const escaped = search.replace(/[%_\\]/g, "\\$&");
+          const searchPattern = `%${escaped}%`;
           conditions.push(
             or(
               like(auditLog.action, searchPattern),

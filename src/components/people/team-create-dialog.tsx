@@ -77,7 +77,7 @@ export function TeamCreateDialog({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...data,
-          managerId: selectedLeadId,
+          managerId: selectedLeadId || undefined,
         }),
       });
 

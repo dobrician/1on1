@@ -6,7 +6,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Fixed
+- Security: cross-tenant IDOR in team manager verification (missing tenant_id filter)
+- Security: host header injection in invite email URLs — now uses NEXT_PUBLIC_APP_URL only
+- Security: LIKE wildcard injection in audit log search
+- Security: avatarUrl validation now requires HTTPS URLs
+- Bug: Create Team dialog sent `managerId: null` failing Zod validation (now sends `undefined`)
+- Dead code: unreachable `acceptedAt` check in invite resend route removed
+- React key warning: Fragment in audit log table now has proper key
+- Teams page lead picker now filters out deactivated users
+
 ### Added
+- Playwright E2E test suite: 63 tests across 5 files (people, teams, invite, audit-log, RBAC)
 - Invite button on People page header (admin-only) wiring the invite dialog into the UI
 - Audit log API: `GET /api/audit-log` with server-side pagination, action type filter, date range filter, and search (admin-only)
 - Audit log page (`/settings/audit-log`) with expandable detail rows, pagination, and filters

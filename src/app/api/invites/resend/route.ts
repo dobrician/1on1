@@ -37,15 +37,9 @@ function getEmailFrom(): string {
   return process.env.EMAIL_FROM || "1on1 <noreply@example.com>";
 }
 
-function getBaseUrl(request: Request): string {
-  const forwardedProto = request.headers.get("x-forwarded-proto");
-  const forwardedHost =
-    request.headers.get("x-forwarded-host") || request.headers.get("host");
-  if (forwardedHost) {
-    const proto = forwardedProto || "https";
-    return `${proto}://${forwardedHost}`;
-  }
-  return process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+function getBaseUrl(): string {
+  if (process.env.NEXT_PUBLIC_APP_URL) return process.env.NEXT_PUBLIC_APP_URL;
+  return "http://localhost:3000";
 }
 
 export async function POST(request: Request) {
@@ -93,13 +87,6 @@ export async function POST(request: Request) {
     );
   }
 
-  if (existingInvite.acceptedAt) {
-    return NextResponse.json(
-      { error: "This invite has already been accepted" },
-      { status: 400 }
-    );
-  }
-
   // Generate new token and expiry
   const newToken = randomBytes(32).toString("hex");
   const newExpiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
@@ -140,7 +127,7 @@ export async function POST(request: Request) {
       ? `${inviter.firstName} ${inviter.lastName}`
       : "An administrator";
 
-    const baseUrl = getBaseUrl(request);
+    const baseUrl = getBaseUrl();
     const inviteUrl = `${baseUrl}/invite/${newToken}`;
     const html = await render(
       InviteEmail({

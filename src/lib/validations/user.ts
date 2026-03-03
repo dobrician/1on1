@@ -36,7 +36,7 @@ export const updateProfileSchema = z.object({
   firstName: z.string().min(1).max(100).optional(),
   lastName: z.string().min(1).max(100).optional(),
   jobTitle: z.string().max(200).nullable().optional(),
-  avatarUrl: z.string().url().nullable().optional(),
+  avatarUrl: z.string().url().refine((u) => u.startsWith("https://"), { message: "Must be an HTTPS URL" }).nullable().optional(),
 });
 
 export const updateUserRoleSchema = z.object({

@@ -5,7 +5,7 @@ import { canManageTeams } from "@/lib/auth/rbac";
 import { logAuditEvent } from "@/lib/audit/log";
 import { createTeamSchema } from "@/lib/validations/team";
 import { teams, teamMembers, users } from "@/lib/db/schema";
-import { eq, sql } from "drizzle-orm";
+import { eq, and, sql } from "drizzle-orm";
 
 export async function GET() {
   const session = await auth();
@@ -117,7 +117,7 @@ export async function POST(request: Request) {
           const [manager] = await tx
             .select({ id: users.id })
             .from(users)
-            .where(eq(users.id, data.managerId));
+            .where(and(eq(users.id, data.managerId), eq(users.tenantId, session.user.tenantId)));
 
           if (!manager) {
             return { error: "Manager not found", status: 404 };

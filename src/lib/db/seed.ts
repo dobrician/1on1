@@ -28,6 +28,11 @@ const pool = new pg.Pool({ connectionString });
 const db = drizzle(pool, { schema });
 
 // =============================================================================
+// Shared test password: "password123" (bcrypt-hashed)
+// =============================================================================
+const TEST_PASSWORD_HASH = '$2b$10$IoZkuZQFUmBdtHHesZzXmuxYhVLSQIFFaVQaUCFhOtJxZx0dv5bre';
+
+// =============================================================================
 // Deterministic UUIDs for all seed entities
 // =============================================================================
 
@@ -182,6 +187,7 @@ async function seedUsers() {
       lastName: 'Johnson',
       role: 'admin' as const,
       jobTitle: 'VP of Engineering',
+      passwordHash: TEST_PASSWORD_HASH,
       isActive: true,
     },
     {
@@ -192,6 +198,7 @@ async function seedUsers() {
       lastName: 'Smith',
       role: 'manager' as const,
       jobTitle: 'Engineering Manager',
+      passwordHash: TEST_PASSWORD_HASH,
       isActive: true,
     },
     {
@@ -212,6 +219,7 @@ async function seedUsers() {
       lastName: 'Brown',
       role: 'member' as const,
       jobTitle: 'Senior Software Engineer',
+      passwordHash: TEST_PASSWORD_HASH,
       managerId: BOB_ID,
       isActive: true,
     },
@@ -297,6 +305,7 @@ async function seedUsers() {
           lastName: sql`excluded.last_name`,
           role: sql`excluded.role`,
           jobTitle: sql`excluded.job_title`,
+          passwordHash: sql`excluded.password_hash`,
           managerId: sql`excluded.manager_id`,
           isActive: sql`excluded.is_active`,
           updatedAt: sql`now()`,

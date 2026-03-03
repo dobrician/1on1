@@ -163,7 +163,7 @@ export async function PATCH(request: Request, { params }: RouteContext) {
             const [newManager] = await tx
               .select({ id: users.id })
               .from(users)
-              .where(eq(users.id, data.managerId));
+              .where(and(eq(users.id, data.managerId), eq(users.tenantId, session.user.tenantId)));
 
             if (!newManager) {
               return { error: "Manager not found", status: 404 };

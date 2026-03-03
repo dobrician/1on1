@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronDown, ChevronRight, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -261,9 +261,8 @@ export function AuditLogClient() {
                   : [];
 
                 return (
-                  <>
+                  <Fragment key={entry.id}>
                     <TableRow
-                      key={entry.id}
                       className={
                         hasMetadata ? "cursor-pointer hover:bg-accent/50" : ""
                       }
@@ -329,7 +328,7 @@ export function AuditLogClient() {
                         </TableCell>
                       </TableRow>
                     )}
-                  </>
+                  </Fragment>
                 );
               })}
             </TableBody>

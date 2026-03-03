@@ -2,7 +2,7 @@ import { auth } from "@/lib/auth/config";
 import { redirect } from "next/navigation";
 import { withTenantContext } from "@/lib/db/tenant-context";
 import { teams, teamMembers, users } from "@/lib/db/schema";
-import { eq, sql } from "drizzle-orm";
+import { eq, and, sql } from "drizzle-orm";
 import { PeopleTabs } from "@/components/people/people-tabs";
 import { TeamsGrid } from "./teams-grid";
 
@@ -80,7 +80,7 @@ export default async function TeamsPage() {
           lastName: users.lastName,
         })
         .from(users)
-        .where(eq(users.tenantId, session.user.tenantId))
+        .where(and(eq(users.tenantId, session.user.tenantId), eq(users.isActive, true)))
         .orderBy(users.lastName, users.firstName);
 
       return { teams: teamList, users: allUsers };

@@ -33,15 +33,9 @@ function getEmailFrom(): string {
   return process.env.EMAIL_FROM || "1on1 <noreply@example.com>";
 }
 
-function getBaseUrl(request: Request): string {
-  const forwardedProto = request.headers.get("x-forwarded-proto");
-  const forwardedHost =
-    request.headers.get("x-forwarded-host") || request.headers.get("host");
-  if (forwardedHost) {
-    const proto = forwardedProto || "https";
-    return `${proto}://${forwardedHost}`;
-  }
-  return process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+function getBaseUrl(): string {
+  if (process.env.NEXT_PUBLIC_APP_URL) return process.env.NEXT_PUBLIC_APP_URL;
+  return "http://localhost:3000";
 }
 
 export async function POST(request: Request) {
@@ -87,7 +81,7 @@ export async function POST(request: Request) {
     ? `${inviter.firstName} ${inviter.lastName}`
     : "An administrator";
 
-  const baseUrl = getBaseUrl(request);
+  const baseUrl = getBaseUrl();
   const ipAddress =
     request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || null;
 

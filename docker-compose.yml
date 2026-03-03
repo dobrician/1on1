@@ -26,6 +26,7 @@ services:
     environment:
       DATABASE_URL: postgresql://app_user:app_password@db:5432/oneonone_stable
       ENCRYPTION_MASTER_KEY: "${ENCRYPTION_MASTER_KEY}"
+      AUTH_SECRET: "${AUTH_SECRET}"
       NODE_ENV: production
       NEXT_PUBLIC_APP_URL: http://localhost:4300
     depends_on:

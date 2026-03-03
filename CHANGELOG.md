@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## [Unreleased]
 
 ### Added
+- Invite button on People page header (admin-only) wiring the invite dialog into the UI
 - Audit log API: `GET /api/audit-log` with server-side pagination, action type filter, date range filter, and search (admin-only)
 - Audit log page (`/settings/audit-log`) with expandable detail rows, pagination, and filters
 - Sidebar updated with role-based navigation: Settings section (Company, Audit Log) visible to admins only

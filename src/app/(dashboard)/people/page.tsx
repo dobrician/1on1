@@ -5,6 +5,7 @@ import { users, teams, teamMembers, inviteTokens } from "@/lib/db/schema";
 import { eq, and, gt, isNull, sql } from "drizzle-orm";
 import { PeopleTabs } from "@/components/people/people-tabs";
 import { PeopleTable } from "@/components/people/people-table";
+import { InviteButton } from "@/components/people/invite-button";
 import type { UserRow } from "@/components/people/people-table-columns";
 
 export default async function PeoplePage() {
@@ -136,11 +137,14 @@ export default async function PeoplePage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">People</h1>
-        <p className="text-sm text-muted-foreground">
-          Manage your organization&apos;s members
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight">People</h1>
+          <p className="text-sm text-muted-foreground">
+            Manage your organization&apos;s members
+          </p>
+        </div>
+        {session.user.role === "admin" && <InviteButton />}
       </div>
 
       <PeopleTabs>

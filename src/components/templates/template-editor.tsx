@@ -9,6 +9,22 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import Link from "next/link";
 import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  KeyboardSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+  sortableKeyboardCoordinates,
+  arrayMove,
+} from "@dnd-kit/sortable";
+import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
+import {
   ArrowLeft,
   Plus,
   Save,
@@ -175,6 +191,78 @@ export function TemplateEditor({ template, userRole }: TemplateEditorProps) {
     null
   );
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
+
+  // DnD sensors: pointer (mouse/touch) + keyboard
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  // Reorder mutation
+  const reorderMutation = useMutation({
+    mutationFn: async (questionIds: string[]) => {
+      const res = await fetch(
+        `/api/templates/${template!.id}/questions/reorder`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ questionIds }),
+        }
+      );
+      if (!res.ok) {
+        const json = await res.json();
+        throw new Error(json.error || "Failed to reorder questions");
+      }
+      return res.json();
+    },
+    onError: (error) => {
+      toast.error(
+        error instanceof Error ? error.message : "Failed to reorder questions"
+      );
+    },
+  });
+
+  // DnD drag end handler
+  const handleDragEnd = useCallback(
+    (event: DragEndEvent) => {
+      const { active, over } = event;
+      if (!over || active.id === over.id) return;
+
+      setQuestions((prev) => {
+        const oldIndex = prev.findIndex(
+          (q) => (q.id ?? `new-${prev.indexOf(q)}`) === active.id
+        );
+        const newIndex = prev.findIndex(
+          (q) => (q.id ?? `new-${prev.indexOf(q)}`) === over.id
+        );
+
+        if (oldIndex === -1 || newIndex === -1) return prev;
+
+        const reordered = arrayMove(prev, oldIndex, newIndex);
+
+        // Persist to server if not in create mode and all questions have IDs
+        if (template && reordered.every((q) => q.id)) {
+          const previousOrder = prev.map((q) => q.id!);
+          reorderMutation.mutate(reordered.map((q) => q.id!), {
+            onError: () => {
+              // Rollback on error
+              setQuestions(prev);
+            },
+          });
+          void previousOrder; // suppress unused variable
+        }
+
+        return reordered;
+      });
+    },
+    [template, reorderMutation]
+  );
 
   // Create template mutation
   const createMutation = useMutation({
@@ -408,6 +496,11 @@ export function TemplateEditor({ template, userRole }: TemplateEditorProps) {
   const isSaving =
     createMutation.isPending || saveMutation.isPending;
 
+  // Sortable IDs for DndContext
+  const sortableIds = questions.map(
+    (q, i) => q.id ?? `new-${i}`
+  );
+
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       {/* Header with back button */}
@@ -616,18 +709,31 @@ export function TemplateEditor({ template, userRole }: TemplateEditorProps) {
               )}
             </div>
           ) : (
-            <div className="space-y-3">
-              {questions.map((question, index) => (
-                <QuestionCard
-                  key={question.id ?? `new-${index}`}
-                  question={question}
-                  index={index}
-                  isReadOnly={isReadOnly}
-                  onEdit={() => handleEditQuestion(question, index)}
-                  onRemove={() => handleRemoveQuestion(index)}
-                />
-              ))}
-            </div>
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              modifiers={[restrictToVerticalAxis]}
+              onDragEnd={handleDragEnd}
+            >
+              <SortableContext
+                items={sortableIds}
+                strategy={verticalListSortingStrategy}
+              >
+                <div className="space-y-3">
+                  {questions.map((question, index) => (
+                    <QuestionCard
+                      key={question.id ?? `new-${index}`}
+                      question={question}
+                      index={index}
+                      isReadOnly={isReadOnly}
+                      allQuestions={questions}
+                      onEdit={() => handleEditQuestion(question, index)}
+                      onRemove={() => handleRemoveQuestion(index)}
+                    />
+                  ))}
+                </div>
+              </SortableContext>
+            </DndContext>
           )}
         </div>
 

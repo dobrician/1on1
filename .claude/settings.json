@@ -20,6 +20,16 @@
             "statusMessage": "Syncing wiki..."
           }
         ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/home/dc/work/1on1/scripts/changelog-hook.sh",
+            "statusMessage": "Checking changelog..."
+          }
+        ]
       }
     ]
   }

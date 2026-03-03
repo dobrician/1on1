@@ -103,6 +103,10 @@ Full project documentation is in `docs/`:
 
 Sprint plans: `docs/wiki/Sprint-01.md` through `Sprint-15.md`. Sprint dependency graph and parallelizable sprints: `docs/wiki/Sprint-Log.md` (sprints 05+06, 11+12, 13+14 can run in parallel).
 
+## Changelog
+
+`CHANGELOG.md` follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format. Update it with every commit — a PostToolUse hook on Bash will remind you if a `git commit` doesn't include `CHANGELOG.md`. Group entries under `## [Unreleased]` with subsections: `Added`, `Changed`, `Fixed`, `Removed`.
+
 ## Sprint Progress Tracking
 
 Implementation progress is tracked live on the [GitHub Wiki](https://github.com/dobrician/1on1/wiki/Sprint-Log).

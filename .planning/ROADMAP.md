@@ -87,12 +87,12 @@ Plans:
   3. Template edits create new versions while past sessions retain their original answers
   4. User can duplicate, archive, and set an organization default template
   5. Conditional logic allows showing/hiding questions based on previous answers (eq, neq, lt, gt, lte, gte operators)
-**Plans**: TBD
+**Plans**: 3 plans in 2 waves (Wave 1: CRUD foundation, Wave 2: editor + DnD/conditional in parallel)
 
 Plans:
-- [ ] 04-01: Template CRUD and question type system
-- [ ] 04-02: Versioning, duplication, archival, and defaults
-- [ ] 04-03: Drag-and-drop reordering and conditional logic
+- [ ] 04-01-PLAN.md -- Schema migration, Zod validations, API CRUD, template list page, sidebar (Wave 1)
+- [ ] 04-02-PLAN.md -- Template editor, versioning, duplication, archival, default setting (Wave 2)
+- [ ] 04-03-PLAN.md -- Drag-and-drop reordering and conditional logic (Wave 2)
 
 ### Phase 5: Meeting Series & Session Wizard
 **Goal**: Managers can run structured 1:1 sessions through a step-by-step wizard with full context from previous meetings

@@ -69,13 +69,13 @@ Plans:
   3. Users can edit their profile (name, job title, avatar) and admin can set manager-report relationships
   4. Admin or manager can create teams, assign leads, and add/remove members (users can belong to multiple teams)
   5. Significant events (invites, deactivations, role changes, settings changes) are recorded in the audit log
-**Plans**: TBD
+**Plans**: 4 plans in 3 waves (Wave 1: foundation, Wave 2: invites + people in parallel, Wave 3: teams + audit)
 
 Plans:
-- [ ] 03-01: User invitation flow and profile management
-- [ ] 03-02: RBAC enforcement and resource-level authorization
-- [ ] 03-03: Team management and reporting lines
-- [ ] 03-04: Audit logging
+- [ ] 03-01-PLAN.md -- Foundation: deps, schemas (audit_log, invite_tokens), RBAC/audit helpers, sidebar, query provider (Wave 1)
+- [ ] 03-02-PLAN.md -- Invite flow: send bulk invites, email template, 2-step onboarding acceptance (Wave 2)
+- [ ] 03-03-PLAN.md -- People directory: data table, inline role/manager editing, profile, deactivation (Wave 2)
+- [ ] 03-04-PLAN.md -- Teams: card grid, detail page, member management, audit log viewer (Wave 3)
 
 ### Phase 4: Questionnaire Templates
 **Goal**: Managers and admins can design structured questionnaire templates that capture typed, categorized data across 6 question formats

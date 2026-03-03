@@ -1,5 +1,12 @@
-// Schema files will be added in Plan 01-02
-// This file re-exports all table definitions
-
-// Placeholder export to make this a valid module
-export {};
+export * from "./enums";
+export * from "./tenants";
+export * from "./users";
+export * from "./teams";
+export * from "./templates";
+export * from "./series";
+export * from "./sessions";
+export * from "./answers";
+export * from "./notes";
+export * from "./action-items";
+export * from "./notifications";
+export * from "./analytics";

@@ -1,0 +1,61 @@
+import {
+  pgTable,
+  uuid,
+  varchar,
+  boolean,
+  jsonb,
+  timestamp,
+  index,
+  uniqueIndex,
+} from "drizzle-orm/pg-core";
+import { relations } from "drizzle-orm";
+import { tenants } from "./tenants";
+import { userRoleEnum } from "./enums";
+
+export const users = pgTable(
+  "user",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    tenantId: uuid("tenant_id")
+      .notNull()
+      .references(() => tenants.id),
+    email: varchar("email", { length: 255 }).notNull(),
+    firstName: varchar("first_name", { length: 100 }).notNull(),
+    lastName: varchar("last_name", { length: 100 }).notNull(),
+    role: userRoleEnum("role").notNull().default("member"),
+    jobTitle: varchar("job_title", { length: 200 }),
+    avatarUrl: varchar("avatar_url", { length: 500 }),
+    managerId: uuid("manager_id"),
+    isActive: boolean("is_active").notNull().default(true),
+    notificationPreferences: jsonb("notification_preferences")
+      .notNull()
+      .default({}),
+    invitedAt: timestamp("invited_at", { withTimezone: true }),
+    inviteAcceptedAt: timestamp("invite_accepted_at", { withTimezone: true }),
+    lastLoginAt: timestamp("last_login_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [
+    uniqueIndex("user_tenant_email_idx").on(table.tenantId, table.email),
+    index("user_tenant_manager_idx").on(table.tenantId, table.managerId),
+    index("user_tenant_role_idx").on(table.tenantId, table.role),
+  ]
+);
+
+export const usersRelations = relations(users, ({ one, many }) => ({
+  tenant: one(tenants, {
+    fields: [users.tenantId],
+    references: [tenants.id],
+  }),
+  manager: one(users, {
+    fields: [users.managerId],
+    references: [users.id],
+    relationName: "managerReports",
+  }),
+  reports: many(users, { relationName: "managerReports" }),
+}));

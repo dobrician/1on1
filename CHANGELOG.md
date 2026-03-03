@@ -22,3 +22,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Claude Code PostToolUse hooks for automatic wiki sync on file edits
 - `CLAUDE.md` with project conventions, architecture overview, and sprint tracking instructions
 - Sprint progress tracking with checkboxes and status fields
+- Complete Drizzle ORM schema for all database tables matching `docs/data-model.md`
+- Centralized pgEnum definitions for all 16 enum types (`src/lib/db/schema/enums.ts`)
+- Schema files for: tenant, user, team, team_member, questionnaire_template, template_question, meeting_series, session, session_answer, private_note, talking_point, action_item, notification, analytics_snapshot
+- All tenant-scoped tables include `tenant_id` foreign key column
+- `key_version` column on `private_note` table for encryption key rotation tracking
+- Drizzle relations for all foreign key relationships including self-references
+- Database indexes per data-model.md specification (unique constraints, composite indexes)

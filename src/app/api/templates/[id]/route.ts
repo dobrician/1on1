@@ -3,9 +3,17 @@ import { auth } from "@/lib/auth/config";
 import { withTenantContext } from "@/lib/db/tenant-context";
 import { canManageTemplates } from "@/lib/auth/rbac";
 import { logAuditEvent } from "@/lib/audit/log";
-import { updateTemplateSchema } from "@/lib/validations/template";
-import { questionnaireTemplates, templateQuestions } from "@/lib/db/schema";
-import { eq, and, asc } from "drizzle-orm";
+import {
+  updateTemplateSchema,
+  saveTemplateSchema,
+  validateAnswerConfig,
+} from "@/lib/validations/template";
+import {
+  questionnaireTemplates,
+  templateQuestions,
+  sessions,
+} from "@/lib/db/schema";
+import { eq, and, asc, sql } from "drizzle-orm";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
@@ -93,71 +101,293 @@ export async function PATCH(request: Request, { params }: RouteContext) {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
+  // Determine if this is a batch save (with questions) or metadata-only update
+  const isBatchSave =
+    typeof body === "object" &&
+    body !== null &&
+    "questions" in body;
+
   try {
-    const data = updateTemplateSchema.parse(body);
+    if (isBatchSave) {
+      // Full batch save: template metadata + all questions
+      const data = saveTemplateSchema.parse(body);
 
-    const result = await withTenantContext(
-      session.user.tenantId,
-      session.user.id,
-      async (tx) => {
-        const [template] = await tx
-          .select({ id: questionnaireTemplates.id })
-          .from(questionnaireTemplates)
-          .where(
-            and(
-              eq(questionnaireTemplates.id, id),
-              eq(questionnaireTemplates.tenantId, session.user.tenantId)
-            )
+      // Validate answer configs for all questions
+      for (const q of data.questions) {
+        const configError = validateAnswerConfig(q.answerType, q.answerConfig);
+        if (configError) {
+          return NextResponse.json(
+            { error: `Question "${q.questionText}": ${configError}` },
+            { status: 400 }
           );
-
-        if (!template) {
-          return { error: "Template not found", status: 404 };
         }
-
-        const updatePayload: Record<string, unknown> = {
-          updatedAt: new Date(),
-        };
-
-        if (data.name !== undefined) updatePayload.name = data.name;
-        if (data.description !== undefined)
-          updatePayload.description = data.description;
-        if (data.category !== undefined) updatePayload.category = data.category;
-
-        const [updated] = await tx
-          .update(questionnaireTemplates)
-          .set(updatePayload)
-          .where(eq(questionnaireTemplates.id, id))
-          .returning();
-
-        await logAuditEvent(tx, {
-          tenantId: session.user.tenantId,
-          actorId: session.user.id,
-          action: "template_updated",
-          resourceType: "template",
-          resourceId: id,
-          metadata: {
-            ...(data.name !== undefined && { newName: data.name }),
-            ...(data.description !== undefined && {
-              newDescription: data.description,
-            }),
-            ...(data.category !== undefined && {
-              newCategory: data.category,
-            }),
-          },
-        });
-
-        return { data: updated };
       }
-    );
 
-    if ("error" in result) {
-      return NextResponse.json(
-        { error: result.error },
-        { status: result.status }
+      const result = await withTenantContext(
+        session.user.tenantId,
+        session.user.id,
+        async (tx) => {
+          const [template] = await tx
+            .select({
+              id: questionnaireTemplates.id,
+              version: questionnaireTemplates.version,
+            })
+            .from(questionnaireTemplates)
+            .where(
+              and(
+                eq(questionnaireTemplates.id, id),
+                eq(questionnaireTemplates.tenantId, session.user.tenantId)
+              )
+            );
+
+          if (!template) {
+            return { error: "Template not found", status: 404 };
+          }
+
+          // Check if template has been used in any session
+          const [sessionCount] = await tx
+            .select({ count: sql<number>`cast(count(*) as int)` })
+            .from(sessions)
+            .where(eq(sessions.templateId, id));
+
+          const isUsedInSessions = sessionCount.count > 0;
+
+          // Get current non-archived questions to detect changes
+          const currentQuestions = await tx
+            .select()
+            .from(templateQuestions)
+            .where(
+              and(
+                eq(templateQuestions.templateId, id),
+                eq(templateQuestions.isArchived, false)
+              )
+            )
+            .orderBy(asc(templateQuestions.sortOrder));
+
+          // Determine if questions have changed
+          const currentIds = new Set(currentQuestions.map((q) => q.id));
+          const incomingIds = new Set(
+            data.questions.filter((q) => q.id).map((q) => q.id!)
+          );
+          const questionsChanged =
+            currentQuestions.length !== data.questions.length ||
+            [...currentIds].some((cid) => !incomingIds.has(cid)) ||
+            data.questions.some((q) => !q.id);
+
+          let newVersion = template.version;
+
+          if (isUsedInSessions && questionsChanged) {
+            // Versioning: increment version, archive all old questions, insert new
+            newVersion = template.version + 1;
+
+            // Archive all current non-archived questions
+            await tx
+              .update(templateQuestions)
+              .set({ isArchived: true })
+              .where(
+                and(
+                  eq(templateQuestions.templateId, id),
+                  eq(templateQuestions.isArchived, false)
+                )
+              );
+
+            // Insert all questions as new rows with new UUIDs
+            for (const q of data.questions) {
+              await tx.insert(templateQuestions).values({
+                templateId: id,
+                questionText: q.questionText,
+                helpText: q.helpText ?? null,
+                category: q.category,
+                answerType: q.answerType,
+                answerConfig: q.answerConfig,
+                isRequired: q.isRequired,
+                sortOrder: q.sortOrder,
+                conditionalOnQuestionId:
+                  q.conditionalOnQuestionId ?? null,
+                conditionalOperator: q.conditionalOperator ?? null,
+                conditionalValue: q.conditionalValue ?? null,
+              });
+            }
+          } else {
+            // Not used in sessions -- update in place (upsert pattern)
+            // Archive questions that were removed
+            for (const cq of currentQuestions) {
+              if (!incomingIds.has(cq.id)) {
+                await tx
+                  .update(templateQuestions)
+                  .set({ isArchived: true })
+                  .where(eq(templateQuestions.id, cq.id));
+              }
+            }
+
+            // Update existing and insert new questions
+            for (const q of data.questions) {
+              if (q.id && currentIds.has(q.id)) {
+                // Update existing question
+                await tx
+                  .update(templateQuestions)
+                  .set({
+                    questionText: q.questionText,
+                    helpText: q.helpText ?? null,
+                    category: q.category,
+                    answerType: q.answerType,
+                    answerConfig: q.answerConfig,
+                    isRequired: q.isRequired,
+                    sortOrder: q.sortOrder,
+                    conditionalOnQuestionId:
+                      q.conditionalOnQuestionId ?? null,
+                    conditionalOperator: q.conditionalOperator ?? null,
+                    conditionalValue: q.conditionalValue ?? null,
+                  })
+                  .where(eq(templateQuestions.id, q.id));
+              } else {
+                // Insert new question
+                await tx.insert(templateQuestions).values({
+                  templateId: id,
+                  questionText: q.questionText,
+                  helpText: q.helpText ?? null,
+                  category: q.category,
+                  answerType: q.answerType,
+                  answerConfig: q.answerConfig,
+                  isRequired: q.isRequired,
+                  sortOrder: q.sortOrder,
+                  conditionalOnQuestionId:
+                    q.conditionalOnQuestionId ?? null,
+                  conditionalOperator: q.conditionalOperator ?? null,
+                  conditionalValue: q.conditionalValue ?? null,
+                });
+              }
+            }
+          }
+
+          // Update template metadata
+          const [updated] = await tx
+            .update(questionnaireTemplates)
+            .set({
+              name: data.name,
+              description: data.description ?? null,
+              category: data.category,
+              version: newVersion,
+              updatedAt: new Date(),
+            })
+            .where(eq(questionnaireTemplates.id, id))
+            .returning();
+
+          await logAuditEvent(tx, {
+            tenantId: session.user.tenantId,
+            actorId: session.user.id,
+            action: "template_updated",
+            resourceType: "template",
+            resourceId: id,
+            metadata: {
+              version: newVersion,
+              questionsChanged,
+              isUsedInSessions,
+            },
+          });
+
+          // Return template with updated questions
+          const updatedQuestions = await tx
+            .select()
+            .from(templateQuestions)
+            .where(
+              and(
+                eq(templateQuestions.templateId, id),
+                eq(templateQuestions.isArchived, false)
+              )
+            )
+            .orderBy(asc(templateQuestions.sortOrder));
+
+          return {
+            data: {
+              ...updated,
+              createdAt: updated.createdAt.toISOString(),
+              updatedAt: updated.updatedAt.toISOString(),
+              questions: updatedQuestions.map((q) => ({
+                ...q,
+                createdAt: q.createdAt.toISOString(),
+              })),
+            },
+          };
+        }
       );
-    }
 
-    return NextResponse.json(result.data);
+      if ("error" in result) {
+        return NextResponse.json(
+          { error: result.error },
+          { status: result.status }
+        );
+      }
+
+      return NextResponse.json(result.data);
+    } else {
+      // Metadata-only update (backward compatible)
+      const data = updateTemplateSchema.parse(body);
+
+      const result = await withTenantContext(
+        session.user.tenantId,
+        session.user.id,
+        async (tx) => {
+          const [template] = await tx
+            .select({ id: questionnaireTemplates.id })
+            .from(questionnaireTemplates)
+            .where(
+              and(
+                eq(questionnaireTemplates.id, id),
+                eq(questionnaireTemplates.tenantId, session.user.tenantId)
+              )
+            );
+
+          if (!template) {
+            return { error: "Template not found", status: 404 };
+          }
+
+          const updatePayload: Record<string, unknown> = {
+            updatedAt: new Date(),
+          };
+
+          if (data.name !== undefined) updatePayload.name = data.name;
+          if (data.description !== undefined)
+            updatePayload.description = data.description;
+          if (data.category !== undefined)
+            updatePayload.category = data.category;
+
+          const [updated] = await tx
+            .update(questionnaireTemplates)
+            .set(updatePayload)
+            .where(eq(questionnaireTemplates.id, id))
+            .returning();
+
+          await logAuditEvent(tx, {
+            tenantId: session.user.tenantId,
+            actorId: session.user.id,
+            action: "template_updated",
+            resourceType: "template",
+            resourceId: id,
+            metadata: {
+              ...(data.name !== undefined && { newName: data.name }),
+              ...(data.description !== undefined && {
+                newDescription: data.description,
+              }),
+              ...(data.category !== undefined && {
+                newCategory: data.category,
+              }),
+            },
+          });
+
+          return { data: updated };
+        }
+      );
+
+      if ("error" in result) {
+        return NextResponse.json(
+          { error: result.error },
+          { status: result.status }
+        );
+      }
+
+      return NextResponse.json(result.data);
+    }
   } catch (error) {
     if (error instanceof Error && error.name === "ZodError") {
       return NextResponse.json(

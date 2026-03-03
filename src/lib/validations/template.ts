@@ -70,13 +70,18 @@ export const questionSchema = z.object({
   conditionalValue: z.string().max(255).nullable().optional(),
 });
 
+// Question with optional ID for batch saves (existing questions have IDs, new ones don't)
+export const saveQuestionSchema = questionSchema.extend({
+  id: z.string().uuid().optional(),
+});
+
 // Batch save: template metadata + all questions in one call
 export const saveTemplateSchema = z.object({
   name: z.string().min(1).max(255),
   description: z.string().max(2000).nullable().optional(),
   category: z.enum(templateCategories),
   questions: z
-    .array(questionSchema)
+    .array(saveQuestionSchema)
     .min(1, "Template must have at least 1 question"),
 });
 

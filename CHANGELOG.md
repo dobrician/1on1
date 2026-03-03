@@ -7,6 +7,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## [Unreleased]
 
 ### Added
+- Template versioning-aware PATCH endpoint: detects session usage, increments version, archives old questions when template is in use
+- Template duplicate API (`POST /api/templates/[id]/duplicate`): deep-copies template + questions with new UUIDs, remaps conditional references
+- Template set-default API (`PUT /api/templates/[id]/default`): atomically sets one default per tenant (admin-only)
+- Template publish toggle API (`PUT /api/templates/[id]/publish`): toggles published status with question count validation
+- `saveQuestionSchema` Zod schema with optional `id` field for batch save operations
+- shadcn/ui `switch` and `alert-dialog` components
 - Template schema migration: `is_archived` column on `questionnaire_template` table for soft-delete/archive
 - Template CRUD API: `GET/POST /api/templates` for listing and creating templates with question counts
 - Template detail API: `GET/PATCH/DELETE /api/templates/[id]` for viewing, updating, and archiving templates

@@ -29,3 +29,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `key_version` column on `private_note` table for encryption key rotation tracking
 - Drizzle relations for all foreign key relationships including self-references
 - Database indexes per data-model.md specification (unique constraints, composite indexes)
+- SQL migrations: initial schema DDL and RLS policies (`src/lib/db/migrations/`)
+- Row-Level Security (RLS) enabled on all 14 tables with tenant isolation policies
+- Restrictive tenant isolation + author-only policies on `private_note` (FORCE ROW LEVEL SECURITY)
+- RLS policies for junction tables (team_member, template_question, session_answer, talking_point) via parent JOIN
+- `withTenantContext()` wrapper for tenant-scoped database queries using `set_config` with SET LOCAL
+- `app_user` role granted CRUD privileges on all tables with default privileges for future tables

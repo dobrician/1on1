@@ -43,10 +43,10 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Questionnaire Templates
 
-- [ ] **TMPL-01**: Admin or manager can create questionnaire templates with a name and description
-- [ ] **TMPL-02**: Templates support 6 question types: free text, rating 1-5, rating 1-10, yes/no, multiple choice, mood (5-point emoji)
-- [ ] **TMPL-03**: Each question can be configured as required/optional with help text
-- [ ] **TMPL-04**: Questions can be tagged with categories (wellbeing, engagement, performance, career, etc.)
+- [x] **TMPL-01**: Admin or manager can create questionnaire templates with a name and description
+- [x] **TMPL-02**: Templates support 6 question types: free text, rating 1-5, rating 1-10, yes/no, multiple choice, mood (5-point emoji)
+- [x] **TMPL-03**: Each question can be configured as required/optional with help text
+- [x] **TMPL-04**: Questions can be tagged with categories (wellbeing, engagement, performance, career, etc.)
 - [ ] **TMPL-05**: Templates are versioned — edits create new versions; past sessions retain original answers
 - [ ] **TMPL-06**: Admin can mark one template as the organization default
 - [ ] **TMPL-07**: User can duplicate an existing template
@@ -222,10 +222,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | TEAM-02 | Phase 3 | Complete |
 | TEAM-03 | Phase 3 | Complete |
 | TEAM-04 | Phase 3 | Complete |
-| TMPL-01 | Phase 4 | Pending |
-| TMPL-02 | Phase 4 | Pending |
-| TMPL-03 | Phase 4 | Pending |
-| TMPL-04 | Phase 4 | Pending |
+| TMPL-01 | Phase 4 | Complete |
+| TMPL-02 | Phase 4 | Complete |
+| TMPL-03 | Phase 4 | Complete |
+| TMPL-04 | Phase 4 | Complete |
 | TMPL-05 | Phase 4 | Pending |
 | TMPL-06 | Phase 4 | Pending |
 | TMPL-07 | Phase 4 | Pending |

@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: completed
-stopped_at: Completed 03-04-PLAN.md
-last_updated: "2026-03-03T19:02:38.682Z"
-last_activity: 2026-03-03 -- Plan 03-04 completed (team management, audit log, sidebar update)
+status: in_progress
+stopped_at: Completed 04-01-PLAN.md
+last_updated: "2026-03-03T19:46:12Z"
+last_activity: 2026-03-03 -- Plan 04-01 completed (template CRUD API, list page, sidebar nav)
 progress:
   total_phases: 10
   completed_phases: 3
-  total_plans: 10
-  completed_plans: 10
-  percent: 30
+  total_plans: 13
+  completed_plans: 11
+  percent: 33
 ---
 
 # Project State
@@ -21,23 +21,23 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-03)
 
 **Core value:** The AI context layer that makes every meeting smarter than the last
-**Current focus:** Phase 3 COMPLETE - Next: Phase 4
+**Current focus:** Phase 4 - Questionnaire Templates
 
 ## Current Position
 
-Phase: 3 of 10 (User & Team Management) -- COMPLETE
-Plan: 4 of 4 in current phase -- COMPLETE
-Status: Phase 03 complete -- All user & team management features built
-Last activity: 2026-03-03 -- Plan 03-04 completed (team management, audit log, sidebar update)
+Phase: 4 of 10 (Questionnaire Templates)
+Plan: 1 of 3 in current phase -- COMPLETE
+Status: Plan 04-01 complete -- Template CRUD foundation built
+Last activity: 2026-03-03 -- Plan 04-01 completed (template CRUD API, list page, sidebar nav)
 
-Progress: [▓▓▓▓▓▓▓░░░] 30%
+Progress: [▓▓▓▓▓▓▓░░░] 33%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 10
-- Average duration: 10 min
-- Total execution time: 1.50 hours
+- Total plans completed: 11
+- Average duration: 9 min
+- Total execution time: 1.58 hours
 
 **By Phase:**
 
@@ -46,9 +46,10 @@ Progress: [▓▓▓▓▓▓▓░░░] 30%
 | 01-foundation-infrastructure | 3 | 18 min | 6 min |
 | 02-authentication-organization | 3 | 59 min | 20 min |
 | 03-user-team-management | 4 | 24 min | 6 min |
+| 04-questionnaire-templates | 1 | 5 min | 5 min |
 
 **Recent Trend:**
-- Last 5 plans: 02-03 (45 min), 03-01 (5 min), 03-02 (6 min), 03-03 (6 min), 03-04 (7 min)
+- Last 5 plans: 03-01 (5 min), 03-02 (6 min), 03-03 (6 min), 03-04 (7 min), 04-01 (5 min)
 - Trend: consistent
 
 *Updated after each plan completion*
@@ -56,6 +57,7 @@ Progress: [▓▓▓▓▓▓▓░░░] 30%
 | Phase 03 P02 | 6min | 2 tasks | 8 files |
 | Phase 03 P03 | 6min | 2 tasks | 13 files |
 | Phase 03 P04 | 7min | 2 tasks | 15 files |
+| Phase 04 P01 | 5min | 2 tasks | 11 files |
 
 ## Accumulated Context
 
@@ -107,6 +109,11 @@ Recent decisions affecting current work:
 - [03-04]: Audit log uses server-side pagination (page/limit params) -- audit logs grow large over time
 - [03-04]: Team detail page splits Server Component (data fetch) and Client Component (interactivity)
 
+- [04-01]: Soft-delete pattern for templates: is_archived=true, never actual row deletion (preserves session history)
+- [04-01]: Answer config validation at API level: multiple_choice enforces min 2 non-empty string options
+- [04-01]: Template list uses LEFT JOIN with COUNT for question counts, filtering archived questions
+- [04-01]: DELETE endpoint on templates is archive (soft-delete), unsetting is_default if needed
+
 ### Pending Todos
 
 None yet.
@@ -121,5 +128,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-03
-Stopped at: Completed 03-04-PLAN.md
-Resume file: .planning/phases/03-user-team-management/03-04-SUMMARY.md
+Stopped at: Completed 04-01-PLAN.md
+Resume file: .planning/phases/04-questionnaire-templates/04-01-SUMMARY.md

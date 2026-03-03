@@ -7,6 +7,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## [Unreleased]
 
 ### Added
+- Team CRUD API: `GET/POST /api/teams` for listing and creating teams with member counts and manager info
+- Team detail API: `GET/PATCH/DELETE /api/teams/[id]` for viewing, updating, and deleting teams (admin-only delete)
+- Team members API: `POST/DELETE /api/teams/[id]/members` for adding and removing team members
+- Team card component (`src/components/people/team-card.tsx`) with name, description, lead avatar, member count
+- Team create dialog (`src/components/people/team-create-dialog.tsx`) with name, description, and searchable team lead picker
+- Member picker dialog (`src/components/people/member-picker.tsx`) with searchable multi-select and checkbox UI
+- Teams page (`/teams`) with responsive card grid, create button (admin/manager), empty state
+- Team detail page (`/teams/[id]`) with inline name/description editing, member table, add/remove members
+- RBAC enforcement on team mutations: admin/manager can create and manage, admin-only delete
+- Audit logging for all team mutations: `team_created`, `team_updated`, `team_deleted`, `team_lead_changed`, `member_added_to_team`, `member_removed_from_team`
 - Invite API: `POST /api/invites` sends bulk email invitations with role assignment (admin-only)
 - Invite acceptance API: `POST /api/invites/accept` creates user account from invite token (public endpoint)
 - Invite resend API: `POST /api/invites/resend` generates new token and resends invite email (admin-only)

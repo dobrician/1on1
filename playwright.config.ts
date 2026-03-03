@@ -8,7 +8,7 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: "html",
   use: {
-    baseURL: "http://localhost:4300",
+    baseURL: "http://localhost:4301",
     trace: "on-first-retry",
     screenshot: "only-on-failure",
   },
@@ -35,8 +35,8 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: "bun run dev --port 4300",
-    url: "http://localhost:4300",
+    command: "bun run dev --port 4301",
+    url: "http://localhost:4301",
     reuseExistingServer: true,
     timeout: 120_000,
   },

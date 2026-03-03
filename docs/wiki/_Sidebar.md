@@ -10,19 +10,14 @@
 - [[Security]]
 
 **Implementation**
-- [[Sprint-Log]]
-- [[Sprint-01]] — Bootstrap & Infra
-- [[Sprint-02]] — DB Schema & RLS
-- [[Sprint-03]] — Auth & Onboarding
-- [[Sprint-04]] — User Management
-- [[Sprint-05]] — Team Management
-- [[Sprint-06]] — Template Builder
-- [[Sprint-07]] — Meeting Series
-- [[Sprint-08]] — Session Wizard Core
-- [[Sprint-09]] — Context & Notes
-- [[Sprint-10]] — Action Items
-- [[Sprint-11]] — Manager Dashboard
-- [[Sprint-12]] — History & Search
-- [[Sprint-13]] — Basic Analytics
-- [[Sprint-14]] — Email Notifications
-- [[Sprint-15]] — Polish & Launch
+- [[Phase-Log]]
+- [[Phase-01]] — Foundation & Infrastructure
+- [[Phase-02]] — Authentication & Organization
+- [[Phase-03]] — User & Team Management
+- [[Phase-04]] — Questionnaire Templates
+- [[Phase-05]] — Meeting Series & Session Wizard
+- [[Phase-06]] — Action Items & Session History
+- [[Phase-07]] — AI Pipeline
+- [[Phase-08]] — Manager Dashboard & Analytics
+- [[Phase-09]] — Email Notifications
+- [[Phase-10]] — Integration & Polish

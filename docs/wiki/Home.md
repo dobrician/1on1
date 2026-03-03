@@ -20,7 +20,7 @@ A SaaS platform that helps organizations run effective, data-driven 1:1 meetings
 | Validation | Zod (shared client/server) |
 | Forms | React Hook Form |
 | Charts | Recharts |
-| Email | Resend + React Email |
+| Email | Nodemailer + React Email |
 | Background Jobs | Inngest |
 | Client State | TanStack Query |
 | Deployment | Vercel + Neon/Supabase |
@@ -36,7 +36,7 @@ A SaaS platform that helps organizations run effective, data-driven 1:1 meetings
 | [[Questionnaires]] | Question types, answer formats, template system |
 | [[Analytics]] | Metrics, KPIs, charting strategy, data aggregation |
 | [[Security]] | Authentication, authorization, multi-tenancy, GDPR |
-| [[Sprint-Log]] | Implementation sprint plan with timeline and goals |
+| [[Phase-Log]] | Implementation progress — phase-based roadmap (2/10 complete) |
 
 ## Repository
 

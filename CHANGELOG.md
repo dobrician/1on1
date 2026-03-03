@@ -7,6 +7,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## [Unreleased]
 
 ### Changed
+- Wiki overhauled: replaced 15-sprint tracking with 10-phase roadmap matching GSD workflow
+- `CLAUDE.md` updated: project status, email tech stack (Nodemailer), sprint references replaced with phase references
+- `ROADMAP.md` updated: Phase 2 marked complete with all plan checkboxes checked
+
+### Removed
+- 16 sprint wiki pages (`Sprint-01.md` through `Sprint-15.md` and `Sprint-Log.md`) replaced by phase-based tracking
+
+### Added
+- `docs/wiki/Phase-Log.md` — master implementation tracking with phase summary table and dependency graph
+- `docs/wiki/Phase-01.md` through `Phase-10.md` — per-phase wiki pages with goals, success criteria, and build details
+- Phase progress cross-reference in `Features-Roadmap.md`
+
+### Changed
 - Database connection module (`src/lib/db/index.ts`) switched from Neon serverless driver to `node-postgres` (pg) for local development compatibility
 - Email infrastructure switched from Resend to Nodemailer (SMTP-based) for self-hosted flexibility
 - Auth flows (`auth/config.ts`, `auth/actions.ts`, `email/send.ts`) now use `adminDb` (superuser connection) to bypass RLS for registration, login, password reset, and email verification
@@ -69,12 +82,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Multi-stage Dockerfile (Bun for deps/build, Node.js 22 for production runtime)
 - Database init script (`scripts/init-db.sh`) with default privileges for app_user
 - Project documentation: architecture, data model, features roadmap, UX flows, questionnaires, analytics, and security docs
-- 15-sprint implementation plan with dependency graph (`docs/wiki/Sprint-01.md` through `Sprint-15.md`)
+- Phase-based implementation plan with dependency graph (`docs/wiki/Phase-01.md` through `Phase-10.md`)
 - GitHub Wiki with auto-sync from `docs/wiki/` via GitHub Actions workflow
 - Wiki sync scripts (`scripts/push-wiki.sh`, `scripts/push-wiki-hook.sh`)
 - Claude Code PostToolUse hooks for automatic wiki sync on file edits
-- `CLAUDE.md` with project conventions, architecture overview, and sprint tracking instructions
-- Sprint progress tracking with checkboxes and status fields
+- `CLAUDE.md` with project conventions, architecture overview, and phase tracking instructions
 - Complete Drizzle ORM schema for all database tables matching `docs/data-model.md`
 - Centralized pgEnum definitions for all 16 enum types (`src/lib/db/schema/enums.ts`)
 - Schema files for: tenant, user, team, team_member, questionnaire_template, template_question, meeting_series, session, session_answer, private_note, talking_point, action_item, notification, analytics_snapshot

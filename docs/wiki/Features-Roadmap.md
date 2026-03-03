@@ -1,5 +1,7 @@
 # Features Roadmap
 
+> **Implementation tracking**: See [[Phase-Log]] for current build progress (2/10 phases complete). This page documents the feature scope; the Phase Log tracks what has been built.
+
 ## MVP (v1) — Core Product
 
 The minimum viable product delivers structured 1:1 sessions with quantifiable answers and historical tracking.

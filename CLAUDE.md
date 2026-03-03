@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Structured one-on-one meeting management SaaS for companies. License: AGPL v3.
 
-**Status**: Planning/documentation phase. No application code implemented yet. Full design docs are in `docs/`.
+**Status**: Active development — Phase 2 complete (Auth & Organization), Phase 3 next. Full design docs in `docs/`, implementation tracked in `docs/wiki/Phase-Log.md`.
 
 ## Tech Stack
 
@@ -17,7 +17,7 @@ Structured one-on-one meeting management SaaS for companies. License: AGPL v3.
 - **Validation**: Zod (shared client/server schemas)
 - **Forms**: React Hook Form
 - **Charts**: Recharts
-- **Email**: Resend + React Email
+- **Email**: Nodemailer + React Email
 - **Jobs**: Inngest (event-driven background functions)
 - **State**: TanStack Query (React Query)
 - **Deployment**: Vercel + Neon/Supabase (managed PostgreSQL)
@@ -101,21 +101,21 @@ Full project documentation is in `docs/`:
 - `analytics.md` — Metrics, KPIs, charting strategy
 - `security.md` — Auth, authorization, multi-tenancy, GDPR, audit logging
 
-Sprint plans: `docs/wiki/Sprint-01.md` through `Sprint-15.md`. Sprint dependency graph and parallelizable sprints: `docs/wiki/Sprint-Log.md` (sprints 05+06, 11+12, 13+14 can run in parallel).
+Phase plans: `docs/wiki/Phase-01.md` through `Phase-10.md`. Phase dependency graph and parallelizable phases: `docs/wiki/Phase-Log.md` (phases 6, 7, 9 can run in parallel after Phase 5).
 
 ## Changelog
 
 `CHANGELOG.md` follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format. Update it with every commit — a PostToolUse hook on Bash will remind you if a `git commit` doesn't include `CHANGELOG.md`. Group entries under `## [Unreleased]` with subsections: `Added`, `Changed`, `Fixed`, `Removed`.
 
-## Sprint Progress Tracking
+## Phase Progress Tracking
 
-Implementation progress is tracked live on the [GitHub Wiki](https://github.com/dobrician/1on1/wiki/Sprint-Log).
+Implementation progress is tracked live on the [GitHub Wiki](https://github.com/dobrician/1on1/wiki/Phase-Log).
 
-**When completing sprint work, you MUST update the wiki:**
+**When completing phase work, you MUST update the wiki:**
 
-1. Check off completed deliverables (`- [x]`) and acceptance criteria in the sprint's `docs/wiki/Sprint-XX.md`
-2. Update the sprint's `**Status**` field (`Not Started` / `In Progress` / `Done`)
-3. Update the Status column in `docs/wiki/Sprint-Log.md`
+1. Update the phase's `docs/wiki/Phase-XX.md` with what was built and key decisions
+2. Update the phase's `**Status**` field (`Not Started` / `Next` / `In Progress` / `Complete`)
+3. Update the Status column in `docs/wiki/Phase-Log.md`
 4. The wiki auto-syncs via a PostToolUse hook on Edit/Write — changes to `docs/wiki/*.md` are pushed to the GitHub wiki automatically
 
 If the hook doesn't fire (e.g., first run), manually sync with: `./scripts/push-wiki.sh`

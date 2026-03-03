@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+- Template schema migration: `is_archived` column on `questionnaire_template` table for soft-delete/archive
+- Template CRUD API: `GET/POST /api/templates` for listing and creating templates with question counts
+- Template detail API: `GET/PATCH/DELETE /api/templates/[id]` for viewing, updating, and archiving templates
+- Template question CRUD API: `POST /api/templates/[id]/questions` and `PATCH/DELETE /api/templates/[id]/questions/[questionId]`
+- Zod validation schemas for template CRUD: `createTemplateSchema`, `updateTemplateSchema`, `questionSchema`, `saveTemplateSchema`, `reorderQuestionsSchema`
+- Answer config validation: `validateAnswerConfig()` ensures multiple_choice has min 2 options
+- RBAC helper: `canManageTemplates()` for admin/manager role check
+
 ### Fixed
 - Security: cross-tenant IDOR in team manager verification (missing tenant_id filter)
 - Security: host header injection in invite email URLs — now uses NEXT_PUBLIC_APP_URL only

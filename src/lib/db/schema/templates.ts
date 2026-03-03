@@ -28,6 +28,7 @@ export const questionnaireTemplates = pgTable("questionnaire_template", {
   isPublished: boolean("is_published").notNull().default(false),
   createdBy: uuid("created_by").references(() => users.id),
   version: integer("version").notNull().default(1),
+  isArchived: boolean("is_archived").notNull().default(false),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
     .defaultNow(),

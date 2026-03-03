@@ -43,6 +43,13 @@
       "when": 1772556055561,
       "tag": "0005_soft_norman_osborn",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1772566868382,
+      "tag": "0006_living_winter_soldier",
+      "breakpoints": true
     }
   ]
 }

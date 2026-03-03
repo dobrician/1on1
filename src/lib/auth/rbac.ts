@@ -28,6 +28,13 @@ export function canManageTeams(role: string): boolean {
 }
 
 /**
+ * Check if user can manage templates (admin or manager).
+ */
+export function canManageTemplates(role: string): boolean {
+  return role === "admin" || role === "manager";
+}
+
+/**
  * Check if user can perform admin-only actions.
  */
 export function isAdmin(role: string): boolean {

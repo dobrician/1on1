@@ -1,0 +1,1 @@
+ALTER TABLE "questionnaire_template" ADD COLUMN "is_archived" boolean DEFAULT false NOT NULL;

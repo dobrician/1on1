@@ -14,22 +14,23 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { registerAction } from "@/lib/auth/actions";
 
 export default function RegisterPage() {
   const router = useRouter();
   const [error, setError] = useState("");
-  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
+  const [orgType, setOrgType] = useState("for_profit");
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError("");
-    setFieldErrors({});
     setLoading(true);
 
     try {
       const formData = new FormData(e.currentTarget);
+      formData.set("orgType", orgType);
       const result = await registerAction(formData);
 
       if (result?.error) {
@@ -71,6 +72,44 @@ export default function RegisterPage() {
               required
               autoFocus
             />
+          </div>
+
+          <div className="space-y-3">
+            <Label>Organization type</Label>
+            <RadioGroup
+              value={orgType}
+              onValueChange={setOrgType}
+              className="grid grid-cols-2 gap-3"
+            >
+              <Label
+                htmlFor="org-for-profit"
+                className={`flex cursor-pointer items-center gap-3 rounded-lg border p-3 transition-colors ${
+                  orgType === "for_profit"
+                    ? "border-primary bg-primary/5"
+                    : "border-border hover:bg-accent"
+                }`}
+              >
+                <RadioGroupItem value="for_profit" id="org-for-profit" />
+                <div>
+                  <span className="text-sm font-medium">For-profit</span>
+                  <p className="text-xs text-muted-foreground">Company</p>
+                </div>
+              </Label>
+              <Label
+                htmlFor="org-non-profit"
+                className={`flex cursor-pointer items-center gap-3 rounded-lg border p-3 transition-colors ${
+                  orgType === "non_profit"
+                    ? "border-primary bg-primary/5"
+                    : "border-border hover:bg-accent"
+                }`}
+              >
+                <RadioGroupItem value="non_profit" id="org-non-profit" />
+                <div>
+                  <span className="text-sm font-medium">Non-profit</span>
+                  <p className="text-xs text-muted-foreground">Organization</p>
+                </div>
+              </Label>
+            </RadioGroup>
           </div>
 
           <div className="grid grid-cols-2 gap-3">

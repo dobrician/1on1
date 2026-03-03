@@ -22,6 +22,7 @@ export async function registerAction(formData: FormData) {
   try {
     const data = registerSchema.parse({
       companyName: formData.get("companyName"),
+      orgType: formData.get("orgType") || "for_profit",
       email: formData.get("email"),
       password: formData.get("password"),
       firstName: formData.get("firstName"),
@@ -62,6 +63,7 @@ export async function registerAction(formData: FormData) {
         .values({
           name: data.companyName,
           slug,
+          orgType: data.orgType,
           settings: {
             timezone: "UTC",
             defaultCadence: "biweekly",

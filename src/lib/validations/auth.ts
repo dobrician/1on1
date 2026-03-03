@@ -10,6 +10,7 @@ export const registerSchema = z.object({
     .string()
     .min(2, "Company name must be at least 2 characters")
     .max(255),
+  orgType: z.enum(["for_profit", "non_profit"]).default("for_profit"),
   email: z.string().email("Invalid email"),
   password: z
     .string()

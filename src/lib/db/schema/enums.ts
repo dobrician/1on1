@@ -6,6 +6,8 @@ export const userRoleEnum = pgEnum("user_role", [
   "member",
 ]);
 
+export const orgTypeEnum = pgEnum("org_type", ["for_profit", "non_profit"]);
+
 export const planEnum = pgEnum("plan", [
   "free",
   "starter",

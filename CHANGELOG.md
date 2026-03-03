@@ -7,6 +7,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## [Unreleased]
 
 ### Added
+- Organization type (`org_type`) enum and column on tenant table: `for_profit` and `non_profit`
+- Organization type selector (radio buttons) on registration page between company name and personal info
+- `orgType` field in registration schema and action -- tenants created with correct org type
+- Organization settings page at `/settings/company` (admin-only, redirects non-admins to `/overview`)
+- Company settings API route (`/api/settings/company`) with GET and PUT handlers, Zod validation, tenant-scoped access
+- Settings form with timezone selector (26 timezones), cadence radio group, duration dropdown
+- Organization details section showing name (editable), type (read-only badge), slug (read-only)
+- Zod validation schema for organization settings (`orgSettingsSchema`)
+- shadcn/ui components: Select, RadioGroup, Badge, Separator
+- Seed data updated with `orgType`: Acme Corp (for_profit), Beta Inc (non_profit)
 - Route protection via `proxy.ts` (Next.js 16 convention) -- unauthenticated users redirect to `/login`, authenticated users redirect away from auth pages to `/overview`
 - Dashboard layout with `SessionProvider` and server-side session validation (defense-in-depth against CVE-2025-29927)
 - Overview page with user info (name, email, role, organization) and email verification banner

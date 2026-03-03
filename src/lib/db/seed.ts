@@ -135,10 +135,11 @@ async function seedTenants() {
         id: ACME_TENANT_ID,
         name: 'Acme Corp',
         slug: 'acme-corp',
+        orgType: 'for_profit' as const,
         plan: 'pro',
         settings: {
           timezone: 'America/New_York',
-          defaultCadence: 'weekly',
+          defaultCadence: 'biweekly',
           defaultDurationMinutes: 30,
         },
       },
@@ -146,10 +147,11 @@ async function seedTenants() {
         id: BETA_TENANT_ID,
         name: 'Beta Inc',
         slug: 'beta-inc',
+        orgType: 'non_profit' as const,
         plan: 'free',
         settings: {
           timezone: 'Europe/London',
-          defaultCadence: 'biweekly',
+          defaultCadence: 'weekly',
           defaultDurationMinutes: 45,
         },
       },
@@ -159,6 +161,7 @@ async function seedTenants() {
       set: {
         name: sql`excluded.name`,
         slug: sql`excluded.slug`,
+        orgType: sql`excluded.org_type`,
         plan: sql`excluded.plan`,
         settings: sql`excluded.settings`,
         updatedAt: sql`now()`,

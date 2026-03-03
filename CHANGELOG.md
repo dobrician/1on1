@@ -14,6 +14,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Zod validation schemas for template CRUD: `createTemplateSchema`, `updateTemplateSchema`, `questionSchema`, `saveTemplateSchema`, `reorderQuestionsSchema`
 - Answer config validation: `validateAnswerConfig()` ensures multiple_choice has min 2 options
 - RBAC helper: `canManageTemplates()` for admin/manager role check
+- Template list page (`/templates`) with responsive card grid showing name, description, category, question count, version, and status badges
+- Template create dialog with React Hook Form + Zod validation for name, description, and category
+- Sidebar navigation: "Templates" item added after "People" (visible to all roles)
 
 ### Fixed
 - Security: cross-tenant IDOR in team manager verification (missing tenant_id filter)

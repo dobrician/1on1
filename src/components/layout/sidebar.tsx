@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { LayoutDashboard, Users, Building2, ScrollText } from "lucide-react";
+import { LayoutDashboard, Users, Building2, ScrollText, FileText } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface NavItem {
@@ -25,6 +25,11 @@ const mainNavItems: NavItem[] = [
     href: "/people",
     icon: Users,
     matchAlso: ["/teams"],
+  },
+  {
+    label: "Templates",
+    href: "/templates",
+    icon: FileText,
   },
 ];
 

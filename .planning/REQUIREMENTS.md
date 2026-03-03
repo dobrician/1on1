@@ -1,0 +1,212 @@
+# Requirements: 1on1
+
+**Defined:** 2026-03-03
+**Core Value:** The AI context layer that makes every meeting smarter than the last
+
+## v1 Requirements
+
+Requirements for initial release. Each maps to roadmap phases.
+
+### Authentication
+
+- [ ] **AUTH-01**: User can create account with email and password
+- [ ] **AUTH-02**: User receives email verification after signup
+- [ ] **AUTH-03**: User can reset password via time-limited email link
+- [ ] **AUTH-04**: User session persists across browser refresh (HTTP-only cookies)
+- [ ] **AUTH-05**: User can sign in with Google OAuth
+- [ ] **AUTH-06**: User can sign in with Microsoft OAuth
+- [ ] **AUTH-07**: User can log out from any page
+
+### Organization & Multi-Tenancy
+
+- [ ] **ORG-01**: Admin can register a new organization with name, slug, and admin account
+- [ ] **ORG-02**: Organization data is fully isolated via tenant_id on all tables
+- [ ] **ORG-03**: PostgreSQL Row-Level Security enforces tenant isolation at the database level
+- [ ] **ORG-04**: Organization admin can configure settings (timezone, default cadence, default duration)
+- [ ] **ORG-05**: Organization type supports both for-profit and non-profit models
+
+### User Management
+
+- [ ] **USER-01**: Admin can invite users to the organization via email
+- [ ] **USER-02**: Invited user receives email with magic link to set password and join
+- [ ] **USER-03**: User can edit their profile (first name, last name, job title, avatar)
+- [ ] **USER-04**: Admin can assign roles: admin, manager, or member
+- [ ] **USER-05**: Each user can have a manager_id establishing reporting lines (org chart)
+- [ ] **USER-06**: Admin can deactivate a user (soft delete preserving historical data)
+
+### Team Management
+
+- [ ] **TEAM-01**: Admin or manager can create teams with name, description, and team lead
+- [ ] **TEAM-02**: Admin or manager can add/remove members to teams
+- [ ] **TEAM-03**: Teams support lead and member roles
+- [ ] **TEAM-04**: A user can belong to multiple teams
+
+### Questionnaire Templates
+
+- [ ] **TMPL-01**: Admin or manager can create questionnaire templates with a name and description
+- [ ] **TMPL-02**: Templates support 6 question types: free text, rating 1-5, rating 1-10, yes/no, multiple choice, mood (5-point emoji)
+- [ ] **TMPL-03**: Each question can be configured as required/optional with help text
+- [ ] **TMPL-04**: Questions can be tagged with categories (wellbeing, engagement, performance, career, etc.)
+- [ ] **TMPL-05**: Templates are versioned — edits create new versions; past sessions retain original answers
+- [ ] **TMPL-06**: Admin can mark one template as the organization default
+- [ ] **TMPL-07**: User can duplicate an existing template
+- [ ] **TMPL-08**: User can archive a template (hide from active use, preserve history)
+- [ ] **TMPL-09**: User can reorder questions within a template via drag-and-drop
+- [ ] **TMPL-10**: User can configure conditional logic — show/hide questions based on previous answers (operators: eq, neq, lt, gt, lte, gte)
+
+### Meeting Series
+
+- [ ] **MEET-01**: Manager can create a 1:1 series by selecting themselves and a report
+- [ ] **MEET-02**: Series has configurable cadence: weekly, biweekly, monthly, or custom interval
+- [ ] **MEET-03**: Series can have a default questionnaire template
+- [ ] **MEET-04**: Series can have a preferred day and time
+- [ ] **MEET-05**: Next session date is auto-computed based on cadence
+- [ ] **MEET-06**: Series lifecycle supports Active, Paused, and Archived states
+
+### Session Wizard
+
+- [ ] **SESS-01**: Manager can start a session for a scheduled meeting in a series
+- [ ] **SESS-02**: Session wizard presents questions one at a time (or in category groups) with progress indicator
+- [ ] **SESS-03**: Context panel (sidebar) shows notes from last 3 sessions (collapsible)
+- [ ] **SESS-04**: Context panel shows open action items from past sessions
+- [ ] **SESS-05**: Context panel shows score trend sparklines (last 6 sessions)
+- [ ] **SESS-06**: Appropriate input widget renders per question type (text area, star rating, slider, toggle, select, emoji picker)
+- [ ] **SESS-07**: Both manager and report can add talking points to the pre-session agenda
+- [ ] **SESS-08**: Shared notes area with rich text editor visible to both parties
+- [ ] **SESS-09**: Private notes area visible only to the author, encrypted at rest (AES-256-GCM)
+- [ ] **SESS-10**: User can create action items inline at any point during the session
+- [ ] **SESS-11**: All answers and notes auto-save with debounce (500ms)
+- [ ] **SESS-12**: Navigation supports next/previous and direct jump to any step
+- [ ] **SESS-13**: Post-session summary screen shows recap of all answers, notes, and new action items
+- [ ] **SESS-14**: Session score is computed as average of all numeric answers
+- [ ] **SESS-15**: Manager confirms session completion from the summary screen
+
+### Action Items
+
+- [ ] **ACTN-01**: User can create action items with title, description, assignee, and optional due date
+- [ ] **ACTN-02**: Action items track status: Open → In Progress → Completed / Cancelled
+- [ ] **ACTN-03**: Unfinished action items automatically carry over and appear flagged in the next session's context panel
+- [ ] **ACTN-04**: Dedicated list view shows all open action items across all series
+- [ ] **ACTN-05**: Action items are visible in the session wizard context panel during future sessions
+
+### Session History
+
+- [ ] **HIST-01**: User can view a chronological timeline of all sessions in a series
+- [ ] **HIST-02**: User can open a read-only detail view of any completed session (answers, notes, action items)
+- [ ] **HIST-03**: User can search across session notes and talking points (full-text search)
+- [ ] **HIST-04**: User can filter sessions by date range and status
+
+### Manager Dashboard
+
+- [ ] **DASH-01**: Dashboard shows upcoming sessions for the next 7 days (report name, date, template, agenda readiness)
+- [ ] **DASH-02**: Dashboard shows overdue action items grouped by report with days overdue
+- [ ] **DASH-03**: Dashboard shows quick stats: total reports, sessions this month, average session score
+- [ ] **DASH-04**: Dashboard shows last 5 completed sessions with scores
+- [ ] **DASH-05**: "Start session" quick action button for today's scheduled sessions
+
+### AI Features
+
+- [ ] **AI-01**: After session completion, AI generates a concise narrative summary from structured answers and notes
+- [ ] **AI-02**: AI summary is stored and viewable in session history and post-session email
+- [ ] **AI-03**: Before a session, AI generates 2-3 specific follow-up suggestions based on previous session answers ("Last time Alex mentioned burnout — follow up?")
+- [ ] **AI-04**: Pre-session nudges appear on the dashboard and in the pre-session state
+- [ ] **AI-05**: After session completion, AI suggests 1-3 action items based on session answers and discussion
+- [ ] **AI-06**: Embedding infrastructure (pgvector) stores session embeddings for context retrieval and profile building
+- [ ] **AI-07**: AI features use Vercel AI SDK v6 with provider-agnostic model routing (cost-optimized per task)
+- [ ] **AI-08**: AI pipelines run as durable Inngest background functions with automatic retry
+
+### Analytics
+
+- [ ] **ANLT-01**: Line chart showing individual session scores over time per report
+- [ ] **ANLT-02**: Bar chart showing per-category average scores (wellbeing, engagement, performance, career)
+- [ ] **ANLT-03**: Session-over-session comparison showing how each category score changed
+- [ ] **ANLT-04**: Team analytics with aggregated scores across all reports (anonymized option)
+- [ ] **ANLT-05**: Heatmap displaying team × question category matrix with color-coded scores
+- [ ] **ANLT-06**: Action item velocity chart (average time from creation to completion)
+- [ ] **ANLT-07**: Meeting adherence chart (% of scheduled sessions completed per month)
+- [ ] **ANLT-08**: Analytics powered by pre-computed ANALYTICS_SNAPSHOT table (Inngest background job)
+- [ ] **ANLT-09**: User can export session data as CSV
+
+### Email Notifications
+
+- [ ] **NOTF-01**: Invite email sent when admin invites a user to the organization
+- [ ] **NOTF-02**: Pre-meeting reminder email sent configurable hours before session (default: 24h)
+- [ ] **NOTF-03**: Post-session summary email sent to both parties with answers, notes, action items, and AI summary
+- [ ] **NOTF-04**: Agenda prep reminder email ("Add your talking points") sent 48h before meeting
+
+### Infrastructure
+
+- [ ] **INFR-01**: Application runs in Docker Compose locally on port 4300, accessible on local network
+- [ ] **INFR-02**: Blue-green style local deployment — stable test environment always running while developing next version
+- [ ] **INFR-03**: Application is deployable to Vercel (serverless functions, edge runtime)
+- [ ] **INFR-04**: Bun is the package manager for all dependency management
+- [ ] **INFR-05**: Dark mode support via Tailwind CSS dark: variants
+
+### Security
+
+- [ ] **SEC-01**: Private notes encrypted at rest with AES-256-GCM, per-tenant keys derived via HKDF
+- [ ] **SEC-02**: Encryption key versioning for rotation support
+- [ ] **SEC-03**: RBAC enforced at API route level — members see only their sessions, managers see their reports, admins see organization-wide
+- [ ] **SEC-04**: Resource-level authorization checks beyond role (verify user is manager/report on specific series)
+- [ ] **SEC-05**: Tenant ID always derived from authenticated session, never from request parameters
+- [ ] **SEC-06**: Audit log records significant events (invites, deactivations, data exports, settings changes)
+
+## v2 Requirements
+
+Deferred to future release. Tracked but not in current roadmap.
+
+### Calendar Integration
+
+- **CAL-01**: Google Calendar read-only sync (display upcoming 1:1s, deep link to wizard)
+- **CAL-02**: Google Calendar read/write (auto-create calendar events for scheduled sessions)
+- **CAL-03**: Outlook/O365 calendar sync
+
+### Advanced AI
+
+- **AI-V2-01**: Live AI suggestions during active sessions (streaming, low latency)
+- **AI-V2-02**: AI personal profiles built from accumulated session data
+- **AI-V2-03**: AI-generated growth narratives ("Over Q1, Alex improved communication by 23%...")
+- **AI-V2-04**: AI anomaly detection with proactive alerts ("Maria's wellbeing dropped 40% in 2 sessions")
+
+### Additional Features
+
+- **MISC-01**: Magic link passwordless login
+- **MISC-02**: Overdue action item email notifications
+- **MISC-03**: Slack/Teams integration (reminders, nudges, quick action item updates)
+- **MISC-04**: PDF export with organization branding for performance reviews
+- **MISC-05**: SSO (SAML 2.0, OIDC) for enterprise organizations
+- **MISC-06**: System template library (pre-built questionnaires for common scenarios)
+
+## Out of Scope
+
+Explicitly excluded. Documented to prevent scope creep.
+
+| Feature | Reason |
+|---------|--------|
+| Real-time video/audio | Competing with Zoom/Teams is suicidal. Run wizard alongside video call. |
+| AI meeting transcription | Structured questionnaire approach IS the alternative. Transcripts produce noisy data. |
+| Full HRIS integration | HRIS integrations are a swamp. CSV import for bulk users suffices. |
+| Anonymous peer feedback / 360 | Poisons the 1:1 trust relationship. Separate product category. |
+| OKR / goal tracking | Separate product category. Reference goals as free text in notes. |
+| Gamification (badges, leaderboards) | Trivializes professional conversations. Use subtle progress indicators instead. |
+| Slack bot replacing session wizard | Chat answers produce lower-quality responses than the focused wizard UX. |
+| Manager scoring / ranking | Creates perverse incentives. Show managers their own trends privately. |
+| Mobile native app | Web responsive is sufficient for v1. Native if mobile demand is proven. |
+| Multi-language (i18n) | English-only until international expansion. |
+
+## Traceability
+
+Which phases cover which requirements. Updated during roadmap creation.
+
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| (Populated by roadmapper) | | |
+
+**Coverage:**
+- v1 requirements: 79 total
+- Mapped to phases: 0
+- Unmapped: 79
+
+---
+*Requirements defined: 2026-03-03*
+*Last updated: 2026-03-03 after initial definition*

@@ -200,13 +200,111 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| (Populated by roadmapper) | | |
+| AUTH-01 | Phase 2 | Pending |
+| AUTH-02 | Phase 2 | Pending |
+| AUTH-03 | Phase 2 | Pending |
+| AUTH-04 | Phase 2 | Pending |
+| AUTH-05 | Phase 2 | Pending |
+| AUTH-06 | Phase 2 | Pending |
+| AUTH-07 | Phase 2 | Pending |
+| ORG-01 | Phase 2 | Pending |
+| ORG-02 | Phase 1 | Pending |
+| ORG-03 | Phase 1 | Pending |
+| ORG-04 | Phase 2 | Pending |
+| ORG-05 | Phase 2 | Pending |
+| USER-01 | Phase 3 | Pending |
+| USER-02 | Phase 3 | Pending |
+| USER-03 | Phase 3 | Pending |
+| USER-04 | Phase 3 | Pending |
+| USER-05 | Phase 3 | Pending |
+| USER-06 | Phase 3 | Pending |
+| TEAM-01 | Phase 3 | Pending |
+| TEAM-02 | Phase 3 | Pending |
+| TEAM-03 | Phase 3 | Pending |
+| TEAM-04 | Phase 3 | Pending |
+| TMPL-01 | Phase 4 | Pending |
+| TMPL-02 | Phase 4 | Pending |
+| TMPL-03 | Phase 4 | Pending |
+| TMPL-04 | Phase 4 | Pending |
+| TMPL-05 | Phase 4 | Pending |
+| TMPL-06 | Phase 4 | Pending |
+| TMPL-07 | Phase 4 | Pending |
+| TMPL-08 | Phase 4 | Pending |
+| TMPL-09 | Phase 4 | Pending |
+| TMPL-10 | Phase 4 | Pending |
+| MEET-01 | Phase 5 | Pending |
+| MEET-02 | Phase 5 | Pending |
+| MEET-03 | Phase 5 | Pending |
+| MEET-04 | Phase 5 | Pending |
+| MEET-05 | Phase 5 | Pending |
+| MEET-06 | Phase 5 | Pending |
+| SESS-01 | Phase 5 | Pending |
+| SESS-02 | Phase 5 | Pending |
+| SESS-03 | Phase 5 | Pending |
+| SESS-04 | Phase 5 | Pending |
+| SESS-05 | Phase 5 | Pending |
+| SESS-06 | Phase 5 | Pending |
+| SESS-07 | Phase 5 | Pending |
+| SESS-08 | Phase 5 | Pending |
+| SESS-09 | Phase 5 | Pending |
+| SESS-10 | Phase 5 | Pending |
+| SESS-11 | Phase 5 | Pending |
+| SESS-12 | Phase 5 | Pending |
+| SESS-13 | Phase 5 | Pending |
+| SESS-14 | Phase 5 | Pending |
+| SESS-15 | Phase 5 | Pending |
+| ACTN-01 | Phase 6 | Pending |
+| ACTN-02 | Phase 6 | Pending |
+| ACTN-03 | Phase 6 | Pending |
+| ACTN-04 | Phase 6 | Pending |
+| ACTN-05 | Phase 6 | Pending |
+| HIST-01 | Phase 6 | Pending |
+| HIST-02 | Phase 6 | Pending |
+| HIST-03 | Phase 6 | Pending |
+| HIST-04 | Phase 6 | Pending |
+| DASH-01 | Phase 8 | Pending |
+| DASH-02 | Phase 8 | Pending |
+| DASH-03 | Phase 8 | Pending |
+| DASH-04 | Phase 8 | Pending |
+| DASH-05 | Phase 8 | Pending |
+| AI-01 | Phase 7 | Pending |
+| AI-02 | Phase 7 | Pending |
+| AI-03 | Phase 7 | Pending |
+| AI-04 | Phase 7 | Pending |
+| AI-05 | Phase 7 | Pending |
+| AI-06 | Phase 7 | Pending |
+| AI-07 | Phase 7 | Pending |
+| AI-08 | Phase 7 | Pending |
+| ANLT-01 | Phase 8 | Pending |
+| ANLT-02 | Phase 8 | Pending |
+| ANLT-03 | Phase 8 | Pending |
+| ANLT-04 | Phase 8 | Pending |
+| ANLT-05 | Phase 8 | Pending |
+| ANLT-06 | Phase 8 | Pending |
+| ANLT-07 | Phase 8 | Pending |
+| ANLT-08 | Phase 8 | Pending |
+| ANLT-09 | Phase 8 | Pending |
+| NOTF-01 | Phase 9 | Pending |
+| NOTF-02 | Phase 9 | Pending |
+| NOTF-03 | Phase 9 | Pending |
+| NOTF-04 | Phase 9 | Pending |
+| INFR-01 | Phase 1 | Pending |
+| INFR-02 | Phase 1 | Pending |
+| INFR-03 | Phase 1 | Pending |
+| INFR-04 | Phase 1 | Pending |
+| INFR-05 | Phase 10 | Pending |
+| SEC-01 | Phase 1 | Pending |
+| SEC-02 | Phase 1 | Pending |
+| SEC-03 | Phase 3 | Pending |
+| SEC-04 | Phase 3 | Pending |
+| SEC-05 | Phase 1 | Pending |
+| SEC-06 | Phase 3 | Pending |
 
 **Coverage:**
-- v1 requirements: 79 total
-- Mapped to phases: 0
-- Unmapped: 79
+- v1 requirements: 99 total
+- Mapped to phases: 99
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-03*
-*Last updated: 2026-03-03 after initial definition*
+*Last updated: 2026-03-03 after roadmap creation*

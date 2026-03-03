@@ -57,6 +57,7 @@ const config = {
           name: `${user.firstName} ${user.lastName}`,
           tenantId: user.tenantId,
           role: user.role,
+          emailVerified: user.emailVerified,
         };
       },
     }),
@@ -86,6 +87,7 @@ const config = {
         token.tenantId = user.tenantId;
         token.role = user.role;
         token.userId = user.id!;
+        token.emailVerified = user.emailVerified ?? null;
       }
       return token;
     },
@@ -93,6 +95,7 @@ const config = {
       session.user.id = token.userId;
       session.user.tenantId = token.tenantId;
       session.user.role = token.role;
+      session.user.emailVerified = token.emailVerified;
       return session;
     },
   },

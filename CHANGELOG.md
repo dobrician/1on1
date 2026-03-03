@@ -7,6 +7,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## [Unreleased]
 
 ### Added
+- Route protection via `proxy.ts` (Next.js 16 convention) -- unauthenticated users redirect to `/login`, authenticated users redirect away from auth pages to `/overview`
+- Dashboard layout with `SessionProvider` and server-side session validation (defense-in-depth against CVE-2025-29927)
+- Overview page with user info (name, email, role, organization) and email verification banner
+- Logout button client component using `signOut()` from `next-auth/react`
+- Root page (`/`) redirects to `/overview`
+- `emailVerified` field added to JWT token and session for verification status display
 - Auth.js v5 (next-auth@beta) with Credentials provider, Google OAuth, and Microsoft Entra ID
 - Drizzle adapter integration with custom user table mapping (`@auth/drizzle-adapter`)
 - JWT session strategy with `tenantId`, `role`, and `userId` on session token

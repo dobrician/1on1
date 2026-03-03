@@ -136,10 +136,10 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Infrastructure
 
-- [ ] **INFR-01**: Application runs in Docker Compose locally on port 4300, accessible on local network
-- [ ] **INFR-02**: Blue-green style local deployment — stable test environment always running while developing next version
+- [x] **INFR-01**: Application runs in Docker Compose locally on port 4300, accessible on local network
+- [x] **INFR-02**: Blue-green style local deployment — stable test environment always running while developing next version
 - [ ] **INFR-03**: Application is deployable to Vercel (serverless functions, edge runtime)
-- [ ] **INFR-04**: Bun is the package manager for all dependency management
+- [x] **INFR-04**: Bun is the package manager for all dependency management
 - [ ] **INFR-05**: Dark mode support via Tailwind CSS dark: variants
 
 ### Security
@@ -288,10 +288,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | NOTF-02 | Phase 9 | Pending |
 | NOTF-03 | Phase 9 | Pending |
 | NOTF-04 | Phase 9 | Pending |
-| INFR-01 | Phase 1 | Pending |
-| INFR-02 | Phase 1 | Pending |
+| INFR-01 | Phase 1 | Complete |
+| INFR-02 | Phase 1 | Complete |
 | INFR-03 | Phase 1 | Pending |
-| INFR-04 | Phase 1 | Pending |
+| INFR-04 | Phase 1 | Complete |
 | INFR-05 | Phase 10 | Pending |
 | SEC-01 | Phase 1 | Pending |
 | SEC-02 | Phase 1 | Pending |

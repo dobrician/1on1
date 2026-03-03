@@ -38,7 +38,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 3 plans in 3 waves (sequential -- each layer builds on the previous)
 
 Plans:
-- [ ] 01-01-PLAN.md -- Project scaffolding with Bun, Docker Compose blue-green setup (Wave 1)
+- [x] 01-01-PLAN.md -- Project scaffolding with Bun, Docker Compose blue-green setup (Wave 1)
 - [ ] 01-02-PLAN.md -- Complete Drizzle schema, RLS policies, tenant context wrapper (Wave 2)
 - [ ] 01-03-PLAN.md -- Encryption infrastructure, seed data, Vercel deployment (Wave 3)
 
@@ -206,7 +206,7 @@ Note: Phases 6, 7, and 9 all depend only on Phase 5 and can execute in parallel.
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Infrastructure | 0/3 | Not started | - |
+| 1. Foundation & Infrastructure | 1/3 | In progress | - |
 | 2. Authentication & Organization | 0/3 | Not started | - |
 | 3. User & Team Management | 0/4 | Not started | - |
 | 4. Questionnaire Templates | 0/3 | Not started | - |

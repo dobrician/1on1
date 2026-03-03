@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Fast wiki push: copies docs/wiki/*.md to the GitHub wiki repo and pushes changes.
-# Used by Claude Code hooks to keep the wiki in sync as sprint progress is updated.
+# Fast wiki push: mirrors docs/wiki/*.md to the GitHub wiki repo and pushes changes.
+# Removes wiki pages that no longer exist in docs/wiki/ (e.g., deleted sprint files).
 #
 # Usage: ./scripts/push-wiki.sh
 
@@ -16,6 +16,14 @@ trap cleanup EXIT
 
 git clone --quiet --depth 1 "$WIKI_URL" "$TMP_DIR/wiki" 2>/dev/null
 
+# Remove wiki .md files that no longer exist in source (mirror deletions)
+for f in "$TMP_DIR/wiki/"*.md; do
+    base="$(basename "$f")"
+    if [ ! -f "$WIKI_DIR/$base" ]; then
+        rm "$f"
+    fi
+done
+
 cp "$WIKI_DIR"/*.md "$TMP_DIR/wiki/"
 
 cd "$TMP_DIR/wiki"
@@ -26,6 +34,6 @@ if git diff --cached --quiet; then
     exit 0
 fi
 
-git commit --quiet -m "Update sprint progress ($(date -u +%Y-%m-%dT%H:%M:%SZ))"
+git commit --quiet -m "Update wiki ($(date -u +%Y-%m-%dT%H:%M:%SZ))"
 git push --quiet
 echo "wiki: pushed updates"

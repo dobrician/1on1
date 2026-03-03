@@ -3,29 +3,31 @@
 **Duration**: 2 weeks
 **Dependencies**: Sprint 07
 
+**Status**: Not Started
+
 ## Goals
 
 Build the core session wizard: session state machine, step-by-step question flow grouped by category, all 6 answer input widgets, progress indicator, navigation, auto-save, and session score computation.
 
 ## Deliverables
 
-1. **Session state machine**: scheduled → in_progress (on start) → completed (on confirm) / cancelled / missed
-2. **Session wizard page** (`/sessions/[id]`):
+- [ ] **Session state machine**: scheduled → in_progress (on start) → completed (on confirm) / cancelled / missed
+- [ ] **Session wizard page** (`/sessions/[id]`):
    - Category-grouped steps (all questions in one category = one step)
    - Progress indicator (dots + step label)
    - Navigation: Previous / Next buttons + direct step jump
-3. **Answer input widgets** (6 types):
+- [ ] **Answer input widgets** (6 types):
    - `text`: multi-line textarea, expandable
    - `rating_1_5`: 5 clickable circles with labels on select
    - `rating_1_10`: 10 numbered buttons or slider with endpoint labels
    - `yes_no`: two large Yes/No buttons
    - `multiple_choice`: radio buttons (single) or checkboxes (multi)
    - `mood`: 5 emoji buttons with highlight ring
-4. **Auto-save**: debounced 500ms save on every answer change via API
-5. **Session score computation**: calculated on completion from all numeric answers (normalized to 1-5)
-6. **Start session action**: transitions from scheduled → in_progress, records `started_at`
-7. **Complete session action**: transitions to completed, records `completed_at`, computes `duration_minutes` and `session_score`
-8. **API routes**: `PUT /api/sessions/[id]/start`, `PUT /api/sessions/[id]/complete`, `POST /api/sessions/[id]/answers`
+- [ ] **Auto-save**: debounced 500ms save on every answer change via API
+- [ ] **Session score computation**: calculated on completion from all numeric answers (normalized to 1-5)
+- [ ] **Start session action**: transitions from scheduled → in_progress, records `started_at`
+- [ ] **Complete session action**: transitions to completed, records `completed_at`, computes `duration_minutes` and `session_score`
+- [ ] **API routes**: `PUT /api/sessions/[id]/start`, `PUT /api/sessions/[id]/complete`, `POST /api/sessions/[id]/answers`
 
 ## Acceptance Criteria
 

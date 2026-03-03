@@ -3,23 +3,25 @@
 **Duration**: 2 weeks
 **Dependencies**: Sprint 02
 
+**Status**: Not Started
+
 ## Goals
 
 Implement all authentication flows (email+password, magic link, Google OAuth, Microsoft OAuth), company registration with the 3-step setup wizard, and route protection middleware.
 
 ## Deliverables
 
-1. **Auth.js v5 full configuration**: providers (Credentials, Email/Magic Link, Google, Microsoft), session strategy, callbacks
-2. **Login page**: email+password form, OAuth buttons (Google, Microsoft), "Forgot password" link
-3. **Registration page**: company name, admin email, password → creates TENANT + first USER (admin role)
-4. **Setup wizard** (3-step post-registration):
+- [ ] **Auth.js v5 full configuration**: providers (Credentials, Email/Magic Link, Google, Microsoft), session strategy, callbacks
+- [ ] **Login page**: email+password form, OAuth buttons (Google, Microsoft), "Forgot password" link
+- [ ] **Registration page**: company name, admin email, password → creates TENANT + first USER (admin role)
+- [ ] **Setup wizard** (3-step post-registration):
    - Step 1: Company profile (name, timezone, logo upload)
    - Step 2: Invite team (email list + role assignment, skippable)
    - Step 3: Create first template (use system template or skip)
-5. **Forgot password flow**: request form → magic link email → reset password page
-6. **Middleware**: route protection redirecting unauthenticated users to `/login`, public routes allowlist
-7. **Session management**: HTTP-only cookies, JWT token generation, session expiry
-8. **Zod schemas**: registration, login, password reset validation
+- [ ] **Forgot password flow**: request form → magic link email → reset password page
+- [ ] **Middleware**: route protection redirecting unauthenticated users to `/login`, public routes allowlist
+- [ ] **Session management**: HTTP-only cookies, JWT token generation, session expiry
+- [ ] **Zod schemas**: registration, login, password reset validation
 
 ## Acceptance Criteria
 

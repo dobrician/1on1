@@ -3,22 +3,24 @@
 **Duration**: 2 weeks
 **Dependencies**: All previous sprints (01-14)
 
+**Status**: Not Started
+
 ## Goals
 
 Final polish pass: responsive design, dark mode, accessibility audit, security hardening (headers, rate limiting, CSP), end-to-end testing of critical flows, performance optimization, and production deployment preparation.
 
 ## Deliverables
 
-1. **Responsive design**:
+- [ ] **Responsive design**:
    - Desktop (>1200px): full sidebar + main content + context panel
    - Tablet (768-1200px): collapsible sidebar, context panel as bottom sheet/tab
    - Mobile (<768px): bottom navigation bar, full-screen wizard with swipeable steps
-2. **Dark mode**:
+- [ ] **Dark mode**:
    - Tailwind `dark:` variants on all components
    - System detection as default, localStorage preference override
    - Theme toggle in user menu
    - Company branding primary color adapts to both themes
-3. **Accessibility audit (WCAG AA)**:
+- [ ] **Accessibility audit (WCAG AA)**:
    - All interactive elements keyboard navigable
    - ARIA labels on all form controls
    - Focus indicators on all focusable elements
@@ -26,23 +28,23 @@ Final polish pass: responsive design, dark mode, accessibility audit, security h
    - Rating scales keyboard-operable (arrow keys)
    - 4.5:1 minimum contrast ratio
    - Screen reader announcements for wizard step changes
-4. **Security hardening**:
+- [ ] **Security hardening**:
    - Security headers (CSP, X-Frame-Options, etc.)
    - Rate limiting on all endpoint groups
    - CSRF verification on all mutations
    - Input sanitization audit
-5. **End-to-end testing** of critical paths:
+- [ ] **End-to-end testing** of critical paths:
    - Company registration → setup wizard → dashboard
    - Invite user → accept → login
    - Create template → create series → start session → complete session
    - Create action item → complete action item
    - Analytics data visible after sessions
-6. **Performance optimization**:
+- [ ] **Performance optimization**:
    - Server Component data fetching (no unnecessary client fetches)
    - TanStack Query cache tuning
    - Image optimization (Next.js Image component for avatars/logos)
    - Bundle analysis and code splitting review
-7. **Production deployment prep**:
+- [ ] **Production deployment prep**:
    - Environment variables documentation finalized
    - Database migration strategy for production
    - Vercel deployment configuration

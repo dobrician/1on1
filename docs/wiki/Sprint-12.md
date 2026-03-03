@@ -4,32 +4,34 @@
 **Dependencies**: Sprint 09
 **Parallelizable with**: Sprint 11
 
+**Status**: Not Started
+
 ## Goals
 
 Implement session history with timeline view per series, read-only session detail for completed sessions, full-text search across notes and talking points, and filtering capabilities.
 
 ## Deliverables
 
-1. **Sessions list page** (`/sessions`):
+- [ ] **Sessions list page** (`/sessions`):
    - All sessions: upcoming (scheduled, in_progress) and past (completed, cancelled, missed)
    - Filters: date range, status, report name
    - Sort: by date (default: upcoming first, then recent past)
-2. **Timeline view per series** (`/series/[id]` sessions tab):
+- [ ] **Timeline view per series** (`/series/[id]` sessions tab):
    - Chronological list of all sessions in a series
    - Visual indicators: completed (green), cancelled (grey), missed (red), scheduled (blue)
    - Session score shown for completed sessions
-3. **Session detail (read-only)** for completed sessions:
+- [ ] **Session detail (read-only)** for completed sessions:
    - All answers displayed with their question text
    - Shared notes
    - Action items created in that session
    - Talking points with discussed/undiscussed status
    - Session metadata: date, duration, score
-4. **Full-text search**:
+- [ ] **Full-text search**:
    - Search across shared notes, talking points, and answer text
    - Results link to the relevant session
    - Scoped to tenant (RLS enforced)
-5. **People profile sessions tab**: show session history for a specific user
-6. **API routes**: `GET /api/sessions` (list with filters), `GET /api/sessions/search?q=...`
+- [ ] **People profile sessions tab**: show session history for a specific user
+- [ ] **API routes**: `GET /api/sessions` (list with filters), `GET /api/sessions/search?q=...`
 
 ## Acceptance Criteria
 

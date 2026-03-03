@@ -3,27 +3,29 @@
 **Duration**: 2 weeks
 **Dependencies**: Sprint 03
 
+**Status**: Not Started
+
 ## Goals
 
 Implement the full user invite flow, user profiles with CRUD, role management, org chart via manager_id, and user deactivation.
 
 ## Deliverables
 
-1. **Invite flow**:
+- [ ] **Invite flow**:
    - Admin form: email, first name, last name, role, manager (optional)
    - System sends invite email with magic link token
    - Accept invite page: set password, upload avatar
    - Token validation and expiry (72 hours)
-2. **User profile pages**:
+- [ ] **User profile pages**:
    - Profile view: name, email, job title, avatar, role, manager, team memberships
    - Edit own profile: name, job title, avatar, notification preferences
-3. **Admin user management**:
+- [ ] **Admin user management**:
    - User list with search, filter by role, filter by active/inactive
    - Edit user: change role, change manager
    - Deactivate user (soft-delete, preserves history)
    - Reactivate user
-4. **API routes**: `POST /api/users/invite`, `GET/PUT /api/users/[id]`, `PUT /api/users/[id]/deactivate`
-5. **Zod schemas**: user creation, profile update, invite validation
+- [ ] **API routes**: `POST /api/users/invite`, `GET/PUT /api/users/[id]`, `PUT /api/users/[id]/deactivate`
+- [ ] **Zod schemas**: user creation, profile update, invite validation
 
 ## Acceptance Criteria
 

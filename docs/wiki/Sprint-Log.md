@@ -8,23 +8,23 @@ Implementation plan for the 1on1 MVP (v1), broken into 15 two-week sprints. Each
 
 ## Sprint Summary
 
-| Sprint | Name | Focus | Dependencies |
-|--------|------|-------|-------------|
-| [[Sprint-01]] | Bootstrap & Infrastructure | Next.js project setup, tooling, CI | None |
-| [[Sprint-02]] | Database Schema & RLS | All Drizzle schemas, RLS policies, migrations | Sprint 01 |
-| [[Sprint-03]] | Auth & Company Onboarding | Registration, login, OAuth, setup wizard | Sprint 02 |
-| [[Sprint-04]] | User Management & Invites | Invite flow, profiles, roles, org chart | Sprint 03 |
-| [[Sprint-05]] | Team Management | Team CRUD, membership, people directory | Sprint 04 |
-| [[Sprint-06]] | Template Builder | Template CRUD, 6 answer types, drag-and-drop | Sprint 04 |
-| [[Sprint-07]] | Meeting Series & Scheduling | Series CRUD, cadence, auto-scheduling | Sprint 05, 06 |
-| [[Sprint-08]] | Session Wizard — Core | Session state machine, question flow, answer widgets, auto-save | Sprint 07 |
-| [[Sprint-09]] | Session Wizard — Context & Notes | Context panel, shared/private notes, talking points, summary | Sprint 08 |
-| [[Sprint-10]] | Action Items | Action item CRUD, status tracking, list view | Sprint 09 |
-| [[Sprint-11]] | Manager Dashboard | Dashboard widgets, upcoming sessions, overdue items, stats | Sprint 10 |
-| [[Sprint-12]] | Session History & Search | Timeline view, detail view, full-text search, filters | Sprint 09 |
-| [[Sprint-13]] | Basic Analytics | Score trends, category charts, snapshots, CSV export | Sprint 12 |
-| [[Sprint-14]] | Email Notifications | Resend setup, email templates, Inngest reminder jobs | Sprint 10 |
-| [[Sprint-15]] | Polish & Launch Prep | Responsive design, dark mode, accessibility, security hardening, testing | Sprint 01-14 |
+| Sprint | Name | Focus | Status | Dependencies |
+|--------|------|-------|--------|-------------|
+| [[Sprint-01]] | Bootstrap & Infrastructure | Next.js project setup, tooling, CI | Not Started | None |
+| [[Sprint-02]] | Database Schema & RLS | All Drizzle schemas, RLS policies, migrations | Not Started | Sprint 01 |
+| [[Sprint-03]] | Auth & Company Onboarding | Registration, login, OAuth, setup wizard | Not Started | Sprint 02 |
+| [[Sprint-04]] | User Management & Invites | Invite flow, profiles, roles, org chart | Not Started | Sprint 03 |
+| [[Sprint-05]] | Team Management | Team CRUD, membership, people directory | Not Started | Sprint 04 |
+| [[Sprint-06]] | Template Builder | Template CRUD, 6 answer types, drag-and-drop | Not Started | Sprint 04 |
+| [[Sprint-07]] | Meeting Series & Scheduling | Series CRUD, cadence, auto-scheduling | Not Started | Sprint 05, 06 |
+| [[Sprint-08]] | Session Wizard — Core | Session state machine, question flow, answer widgets, auto-save | Not Started | Sprint 07 |
+| [[Sprint-09]] | Session Wizard — Context & Notes | Context panel, shared/private notes, talking points, summary | Not Started | Sprint 08 |
+| [[Sprint-10]] | Action Items | Action item CRUD, status tracking, list view | Not Started | Sprint 09 |
+| [[Sprint-11]] | Manager Dashboard | Dashboard widgets, upcoming sessions, overdue items, stats | Not Started | Sprint 10 |
+| [[Sprint-12]] | Session History & Search | Timeline view, detail view, full-text search, filters | Not Started | Sprint 09 |
+| [[Sprint-13]] | Basic Analytics | Score trends, category charts, snapshots, CSV export | Not Started | Sprint 12 |
+| [[Sprint-14]] | Email Notifications | Resend setup, email templates, Inngest reminder jobs | Not Started | Sprint 10 |
+| [[Sprint-15]] | Polish & Launch Prep | Responsive design, dark mode, accessibility, security hardening, testing | Not Started | Sprint 01-14 |
 
 ## Dependency Graph
 

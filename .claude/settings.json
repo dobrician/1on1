@@ -1,0 +1,26 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/home/dc/work/1on1/scripts/push-wiki-hook.sh",
+            "statusMessage": "Syncing wiki..."
+          }
+        ]
+      },
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/home/dc/work/1on1/scripts/push-wiki-hook.sh",
+            "statusMessage": "Syncing wiki..."
+          }
+        ]
+      }
+    ]
+  }
+}

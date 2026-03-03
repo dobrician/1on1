@@ -3,14 +3,16 @@
 **Duration**: 2 weeks
 **Dependencies**: Sprint 05, Sprint 06
 
+**Status**: Not Started
+
 ## Goals
 
 Implement meeting series management: create 1:1 relationships between managers and reports, configure cadence and templates, auto-generate next session dates, and manage series lifecycle.
 
 ## Deliverables
 
-1. **Series list page**: all 1:1 relationships showing manager, report, cadence, next session, status
-2. **Create series form**:
+- [ ] **Series list page**: all 1:1 relationships showing manager, report, cadence, next session, status
+- [ ] **Create series form**:
    - Manager selector (search users with manager role)
    - Report selector (search users)
    - Cadence: weekly, biweekly, monthly, custom (N days)
@@ -18,12 +20,12 @@ Implement meeting series management: create 1:1 relationships between managers a
    - Preferred day and time
    - Default template selector (from published templates)
    - First session date picker
-3. **Series detail page**: series info, session history list, edit settings
-4. **Series lifecycle**: active → paused → archived transitions
-5. **Auto-scheduling**: compute `next_session_at` based on cadence after session completion
-6. **First session creation**: creating a series automatically creates the first SESSION record with status "scheduled"
-7. **API routes**: `GET/POST /api/series`, `GET/PUT /api/series/[id]`, `PUT /api/series/[id]/pause`, `PUT /api/series/[id]/archive`
-8. **Quick action from people page**: "Start 1:1 Series" button on user profile
+- [ ] **Series detail page**: series info, session history list, edit settings
+- [ ] **Series lifecycle**: active → paused → archived transitions
+- [ ] **Auto-scheduling**: compute `next_session_at` based on cadence after session completion
+- [ ] **First session creation**: creating a series automatically creates the first SESSION record with status "scheduled"
+- [ ] **API routes**: `GET/POST /api/series`, `GET/PUT /api/series/[id]`, `PUT /api/series/[id]/pause`, `PUT /api/series/[id]/archive`
+- [ ] **Quick action from people page**: "Start 1:1 Series" button on user profile
 
 ## Acceptance Criteria
 

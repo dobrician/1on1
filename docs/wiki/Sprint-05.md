@@ -4,26 +4,28 @@
 **Dependencies**: Sprint 04
 **Parallelizable with**: Sprint 06
 
+**Status**: Not Started
+
 ## Goals
 
 Implement team CRUD, team membership management, team roles, and update the people directory to show team affiliations.
 
 ## Deliverables
 
-1. **Team list page**: all teams with member count, manager name
-2. **Team detail page**: team info, member list, add/remove members
-3. **Team CRUD**:
+- [ ] **Team list page**: all teams with member count, manager name
+- [ ] **Team detail page**: team info, member list, add/remove members
+- [ ] **Team CRUD**:
    - Create team: name, description, manager
    - Edit team: name, description, change manager
    - Delete team (only if no active series reference it)
-4. **Membership management**:
+- [ ] **Membership management**:
    - Add members to team (search by name/email)
    - Remove members from team
    - Set team role (lead/member)
    - One user can belong to multiple teams
-5. **People directory enhancement**: show team badges on user cards
-6. **API routes**: `GET/POST /api/teams`, `GET/PUT/DELETE /api/teams/[id]`, `POST/DELETE /api/teams/[id]/members`
-7. **Zod schemas**: team creation, team update, membership management
+- [ ] **People directory enhancement**: show team badges on user cards
+- [ ] **API routes**: `GET/POST /api/teams`, `GET/PUT/DELETE /api/teams/[id]`, `POST/DELETE /api/teams/[id]/members`
+- [ ] **Zod schemas**: team creation, team update, membership management
 
 ## Acceptance Criteria
 

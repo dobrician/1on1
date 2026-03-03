@@ -4,31 +4,33 @@
 **Dependencies**: Sprint 10
 **Parallelizable with**: Sprint 12
 
+**Status**: Not Started
+
 ## Goals
 
 Build the manager dashboard (overview/home page) with upcoming sessions, overdue action items, quick stats, recent sessions, and a team score trends chart.
 
 ## Deliverables
 
-1. **Upcoming sessions widget** (next 7 days):
+- [ ] **Upcoming sessions widget** (next 7 days):
    - Cards showing: report name, date/time, template name, agenda readiness
    - Status indicators: green (prepared), yellow (not prepared), red (overdue/missed)
    - [Start] button for today's sessions, [Prepare] for future sessions
-2. **Overdue action items widget**:
+- [ ] **Overdue action items widget**:
    - Grouped by report
    - Shows: item title, due date, days overdue
-3. **Quick stats cards**:
+- [ ] **Quick stats cards**:
    - Total reports count
    - Sessions this month count
    - Average session score
    - Open action items count
-4. **Recent sessions list**: last 5 completed sessions with report name, date, score
-5. **Team score trends chart**:
+- [ ] **Recent sessions list**: last 5 completed sessions with report name, date, score
+- [ ] **Team score trends chart**:
    - Line chart (Recharts) showing last 8 weeks
    - One line per direct report
    - Hover tooltips with exact values
-6. **Member dashboard variant**: simpler view for non-manager users showing their upcoming sessions and action items
-7. **Dashboard API**: `GET /api/dashboard` returning all widget data in one request
+- [ ] **Member dashboard variant**: simpler view for non-manager users showing their upcoming sessions and action items
+- [ ] **Dashboard API**: `GET /api/dashboard` returning all widget data in one request
 
 ## Acceptance Criteria
 

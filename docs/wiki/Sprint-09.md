@@ -3,38 +3,40 @@
 **Duration**: 2 weeks
 **Dependencies**: Sprint 08
 
+**Status**: Not Started
+
 ## Goals
 
 Complete the session wizard with the context panel (past sessions, action items, score trends), shared and private notes, talking points, and the post-session summary view.
 
 ## Deliverables
 
-1. **Context panel** (right sidebar during wizard):
+- [ ] **Context panel** (right sidebar during wizard):
    - Past 3 sessions: score, mood, notes excerpt (collapsible cards)
    - Open action items from past sessions with overdue indicators
    - Score trend sparkline (last 6 sessions)
-2. **Shared notes**:
+- [ ] **Shared notes**:
    - Rich text editor visible on every wizard step
    - Both manager and report can edit
    - Auto-save with debounce
-3. **Private notes**:
+- [ ] **Private notes**:
    - Separate text area with visual indicator (different background color)
    - Toggle between shared and private modes
    - Encrypted at rest (AES-256-GCM via tenant key)
    - Only visible to the author
-4. **Talking points**:
+- [ ] **Talking points**:
    - Pre-session: both parties can add talking points
    - During session: check off as discussed
    - Display carried-over points from previous sessions
    - Add new talking points during session
-5. **Post-session summary** (`/sessions/[id]/summary`):
+- [ ] **Post-session summary** (`/sessions/[id]/summary`):
    - All answers grouped by category
    - Shared notes
    - Action items (new + open from past)
    - Talking points (discussed + undiscussed)
    - Duration, session score
    - [Complete] and [Send Summary Email] buttons
-6. **API routes**: `POST/GET /api/sessions/[id]/notes`, `POST/GET/PUT /api/sessions/[id]/talking-points`, `GET /api/sessions/[id]/context`
+- [ ] **API routes**: `POST/GET /api/sessions/[id]/notes`, `POST/GET/PUT /api/sessions/[id]/talking-points`, `GET /api/sessions/[id]/context`
 
 ## Acceptance Criteria
 

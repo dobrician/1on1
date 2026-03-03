@@ -3,28 +3,30 @@
 **Duration**: 2 weeks
 **Dependencies**: Sprint 09
 
+**Status**: Not Started
+
 ## Goals
 
 Implement the full action item system: inline creation during sessions, status tracking workflow, assignment, due dates, dedicated list view across all series, and carry-over flagging in the context panel.
 
 ## Deliverables
 
-1. **Inline action item creation** during session wizard:
+- [ ] **Inline action item creation** during session wizard:
    - [+ Action Item] button opens quick form without leaving wizard
    - Fields: title, description (optional), assignee (manager or report), due date (optional)
    - Created item appears immediately in context panel
-2. **Action item status workflow**: open → in_progress → completed / cancelled
+- [ ] **Action item status workflow**: open → in_progress → completed / cancelled
    - Status change buttons on each action item
    - `completed_at` recorded on completion
-3. **Action item list page** (`/action-items` or section in dashboard):
+- [ ] **Action item list page** (`/action-items` or section in dashboard):
    - All open action items across all series
    - Filter by: assignee, status, due date, series
    - Sort by: due date, created date, status
    - Overdue highlighting
-4. **Action items in context panel**: open items from current and past sessions, overdue indicators
-5. **Carry-over flagging**: unfinished items from past sessions flagged with origin session indicator in current session's context
-6. **API routes**: `POST /api/sessions/[id]/action-items`, `GET /api/action-items` (list), `PUT /api/action-items/[id]` (update status)
-7. **Zod schemas**: action item creation, status update
+- [ ] **Action items in context panel**: open items from current and past sessions, overdue indicators
+- [ ] **Carry-over flagging**: unfinished items from past sessions flagged with origin session indicator in current session's context
+- [ ] **API routes**: `POST /api/sessions/[id]/action-items`, `GET /api/action-items` (list), `PUT /api/action-items/[id]` (update status)
+- [ ] **Zod schemas**: action item creation, status update
 
 ## Acceptance Criteria
 

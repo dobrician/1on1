@@ -4,29 +4,31 @@
 **Dependencies**: Sprint 10
 **Parallelizable with**: Sprint 13
 
+**Status**: Not Started
+
 ## Goals
 
 Set up Resend + React Email for transactional emails, build all MVP email templates, implement Inngest background jobs for scheduled reminders, and create the notification tracking system.
 
 ## Deliverables
 
-1. **Email infrastructure**:
+- [ ] **Email infrastructure**:
    - Resend SDK configuration
    - React Email template setup with company branding variables
    - Email sending utility (`sendEmail()`) with error handling and retry
-2. **Email templates** (React Email):
+- [ ] **Email templates** (React Email):
    - **Invite email**: welcome message with magic link, company name, inviter name
    - **Pre-meeting reminder**: session details, date/time, link to session, sent 24h before (configurable)
    - **Agenda prep reminder**: "Add your talking points", sent 48h before (configurable)
    - **Session summary**: answers recap, notes, action items, session score
    - **Overdue action item**: item title, due date, days overdue, link to item
-3. **Inngest background jobs**:
+- [ ] **Inngest background jobs**:
    - `send-reminders`: cron job checking for upcoming sessions, creates NOTIFICATION records, sends emails
    - `send-session-summary`: triggered by `session.completed` event
    - `check-overdue-actions`: daily cron checking for newly overdue action items
-4. **Notification tracking**: create NOTIFICATION records for all sent/scheduled/failed notifications
-5. **User notification preferences**: respect per-user settings (email_reminders on/off, reminder_before_hours)
-6. **Tenant notification settings**: respect tenant-level defaults (pre_meeting_reminder_hours, agenda_prep_reminder_hours)
+- [ ] **Notification tracking**: create NOTIFICATION records for all sent/scheduled/failed notifications
+- [ ] **User notification preferences**: respect per-user settings (email_reminders on/off, reminder_before_hours)
+- [ ] **Tenant notification settings**: respect tenant-level defaults (pre_meeting_reminder_hours, agenda_prep_reminder_hours)
 
 ## Acceptance Criteria
 

@@ -3,19 +3,21 @@
 **Duration**: 2 weeks
 **Dependencies**: Sprint 01
 
+**Status**: Not Started
+
 ## Goals
 
 Define all Drizzle ORM table schemas, create PostgreSQL migrations, implement Row-Level Security policies, build the tenant context middleware, and create seed data for development.
 
 ## Deliverables
 
-1. **All Drizzle schema files**: tenants, users, teams, team_members, questionnaire_templates, template_questions, meeting_series, sessions, session_answers, private_notes, talking_points, action_items, notifications, analytics_snapshots
-2. **PostgreSQL enums**: all enum types defined (plan, user_role, team_role, template_category, answer_type, question_category, cadence, series_status, session_status, action_status, notification_type, notification_channel, notification_status, period_type, conditional_operator)
-3. **Indexes**: all indexes as specified in the data model
-4. **RLS policies**: tenant isolation on every tenant-scoped table, author-only policy on private_notes
-5. **Tenant context middleware**: `withTenantContext()` function that sets `app.current_tenant_id` and `app.current_user_id` via `SET LOCAL`
-6. **Migration files**: generated and tested
-7. **Seed script**: creates a demo tenant, 5 users (1 admin, 2 managers, 2 members), 2 teams, 1 template with questions
+- [ ] **All Drizzle schema files**: tenants, users, teams, team_members, questionnaire_templates, template_questions, meeting_series, sessions, session_answers, private_notes, talking_points, action_items, notifications, analytics_snapshots
+- [ ] **PostgreSQL enums**: all enum types defined (plan, user_role, team_role, template_category, answer_type, question_category, cadence, series_status, session_status, action_status, notification_type, notification_channel, notification_status, period_type, conditional_operator)
+- [ ] **Indexes**: all indexes as specified in the data model
+- [ ] **RLS policies**: tenant isolation on every tenant-scoped table, author-only policy on private_notes
+- [ ] **Tenant context middleware**: `withTenantContext()` function that sets `app.current_tenant_id` and `app.current_user_id` via `SET LOCAL`
+- [ ] **Migration files**: generated and tested
+- [ ] **Seed script**: creates a demo tenant, 5 users (1 admin, 2 managers, 2 members), 2 teams, 1 template with questions
 
 ## Acceptance Criteria
 

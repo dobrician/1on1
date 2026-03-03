@@ -4,30 +4,32 @@
 **Dependencies**: Sprint 04
 **Parallelizable with**: Sprint 05
 
+**Status**: Not Started
+
 ## Goals
 
 Build the template management system: template CRUD, all 6 MVP answer types with their input configuration, drag-and-drop question reordering, template versioning, and template preview.
 
 ## Deliverables
 
-1. **Template list page**: all templates with name, category, status (draft/published), question count, version
-2. **Template editor**:
+- [ ] **Template list page**: all templates with name, category, status (draft/published), question count, version
+- [ ] **Template editor**:
    - Template metadata: name, description, category, default flag
    - Question list with drag-and-drop reordering (drag handle ≡)
    - Add question button, edit/delete per question
    - Question edit dialog: text, help text, answer type picker, type-specific config, category, required toggle
-3. **6 answer type configurations**:
+- [ ] **6 answer type configurations**:
    - `text`: no config needed
    - `rating_1_5`: 5 customizable labels
    - `rating_1_10`: min/max endpoint labels
    - `yes_no`: no config needed
    - `multiple_choice`: options list + allow_multiple toggle
    - `mood`: emoji scale (fixed)
-4. **Template actions**: save draft, publish, duplicate, archive
-5. **Template versioning**: version increments on published template edit, past data preserved
-6. **Template preview**: preview mode showing wizard appearance
-7. **API routes**: `GET/POST /api/templates`, `GET/PUT/DELETE /api/templates/[id]`, `PUT /api/templates/[id]/publish`, `POST /api/templates/[id]/duplicate`
-8. **Zod schemas**: template creation, question configuration per answer type
+- [ ] **Template actions**: save draft, publish, duplicate, archive
+- [ ] **Template versioning**: version increments on published template edit, past data preserved
+- [ ] **Template preview**: preview mode showing wizard appearance
+- [ ] **API routes**: `GET/POST /api/templates`, `GET/PUT/DELETE /api/templates/[id]`, `PUT /api/templates/[id]/publish`, `POST /api/templates/[id]/duplicate`
+- [ ] **Zod schemas**: template creation, question configuration per answer type
 
 ## Acceptance Criteria
 

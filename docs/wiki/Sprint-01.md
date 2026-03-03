@@ -3,23 +3,25 @@
 **Duration**: 2 weeks
 **Dependencies**: None
 
+**Status**: Not Started
+
 ## Goals
 
 Set up the project foundation: Next.js 15, TypeScript strict mode, Tailwind CSS 4, shadcn/ui, Drizzle ORM connection, Auth.js stub, and development tooling.
 
 ## Deliverables
 
-1. **Next.js 15 project** initialized with App Router and TypeScript strict mode
-2. **Tailwind CSS 4** configured with design tokens (colors, spacing, typography)
-3. **shadcn/ui** installed with base components: Button, Card, Dialog, Form, Input, Label, Select, Textarea, Toast, Dropdown Menu, Sheet, Tabs, Badge, Avatar
-4. **Drizzle ORM** configured with PostgreSQL connection (Neon or local Docker)
-5. **Auth.js v5** stub configuration (providers configured but not wired to full flows)
-6. **TanStack Query** provider configured at app root
-7. **React Hook Form** + Zod integration confirmed working
-8. **ESLint + Prettier** configured with Next.js recommended rules
-9. **Environment configuration**: `.env.example` with all required variables
-10. **Docker Compose** for local PostgreSQL development
-11. **App shell**: root layout with placeholder sidebar and header
+- [ ] **Next.js 15 project** initialized with App Router and TypeScript strict mode
+- [ ] **Tailwind CSS 4** configured with design tokens (colors, spacing, typography)
+- [ ] **shadcn/ui** installed with base components: Button, Card, Dialog, Form, Input, Label, Select, Textarea, Toast, Dropdown Menu, Sheet, Tabs, Badge, Avatar
+- [ ] **Drizzle ORM** configured with PostgreSQL connection (Neon or local Docker)
+- [ ] **Auth.js v5** stub configuration (providers configured but not wired to full flows)
+- [ ] **TanStack Query** provider configured at app root
+- [ ] **React Hook Form** + Zod integration confirmed working
+- [ ] **ESLint + Prettier** configured with Next.js recommended rules
+- [ ] **Environment configuration**: `.env.example` with all required variables
+- [ ] **Docker Compose** for local PostgreSQL development
+- [ ] **App shell**: root layout with placeholder sidebar and header
 
 ## Acceptance Criteria
 

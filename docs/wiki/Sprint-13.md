@@ -4,28 +4,30 @@
 **Dependencies**: Sprint 12
 **Parallelizable with**: Sprint 14
 
+**Status**: Not Started
+
 ## Goals
 
 Implement the analytics page with individual score trends, category breakdown charts, session-over-session comparison, analytics snapshot computation (background job), and CSV export.
 
 ## Deliverables
 
-1. **Analytics overview page** (`/analytics`):
+- [ ] **Analytics overview page** (`/analytics`):
    - Select individual or view aggregate
    - Period selector (last 3 months, 6 months, 1 year)
-2. **Individual analytics page** (`/analytics/individual/[id]`):
+- [ ] **Individual analytics page** (`/analytics/individual/[id]`):
    - Score trend line chart (Recharts): session score over time, optional comparison with team average
    - Category breakdown: bar chart showing average per category (wellbeing, engagement, performance, career, feedback)
    - Meeting stats: sessions held, adherence %, avg duration, action items total, completion rate
    - Category detail trend: per-category line chart with session granularity
-3. **Session-over-session comparison**: show how each category score changed from the last session (arrow up/down + delta)
-4. **Analytics snapshot computation**:
+- [ ] **Session-over-session comparison**: show how each category score changed from the last session (arrow up/down + delta)
+- [ ] **Analytics snapshot computation**:
    - Inngest background job: compute weekly/monthly snapshots
    - Upsert into `analytics_snapshot` table
    - Metrics: avg_session_score, wellbeing_score, engagement_score, performance_score, career_score, meeting_adherence, action_completion_rate
-5. **CSV export**: download session data, score trends, and action items as CSV
-6. **People profile analytics tab**: show score trend + category radar for a specific user
-7. **API routes**: `GET /api/analytics/individual/[id]`, `GET /api/analytics/export/csv`
+- [ ] **CSV export**: download session data, score trends, and action items as CSV
+- [ ] **People profile analytics tab**: show score trend + category radar for a specific user
+- [ ] **API routes**: `GET /api/analytics/individual/[id]`, `GET /api/analytics/export/csv`
 
 ## Acceptance Criteria
 

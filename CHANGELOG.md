@@ -7,6 +7,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## [Unreleased]
 
 ### Added
+- Drag-and-drop question reordering in template editor using @dnd-kit with vertical axis constraint
+- GripVertical drag handle on question cards with visual drag feedback (shadow + opacity)
+- Keyboard accessibility for question reordering via KeyboardSensor
+- Optimistic reorder with server persistence and rollback on error
+- Reorder API endpoint (`PATCH /api/templates/[id]/questions/reorder`) with contiguous sort_order assignment
+- Conditional logic configuration form (`ConditionalLogicForm`) with type-aware operator filtering and adaptive value inputs
+- Conditional logic indicator on question cards showing "Shows when Q{n} {operator} {value}"
+- Server-side conditional logic validation (`validateConditionalLogic`): prevents circular references, validates operator/type compatibility
+- `operatorsForAnswerType` mapping for filtering operators by answer type (text: eq/neq only, ratings/mood: all 6 operators)
 - Template editor page (`/templates/[id]`) with full question management: add, edit, remove questions with all 6 answer types
 - New template page (`/templates/new`) for creating templates from scratch (admin/manager only)
 - Template editor component with metadata form (name, description, category), questions list, and actions toolbar

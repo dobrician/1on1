@@ -9,7 +9,6 @@ import {
   answerTypes,
 } from "@/lib/validations/template";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -21,6 +20,7 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { AnswerConfigForm } from "./answer-config-form";
+import { ConditionalLogicForm } from "./conditional-logic-form";
 import type { QuestionData } from "./template-editor";
 
 type QuestionFormValues = z.infer<typeof questionSchema>;
@@ -48,18 +48,26 @@ const categoryLabels: Record<string, string> = {
 
 interface QuestionFormProps {
   question: QuestionData | null;
+  questionIndex?: number;
+  allQuestions?: QuestionData[];
   onSave: (question: QuestionData) => void;
   onCancel: () => void;
 }
 
-export function QuestionForm({ question, onSave, onCancel }: QuestionFormProps) {
+export function QuestionForm({
+  question,
+  questionIndex,
+  allQuestions,
+  onSave,
+  onCancel,
+}: QuestionFormProps) {
   const {
     register,
     handleSubmit,
     setValue,
     watch,
     formState: { errors },
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } = useForm<QuestionFormValues>({
     resolver: zodResolver(questionSchema) as any,
     defaultValues: {
@@ -96,6 +104,31 @@ export function QuestionForm({ question, onSave, onCancel }: QuestionFormProps) 
       conditionalValue: data.conditionalValue || null,
     });
   }
+
+  // Handle conditional logic changes from the sub-form
+  function handleConditionChange(
+    condition: {
+      conditionalOnQuestionId: string | null;
+      conditionalOperator: string | null;
+      conditionalValue: string | null;
+    } | null
+  ) {
+    if (condition) {
+      setValue("conditionalOnQuestionId", condition.conditionalOnQuestionId);
+      setValue(
+        "conditionalOperator",
+        condition.conditionalOperator as QuestionFormValues["conditionalOperator"] ?? undefined
+      );
+      setValue("conditionalValue", condition.conditionalValue);
+    } else {
+      setValue("conditionalOnQuestionId", null);
+      setValue("conditionalOperator", null);
+      setValue("conditionalValue", null);
+    }
+  }
+
+  const showConditionalLogic =
+    allQuestions !== undefined && questionIndex !== undefined;
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -215,6 +248,27 @@ export function QuestionForm({ question, onSave, onCancel }: QuestionFormProps) 
           onCheckedChange={(checked) => setValue("isRequired", checked)}
         />
       </div>
+
+      {/* Conditional logic */}
+      {showConditionalLogic && (
+        <ConditionalLogicForm
+          currentQuestionIndex={questionIndex}
+          allQuestions={allQuestions}
+          initialCondition={
+            question?.conditionalOnQuestionId
+              ? {
+                  conditionalOnQuestionId:
+                    question.conditionalOnQuestionId,
+                  conditionalOperator:
+                    question.conditionalOperator ?? null,
+                  conditionalValue:
+                    question.conditionalValue ?? null,
+                }
+              : null
+          }
+          onConditionChange={handleConditionChange}
+        />
+      )}
 
       {/* Actions */}
       <div className="flex justify-end gap-2 pt-2">

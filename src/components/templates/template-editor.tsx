@@ -768,6 +768,8 @@ export function TemplateEditor({ template, userRole }: TemplateEditorProps) {
           </DialogHeader>
           <QuestionForm
             question={editingQuestion}
+            questionIndex={editingIndex ?? questions.length}
+            allQuestions={questions}
             onSave={handleSaveQuestion}
             onCancel={() => setQuestionDialogOpen(false)}
           />

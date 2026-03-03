@@ -7,6 +7,7 @@ import {
   updateTemplateSchema,
   saveTemplateSchema,
   validateAnswerConfig,
+  validateConditionalLogic,
 } from "@/lib/validations/template";
 import {
   questionnaireTemplates,
@@ -121,6 +122,25 @@ export async function PATCH(request: Request, { params }: RouteContext) {
             { status: 400 }
           );
         }
+      }
+
+      // Validate conditional logic across all questions
+      const conditionalError = validateConditionalLogic(
+        data.questions.map((q, i) => ({
+          id: q.id,
+          questionText: q.questionText,
+          sortOrder: q.sortOrder ?? i,
+          answerType: q.answerType,
+          conditionalOnQuestionId: q.conditionalOnQuestionId,
+          conditionalOperator: q.conditionalOperator,
+          conditionalValue: q.conditionalValue,
+        }))
+      );
+      if (conditionalError) {
+        return NextResponse.json(
+          { error: conditionalError },
+          { status: 400 }
+        );
       }
 
       const result = await withTenantContext(

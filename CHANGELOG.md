@@ -7,6 +7,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## [Unreleased]
 
 ### Added
+- User management API: `GET /api/users` returns all users with team memberships and pending invites merged
+- User detail API: `GET /api/users/[id]` fetches single user with manager name and team memberships
+- User update API: `PATCH /api/users/[id]` handles role changes (admin-only), manager assignment (admin-only), profile updates (self or admin), and reactivation (admin-only)
+- User deactivation API: `DELETE /api/users/[id]` soft-deactivates users (admin-only) with last-admin protection
+- Circular manager assignment prevention: walks up manager chain (max 10 levels) before allowing assignment
+- Last-admin guard: prevents demoting or deactivating the last admin in an organization
+- Audit logging for all user mutations: `role_changed`, `manager_assigned`, `profile_updated`, `user_deactivated`, `user_reactivated`
 - `audit_log` Drizzle schema with tenant/action and tenant/actor composite indexes
 - `invite_token` Drizzle schema with tenant+email unique index and 7-day expiry support
 - RLS policies for `audit_log` (SELECT/INSERT only, immutable) and `invite_token` (SELECT/INSERT/UPDATE)

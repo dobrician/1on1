@@ -35,3 +35,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - RLS policies for junction tables (team_member, template_question, session_answer, talking_point) via parent JOIN
 - `withTenantContext()` wrapper for tenant-scoped database queries using `set_config` with SET LOCAL
 - `app_user` role granted CRUD privileges on all tables with default privileges for future tables
+- Vitest test framework with coverage support and path alias configuration
+- AES-256-GCM encryption infrastructure for private notes (`src/lib/encryption/`)
+- HKDF key derivation from master key to per-tenant encryption keys (`deriveTenantKey`)
+- Encrypt/decrypt functions with key versioning for rotation support (`encryptNote`, `decryptNote`)
+- 11 encryption unit tests covering round-trips, key isolation, unicode, and tampering detection

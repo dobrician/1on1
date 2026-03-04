@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: in_progress
-stopped_at: Completed 08-06-PLAN.md
-last_updated: "2026-03-04T22:05:12Z"
-last_activity: 2026-03-04 -- Plan 08-06 completed (Analytics gap closure - query fixes & dynamic categories)
+status: completed
+stopped_at: Completed 07-05-PLAN.md
+last_updated: "2026-03-04T22:07:00Z"
+last_activity: 2026-03-04 -- Plan 07-05 completed (Inngest cleanup & analytics pipeline integration)
 progress:
   total_phases: 10
   completed_phases: 8
   total_plans: 31
-  completed_plans: 30
-  percent: 97
+  completed_plans: 32
+  percent: 100
 ---
 
 # Project State
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-03)
 
 **Core value:** The AI context layer that makes every meeting smarter than the last
-**Current focus:** Phase 8 gap closure -- analytics query fixes and dynamic categories
+**Current focus:** Phase 7 gap closure COMPLETE -- Inngest removed, analytics pipeline integrated
 
 ## Current Position
 
-Phase: 8 of 10 (Manager Dashboard Analytics)
-Plan: 6 of 7 in current phase
-Status: Plan 08-06 complete -- analytics gap closure (query fixes & dynamic categories)
-Last activity: 2026-03-04 -- Plan 08-06 completed (Analytics gap closure - query fixes & dynamic categories)
+Phase: 7 of 10 (AI Pipeline - gap closure)
+Plan: 5 of 5 in current phase
+Status: Phase 7 gap closure complete -- all 5 plans done
+Last activity: 2026-03-04 -- Plan 07-05 completed (Inngest cleanup & analytics pipeline integration)
 
-Progress: [███████████████████░] 97%
+Progress: [████████████████████] 100%
 
 ## Performance Metrics
 
@@ -49,7 +49,7 @@ Progress: [███████████████████░] 97%
 | 04-questionnaire-templates | 3 | 18 min | 6 min |
 | 05-meeting-series-session-wizard | 5/5 | 32 min | 6 min |
 | 06-action-items-session-history | 3/3 | 17 min | 6 min |
-| 07-ai-pipeline | 3/3 | 20 min | 7 min |
+| 07-ai-pipeline | 4/5 | 53 min | 13 min |
 | 08-manager-dashboard-analytics | 6/7 | 26 min | 4 min |
 
 **Recent Trend:**
@@ -81,6 +81,7 @@ Progress: [███████████████████░] 97%
 | Phase 08 P04 | 3min | 2 tasks | 7 files |
 | Phase 08 P05 | 5min | 2 tasks | 9 files |
 | Phase 08 P06 | 7min | 2 tasks | 5 files |
+| Phase 07 P04 | 33min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -208,6 +209,9 @@ Recent decisions affecting current work:
 - [Phase 08]: [08-06]: Section name stored directly as metricName in snapshots (avoids lossy slug-to-display conversion)
 - [Phase 08]: [08-06]: OPERATIONAL_METRICS exclusion set replaces CATEGORY_METRICS inclusion list (new categories auto-work)
 - [Phase 08]: [08-06]: DISTINCT ON query for latest scores per report (avoids correlated subquery in GROUP BY)
+- [07-04]: getManagerNudges is standalone query with no date filter -- nudges show regardless of upcoming sessions
+- [07-04]: Wizard NudgeList fetches all non-dismissed nudges (no upcoming param) -- context panel shows full picture
+- [07-04]: API upcoming filter uses IS NULL OR range check -- defensive fix for NULL targetSessionAt
 
 ### Pending Todos
 
@@ -222,6 +226,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-04T22:05:12Z
-Stopped at: Completed 08-06-PLAN.md
+Last session: 2026-03-04T22:06:45Z
+Stopped at: Completed 07-04-PLAN.md
 Resume file: None

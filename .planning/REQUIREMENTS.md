@@ -124,7 +124,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **ANLT-05**: Heatmap displaying team × question category matrix with color-coded scores
 - [ ] **ANLT-06**: Action item velocity chart (average time from creation to completion)
 - [ ] **ANLT-07**: Meeting adherence chart (% of scheduled sessions completed per month)
-- [ ] **ANLT-08**: Analytics powered by pre-computed ANALYTICS_SNAPSHOT table (Inngest background job)
+- [x] **ANLT-08**: Analytics powered by pre-computed ANALYTICS_SNAPSHOT table (Inngest background job)
 - [ ] **ANLT-09**: User can export session data as CSV
 
 ### Email Notifications
@@ -282,7 +282,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | ANLT-05 | Phase 8 | Pending |
 | ANLT-06 | Phase 8 | Pending |
 | ANLT-07 | Phase 8 | Pending |
-| ANLT-08 | Phase 8 | Pending |
+| ANLT-08 | Phase 8 | Complete |
 | ANLT-09 | Phase 8 | Pending |
 | NOTF-01 | Phase 9 | Pending |
 | NOTF-02 | Phase 9 | Pending |

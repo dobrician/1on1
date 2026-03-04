@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Completed 08-02-PLAN.md
-last_updated: "2026-03-04T19:39:45.339Z"
-last_activity: 2026-03-04 -- Plan 07-03 completed (Pre-session nudge pipeline, dashboard/wizard nudge UI)
+stopped_at: Completed 08-01-PLAN.md
+last_updated: "2026-03-04T19:40:26.309Z"
+last_activity: 2026-03-04 -- Plan 08-01 completed (Analytics snapshot pipeline and query layer)
 progress:
   total_phases: 10
   completed_phases: 7
   total_plans: 29
-  completed_plans: 25
-  percent: 80
+  completed_plans: 26
+  percent: 86
 ---
 
 # Project State
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-03)
 
 **Core value:** The AI context layer that makes every meeting smarter than the last
-**Current focus:** Phase 7 COMPLETE - AI Pipeline. All 3 plans done (foundation, post-session, pre-session nudges).
+**Current focus:** Phase 8 IN PROGRESS - Manager Dashboard Analytics. Plan 01 complete (snapshot pipeline + query layer).
 
 ## Current Position
 
-Phase: 7 of 10 (AI Pipeline) -- COMPLETE
-Plan: 3 of 3 in current phase -- COMPLETE
-Status: Phase 07 complete -- AI foundation, post-session pipeline, pre-session nudge pipeline with dashboard/wizard UI
-Last activity: 2026-03-04 -- Plan 07-03 completed (Pre-session nudge pipeline, dashboard/wizard nudge UI)
+Phase: 8 of 10 (Manager Dashboard Analytics)
+Plan: 1 of 5 in current phase
+Status: Plan 08-01 complete -- analytics snapshot pipeline, query layer, Inngest functions
+Last activity: 2026-03-04 -- Plan 08-01 completed (Analytics snapshot pipeline and query layer)
 
-Progress: [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░] 80%
+Progress: [████████████████░░░░] 86%
 
 ## Performance Metrics
 
@@ -75,6 +75,7 @@ Progress: [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░] 80%
 | Phase 07 P02 | 6min | 2 tasks | 12 files |
 | Phase 07 P03 | 6min | 2 tasks | 11 files |
 | Phase 08 P02 | 3min | 2 tasks | 7 files |
+| Phase 08 P01 | 4min | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -188,6 +189,9 @@ Recent decisions affecting current work:
 - [07-03]: NudgeList in context panel uses TanStack Query (client component in existing client component tree)
 - [07-03]: Nudge section only rendered for managers (nudges are manager-only per locked decision)
 - [Phase 08]: Dashboard queries run in parallel within single withTenantContext; nudges batch-fetched by series IDs
+- [Phase 08]: [08-01]: Delete-then-insert for analytics_snapshot upserts (NULL-safe unique index handling)
+- [Phase 08]: [08-01]: Section name as category key -- template_section.name lowercased matches CATEGORY_METRICS keys
+- [Phase 08]: [08-01]: Team averages require minimum 3 data points for anonymization
 
 ### Pending Todos
 
@@ -202,6 +206,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-04T19:39:45.335Z
-Stopped at: Completed 08-02-PLAN.md
+Last session: 2026-03-04T19:40:26.305Z
+Stopped at: Completed 08-01-PLAN.md
 Resume file: None

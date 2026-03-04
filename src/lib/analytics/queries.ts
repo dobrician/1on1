@@ -1,0 +1,420 @@
+import { eq, and, gte, lte, sql, inArray, isNull } from "drizzle-orm";
+import type { TransactionClient } from "@/lib/db/tenant-context";
+import {
+  analyticsSnapshots,
+  sessions,
+  sessionAnswers,
+  templateQuestions,
+  templateSections,
+  teamMembers,
+  users,
+} from "@/lib/db/schema";
+import {
+  METRIC_NAMES,
+  CATEGORY_METRICS,
+  SCORABLE_ANSWER_TYPES,
+} from "./constants";
+
+// ---------- Types ----------
+
+export interface ScoreTrendPoint {
+  date: string;
+  score: number;
+}
+
+export interface CategoryAverage {
+  category: string;
+  avgScore: number;
+  sampleCount: number;
+}
+
+export interface SessionComparisonRow {
+  category: string;
+  score1: number;
+  score2: number;
+  delta: number;
+}
+
+export interface TeamAverage {
+  category: string;
+  avgScore: number;
+  memberCount: number;
+}
+
+export interface HeatmapDataPoint {
+  userId: string;
+  userName: string;
+  category: string;
+  score: number;
+}
+
+// ---------- Score Trend ----------
+
+/**
+ * Get session score trend for a user over a date range.
+ *
+ * Queries analytics_snapshot for session_score metric, ordered by period start.
+ * Falls back to live query on sessions table if no snapshots exist.
+ */
+export async function getScoreTrend(
+  tx: TransactionClient,
+  userId: string,
+  startDate: string,
+  endDate: string,
+): Promise<ScoreTrendPoint[]> {
+  // Try snapshots first
+  const snapshots = await tx
+    .select({
+      date: analyticsSnapshots.periodStart,
+      score: analyticsSnapshots.metricValue,
+    })
+    .from(analyticsSnapshots)
+    .where(
+      and(
+        eq(analyticsSnapshots.userId, userId),
+        eq(analyticsSnapshots.metricName, METRIC_NAMES.SESSION_SCORE),
+        eq(analyticsSnapshots.periodType, "month"),
+        isNull(analyticsSnapshots.teamId),
+        gte(analyticsSnapshots.periodStart, startDate),
+        lte(analyticsSnapshots.periodStart, endDate),
+      ),
+    )
+    .orderBy(analyticsSnapshots.periodStart);
+
+  if (snapshots.length > 0) {
+    return snapshots.map((s) => ({
+      date: s.date,
+      score: parseFloat(s.score),
+    }));
+  }
+
+  // Fallback: live query on sessions via series where user is report
+  const liveResults = await tx
+    .select({
+      date: sql<string>`to_char(${sessions.completedAt}, 'YYYY-MM-DD')`,
+      score: sessions.sessionScore,
+    })
+    .from(sessions)
+    .where(
+      and(
+        eq(sessions.status, "completed"),
+        sql`${sessions.sessionScore} IS NOT NULL`,
+        sql`${sessions.completedAt} >= ${startDate}::date`,
+        sql`${sessions.completedAt} <= ${endDate}::date + interval '1 day'`,
+        sql`${sessions.seriesId} IN (
+          SELECT id FROM meeting_series WHERE report_id = ${userId}
+        )`,
+      ),
+    )
+    .orderBy(sessions.completedAt);
+
+  return liveResults
+    .filter((r) => r.score !== null && r.date !== null)
+    .map((r) => ({
+      date: r.date!,
+      score: parseFloat(r.score!),
+    }));
+}
+
+// ---------- Category Averages ----------
+
+/**
+ * Get per-category average scores for a user over a date range.
+ *
+ * Queries analytics_snapshot for category metrics. Falls back to live query
+ * joining session_answers + template_questions + template_sections.
+ */
+export async function getCategoryAverages(
+  tx: TransactionClient,
+  userId: string,
+  startDate: string,
+  endDate: string,
+): Promise<CategoryAverage[]> {
+  const categoryMetricNames = Object.values(CATEGORY_METRICS);
+
+  // Try snapshots first
+  const snapshots = await tx
+    .select({
+      metricName: analyticsSnapshots.metricName,
+      avgScore: sql<string>`AVG(${analyticsSnapshots.metricValue}::numeric)`,
+      sampleCount: sql<number>`SUM(${analyticsSnapshots.sampleCount})::int`,
+    })
+    .from(analyticsSnapshots)
+    .where(
+      and(
+        eq(analyticsSnapshots.userId, userId),
+        isNull(analyticsSnapshots.teamId),
+        inArray(analyticsSnapshots.metricName, categoryMetricNames),
+        gte(analyticsSnapshots.periodStart, startDate),
+        lte(analyticsSnapshots.periodStart, endDate),
+      ),
+    )
+    .groupBy(analyticsSnapshots.metricName);
+
+  if (snapshots.length > 0) {
+    // Map metric names back to category labels
+    const metricToCategory = Object.fromEntries(
+      Object.entries(CATEGORY_METRICS).map(([cat, metric]) => [metric, cat]),
+    );
+    return snapshots.map((s) => ({
+      category: metricToCategory[s.metricName] ?? s.metricName,
+      avgScore: parseFloat(s.avgScore),
+      sampleCount: s.sampleCount,
+    }));
+  }
+
+  // Fallback: live query
+  const liveResults = await tx
+    .select({
+      sectionName: templateSections.name,
+      avgScore: sql<string>`AVG(${sessionAnswers.answerNumeric}::numeric)`,
+      sampleCount: sql<number>`COUNT(*)::int`,
+    })
+    .from(sessionAnswers)
+    .innerJoin(
+      templateQuestions,
+      eq(sessionAnswers.questionId, templateQuestions.id),
+    )
+    .innerJoin(
+      templateSections,
+      eq(templateQuestions.sectionId, templateSections.id),
+    )
+    .innerJoin(sessions, eq(sessionAnswers.sessionId, sessions.id))
+    .where(
+      and(
+        eq(sessions.status, "completed"),
+        sql`${sessionAnswers.answerNumeric} IS NOT NULL`,
+        sql`${sessionAnswers.skipped} = false`,
+        sql`${sessions.completedAt} >= ${startDate}::date`,
+        sql`${sessions.completedAt} <= ${endDate}::date + interval '1 day'`,
+        sql`${sessions.seriesId} IN (
+          SELECT id FROM meeting_series WHERE report_id = ${userId}
+        )`,
+        sql`${templateQuestions.answerType} IN (${sql.join(
+          [...SCORABLE_ANSWER_TYPES].map((t) => sql`${t}`),
+          sql`, `,
+        )})`,
+      ),
+    )
+    .groupBy(templateSections.name);
+
+  return liveResults
+    .filter((r) => {
+      const cat = r.sectionName.toLowerCase().trim();
+      return CATEGORY_METRICS[cat] !== undefined;
+    })
+    .map((r) => ({
+      category: r.sectionName.toLowerCase().trim(),
+      avgScore: parseFloat(r.avgScore),
+      sampleCount: r.sampleCount,
+    }));
+}
+
+// ---------- Session Comparison ----------
+
+/**
+ * Compare per-category scores between two sessions.
+ *
+ * Live query (not snapshot) -- fetches per-category averages for both sessions
+ * and computes deltas.
+ */
+export async function getSessionComparison(
+  tx: TransactionClient,
+  sessionId1: string,
+  sessionId2: string,
+): Promise<SessionComparisonRow[]> {
+  async function getSessionCategoryScores(
+    sessionId: string,
+  ): Promise<Map<string, number>> {
+    const rows = await tx
+      .select({
+        sectionName: templateSections.name,
+        avgScore: sql<string>`AVG(${sessionAnswers.answerNumeric}::numeric)`,
+      })
+      .from(sessionAnswers)
+      .innerJoin(
+        templateQuestions,
+        eq(sessionAnswers.questionId, templateQuestions.id),
+      )
+      .innerJoin(
+        templateSections,
+        eq(templateQuestions.sectionId, templateSections.id),
+      )
+      .where(
+        and(
+          eq(sessionAnswers.sessionId, sessionId),
+          sql`${sessionAnswers.answerNumeric} IS NOT NULL`,
+          sql`${sessionAnswers.skipped} = false`,
+          sql`${templateQuestions.answerType} IN (${sql.join(
+            [...SCORABLE_ANSWER_TYPES].map((t) => sql`${t}`),
+            sql`, `,
+          )})`,
+        ),
+      )
+      .groupBy(templateSections.name);
+
+    const map = new Map<string, number>();
+    for (const row of rows) {
+      const cat = row.sectionName.toLowerCase().trim();
+      if (CATEGORY_METRICS[cat]) {
+        map.set(cat, parseFloat(row.avgScore));
+      }
+    }
+    return map;
+  }
+
+  const [scores1, scores2] = await Promise.all([
+    getSessionCategoryScores(sessionId1),
+    getSessionCategoryScores(sessionId2),
+  ]);
+
+  // Merge all categories from both sessions
+  const allCategories = new Set([...scores1.keys(), ...scores2.keys()]);
+  const results: SessionComparisonRow[] = [];
+
+  for (const category of allCategories) {
+    const s1 = scores1.get(category) ?? 0;
+    const s2 = scores2.get(category) ?? 0;
+    results.push({
+      category,
+      score1: s1,
+      score2: s2,
+      delta: parseFloat((s2 - s1).toFixed(3)),
+    });
+  }
+
+  return results;
+}
+
+// ---------- Team Averages ----------
+
+/**
+ * Get aggregated category averages across all team members.
+ *
+ * Queries analytics_snapshot for all members of a given team, aggregates
+ * per-category. Enforces minimum 3 data points for anonymization.
+ */
+export async function getTeamAverages(
+  tx: TransactionClient,
+  teamId: string,
+  startDate: string,
+  endDate: string,
+): Promise<TeamAverage[]> {
+  // Get team member user IDs
+  const members = await tx
+    .select({ userId: teamMembers.userId })
+    .from(teamMembers)
+    .where(eq(teamMembers.teamId, teamId));
+
+  if (members.length === 0) return [];
+
+  const memberIds = members.map((m) => m.userId);
+  const categoryMetricNames = Object.values(CATEGORY_METRICS);
+
+  const results = await tx
+    .select({
+      metricName: analyticsSnapshots.metricName,
+      avgScore: sql<string>`AVG(${analyticsSnapshots.metricValue}::numeric)`,
+      memberCount:
+        sql<number>`COUNT(DISTINCT ${analyticsSnapshots.userId})::int`,
+    })
+    .from(analyticsSnapshots)
+    .where(
+      and(
+        inArray(analyticsSnapshots.userId, memberIds),
+        isNull(analyticsSnapshots.teamId),
+        inArray(analyticsSnapshots.metricName, categoryMetricNames),
+        gte(analyticsSnapshots.periodStart, startDate),
+        lte(analyticsSnapshots.periodStart, endDate),
+      ),
+    )
+    .groupBy(analyticsSnapshots.metricName);
+
+  const metricToCategory = Object.fromEntries(
+    Object.entries(CATEGORY_METRICS).map(([cat, metric]) => [metric, cat]),
+  );
+
+  // Enforce minimum 3 data points for anonymization
+  return results
+    .filter((r) => r.memberCount >= 3)
+    .map((r) => ({
+      category: metricToCategory[r.metricName] ?? r.metricName,
+      avgScore: parseFloat(r.avgScore),
+      memberCount: r.memberCount,
+    }));
+}
+
+// ---------- Team Heatmap ----------
+
+/**
+ * Get per-user per-category scores for a team heatmap.
+ *
+ * Returns individual scores for each team member per category.
+ * When anonymize=true, user names are replaced with "Member 1", "Member 2", etc.
+ */
+export async function getTeamHeatmapData(
+  tx: TransactionClient,
+  teamId: string,
+  startDate: string,
+  endDate: string,
+  anonymize: boolean = false,
+): Promise<HeatmapDataPoint[]> {
+  // Get team member user IDs with names
+  const members = await tx
+    .select({
+      userId: teamMembers.userId,
+      firstName: users.firstName,
+      lastName: users.lastName,
+    })
+    .from(teamMembers)
+    .innerJoin(users, eq(teamMembers.userId, users.id))
+    .where(eq(teamMembers.teamId, teamId));
+
+  if (members.length === 0) return [];
+
+  const memberIds = members.map((m) => m.userId);
+  const categoryMetricNames = Object.values(CATEGORY_METRICS);
+
+  const snapshots = await tx
+    .select({
+      userId: analyticsSnapshots.userId,
+      metricName: analyticsSnapshots.metricName,
+      avgScore: sql<string>`AVG(${analyticsSnapshots.metricValue}::numeric)`,
+    })
+    .from(analyticsSnapshots)
+    .where(
+      and(
+        inArray(analyticsSnapshots.userId, memberIds),
+        isNull(analyticsSnapshots.teamId),
+        inArray(analyticsSnapshots.metricName, categoryMetricNames),
+        gte(analyticsSnapshots.periodStart, startDate),
+        lte(analyticsSnapshots.periodStart, endDate),
+      ),
+    )
+    .groupBy(analyticsSnapshots.userId, analyticsSnapshots.metricName);
+
+  const metricToCategory = Object.fromEntries(
+    Object.entries(CATEGORY_METRICS).map(([cat, metric]) => [metric, cat]),
+  );
+
+  // Build name lookup, with optional anonymization
+  const nameMap = new Map<string, string>();
+  const sortedMembers = [...members].sort((a, b) =>
+    `${a.firstName} ${a.lastName}`.localeCompare(`${b.firstName} ${b.lastName}`),
+  );
+  sortedMembers.forEach((m, idx) => {
+    nameMap.set(
+      m.userId,
+      anonymize ? `Member ${idx + 1}` : `${m.firstName} ${m.lastName}`,
+    );
+  });
+
+  return snapshots
+    .filter((s) => s.userId !== null)
+    .map((s) => ({
+      userId: anonymize ? "" : s.userId!,
+      userName: nameMap.get(s.userId!) ?? "Unknown",
+      category: metricToCategory[s.metricName] ?? s.metricName,
+      score: parseFloat(s.avgScore),
+    }));
+}

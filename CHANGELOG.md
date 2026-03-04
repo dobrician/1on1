@@ -11,6 +11,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Dashboard overview rebuild: upcoming sessions with inline AI nudges, quick stats cards, overdue items grouped by report, recent sessions with score badges
 - Start Session button on today's sessions with Resume for in-progress sessions
 - Upcoming sessions cards integrate AI nudges inline with expandable "+N more" pattern
+- Analytics snapshot compute engine (`computeSessionSnapshot`): per-category averages with rating normalization, delete-then-insert for NULL-safe unique index handling
+- Analytics query layer (`src/lib/analytics/queries.ts`): getScoreTrend, getCategoryAverages, getSessionComparison, getTeamAverages, getTeamHeatmapData with snapshot-first and live fallback
+- Inngest analytics snapshot function (`computeAnalyticsSnapshot`): triggered by session/completed event with 3 retries
+- Inngest analytics sweep cron (`analyticsSnapshotSweep`): daily 3 AM safety net for un-ingested completed sessions
 - Analytics ingestion tracking: `analytics_ingested_at` column on session table with migration
 - Analytics metric name constants (`METRIC_NAMES`): session_score, per-category scores, operational metrics
 - Pre-session nudge cron pipeline (`preSessionNudgeRefresh`): runs every 6 hours, finds series with sessions in next 24h, fires refresh events

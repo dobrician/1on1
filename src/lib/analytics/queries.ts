@@ -85,10 +85,12 @@ export async function getScoreTrend(
     .orderBy(analyticsSnapshots.periodStart);
 
   if (snapshots.length > 0) {
-    return snapshots.map((s) => ({
-      date: s.date,
-      score: parseFloat(s.score),
-    }));
+    return snapshots
+      .map((s) => ({
+        date: s.date,
+        score: Number(s.score),
+      }))
+      .filter((s) => !isNaN(s.score));
   }
 
   // Fallback: live query on sessions via series where user is report
@@ -115,8 +117,9 @@ export async function getScoreTrend(
     .filter((r) => r.score !== null && r.date !== null)
     .map((r) => ({
       date: r.date!,
-      score: parseFloat(r.score!),
-    }));
+      score: Number(r.score!),
+    }))
+    .filter((r) => !isNaN(r.score));
 }
 
 // ---------- Category Averages ----------
@@ -161,7 +164,7 @@ export async function getCategoryAverages(
     );
     return snapshots.map((s) => ({
       category: metricToCategory[s.metricName] ?? s.metricName,
-      avgScore: parseFloat(s.avgScore),
+      avgScore: Number(s.avgScore),
       sampleCount: s.sampleCount,
     }));
   }
@@ -203,7 +206,7 @@ export async function getCategoryAverages(
 
   return liveResults.map((r) => ({
     category: r.sectionName.trim(),
-    avgScore: parseFloat(r.avgScore),
+    avgScore: Number(r.avgScore),
     sampleCount: r.sampleCount,
   }));
 }
@@ -254,7 +257,7 @@ export async function getSessionComparison(
     const map = new Map<string, number>();
     for (const row of rows) {
       const cat = row.sectionName.trim();
-      map.set(cat, parseFloat(row.avgScore));
+      map.set(cat, Number(row.avgScore));
     }
     return map;
   }
@@ -335,7 +338,7 @@ export async function getTeamAverages(
     .filter((r) => r.memberCount >= 3)
     .map((r) => ({
       category: metricToCategory[r.metricName] ?? r.metricName,
-      avgScore: parseFloat(r.avgScore),
+      avgScore: Number(r.avgScore),
       memberCount: r.memberCount,
     }));
 }
@@ -412,7 +415,7 @@ export async function getTeamHeatmapData(
       userId: anonymize ? "" : s.userId!,
       userName: nameMap.get(s.userId!) ?? "Unknown",
       category: metricToCategory[s.metricName] ?? s.metricName,
-      score: parseFloat(s.avgScore),
+      score: Number(s.avgScore),
       sampleCount: s.sampleCount ?? 0,
     }));
 }
@@ -475,7 +478,7 @@ export async function getActionItemVelocity(
     .filter((r) => r.month !== null)
     .map((r) => ({
       month: r.month!,
-      avgDays: parseFloat(parseFloat(r.avgDays).toFixed(1)),
+      avgDays: Number(Number(r.avgDays).toFixed(1)),
       count: r.count,
     }));
 }
@@ -549,7 +552,7 @@ export async function getMeetingAdherence(
       total: r.total,
       adherencePercent:
         r.total > 0
-          ? parseFloat(((r.completed / r.total) * 100).toFixed(1))
+          ? Number(((r.completed / r.total) * 100).toFixed(1))
           : 0,
     }));
 }

@@ -49,7 +49,7 @@ export default async function AnalyticsPage() {
             )
           : eq(users.isActive, true);
 
-      // Get unique report users with session stats
+      // Get unique report users with session counts
       const reportRows = await tx
         .select({
           userId: users.id,
@@ -58,15 +58,6 @@ export default async function AnalyticsPage() {
           avatarUrl: users.avatarUrl,
           jobTitle: users.jobTitle,
           sessionCount: sql<number>`COUNT(DISTINCT ${sessions.id})::int`,
-          latestScore: sql<string | null>`(
-            SELECT s2.session_score
-            FROM session s2
-            WHERE s2.series_id = ${meetingSeries.id}
-              AND s2.status = 'completed'
-              AND s2.session_score IS NOT NULL
-            ORDER BY s2.completed_at DESC
-            LIMIT 1
-          )`,
         })
         .from(meetingSeries)
         .innerJoin(users, eq(meetingSeries.reportId, users.id))
@@ -84,8 +75,33 @@ export default async function AnalyticsPage() {
           users.lastName,
           users.avatarUrl,
           users.jobTitle,
-          meetingSeries.id,
         );
+
+      // Get latest score per report user via DISTINCT ON
+      const latestScoreRows = await tx
+        .select({
+          reportId: sql<string>`DISTINCT ON (ms.report_id) ms.report_id`,
+          score: sessions.sessionScore,
+        })
+        .from(sessions)
+        .innerJoin(
+          sql`meeting_series ms`,
+          sql`${sessions.seriesId} = ms.id`,
+        )
+        .where(
+          and(
+            eq(sessions.status, "completed"),
+            sql`${sessions.sessionScore} IS NOT NULL`,
+          ),
+        )
+        .orderBy(sql`ms.report_id`, sql`${sessions.completedAt} DESC`);
+
+      const latestScoreMap = new Map<string, number>();
+      for (const row of latestScoreRows) {
+        if (row.score !== null) {
+          latestScoreMap.set(row.reportId, Number(row.score));
+        }
+      }
 
       // Deduplicate by userId (a user may appear in multiple series)
       const seen = new Map<string, ReportSummary>();
@@ -99,7 +115,7 @@ export default async function AnalyticsPage() {
             avatarUrl: row.avatarUrl,
             jobTitle: row.jobTitle,
             sessionCount: row.sessionCount,
-            latestScore: row.latestScore ? parseFloat(row.latestScore) : null,
+            latestScore: latestScoreMap.get(row.userId) ?? null,
           });
         }
       }

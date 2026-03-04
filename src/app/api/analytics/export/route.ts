@@ -268,7 +268,7 @@ export async function GET(request: Request) {
 
     if ("csv" in result) {
       const dateStr = new Date().toISOString().split("T")[0];
-      return new Response(result.csv, {
+      return new Response('\uFEFF' + result.csv, {
         headers: {
           "Content-Type": "text/csv; charset=utf-8",
           "Content-Disposition": `attachment; filename="1on1-analytics-${exportType}-${dateStr}.csv"`,

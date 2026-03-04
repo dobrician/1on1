@@ -104,14 +104,14 @@ Plans:
   3. Context panel shows notes from last 3 sessions, open action items, and score trend sparklines (last 6 sessions)
   4. Both parties can add talking points, use shared notes (rich text), create private notes (encrypted), and create action items inline
   5. All answers auto-save with 500ms debounce, navigation supports next/previous/jump, and manager confirms completion from a summary screen showing all answers, notes, action items, and computed session score
-**Plans**: TBD
+**Plans**: 5 plans in 4 waves (Wave 1: series CRUD + schema migration, Wave 2: wizard core + context panel in parallel, Wave 3: notes/action items, Wave 4: summary + completion)
 
 Plans:
-- [ ] 05-01: Meeting series CRUD and lifecycle management
-- [ ] 05-02: Session wizard core (question flow, input widgets, progress, navigation)
-- [ ] 05-03: Context panel (history, action items, sparklines)
-- [ ] 05-04: Notes (shared + private), talking points, and inline action items
-- [ ] 05-05: Auto-save, session scoring, summary screen, and completion flow
+- [ ] 05-01-PLAN.md -- Schema migration, series CRUD, card grid, start session, sidebar nav (Wave 1)
+- [ ] 05-02-PLAN.md -- Wizard layout, shell, question widgets, category navigation, recap screen (Wave 2)
+- [ ] 05-03-PLAN.md -- Context panel, question history dialog, score sparklines (Wave 2)
+- [ ] 05-04-PLAN.md -- Tiptap notes (shared + private), talking points, inline action items (Wave 3)
+- [ ] 05-05-PLAN.md -- Session scoring, summary screen, completion flow, series updates (Wave 4)
 
 ### Phase 6: Action Items & Session History
 **Goal**: Action items carry over between sessions creating accountability, and users can browse and search their complete session history

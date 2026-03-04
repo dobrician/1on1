@@ -67,9 +67,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [x] **SESS-01**: Manager can start a session for a scheduled meeting in a series
 - [ ] **SESS-02**: Session wizard presents questions one at a time (or in category groups) with progress indicator
-- [ ] **SESS-03**: Context panel (sidebar) shows notes from last 3 sessions (collapsible)
-- [ ] **SESS-04**: Context panel shows open action items from past sessions
-- [ ] **SESS-05**: Context panel shows score trend sparklines (last 6 sessions)
+- [x] **SESS-03**: Context panel (sidebar) shows notes from last 3 sessions (collapsible)
+- [x] **SESS-04**: Context panel shows open action items from past sessions
+- [x] **SESS-05**: Context panel shows score trend sparklines (last 6 sessions)
 - [ ] **SESS-06**: Appropriate input widget renders per question type (text area, star rating, slider, toggle, select, emoji picker)
 - [ ] **SESS-07**: Both manager and report can add talking points to the pre-session agenda
 - [ ] **SESS-08**: Shared notes area with rich text editor visible to both parties
@@ -240,9 +240,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | MEET-06 | Phase 5 | Complete |
 | SESS-01 | Phase 5 | Complete |
 | SESS-02 | Phase 5 | Pending |
-| SESS-03 | Phase 5 | Pending |
-| SESS-04 | Phase 5 | Pending |
-| SESS-05 | Phase 5 | Pending |
+| SESS-03 | Phase 5 | Complete |
+| SESS-04 | Phase 5 | Complete |
+| SESS-05 | Phase 5 | Complete |
 | SESS-06 | Phase 5 | Pending |
 | SESS-07 | Phase 5 | Pending |
 | SESS-08 | Phase 5 | Pending |

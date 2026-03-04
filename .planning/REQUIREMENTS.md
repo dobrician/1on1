@@ -71,10 +71,10 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **SESS-04**: Context panel shows open action items from past sessions
 - [x] **SESS-05**: Context panel shows score trend sparklines (last 6 sessions)
 - [x] **SESS-06**: Appropriate input widget renders per question type (text area, star rating, slider, toggle, select, emoji picker)
-- [ ] **SESS-07**: Both manager and report can add talking points to the pre-session agenda
-- [ ] **SESS-08**: Shared notes area with rich text editor visible to both parties
-- [ ] **SESS-09**: Private notes area visible only to the author, encrypted at rest (AES-256-GCM)
-- [ ] **SESS-10**: User can create action items inline at any point during the session
+- [x] **SESS-07**: Both manager and report can add talking points to the pre-session agenda
+- [x] **SESS-08**: Shared notes area with rich text editor visible to both parties
+- [x] **SESS-09**: Private notes area visible only to the author, encrypted at rest (AES-256-GCM)
+- [x] **SESS-10**: User can create action items inline at any point during the session
 - [x] **SESS-11**: All answers and notes auto-save with debounce (500ms)
 - [x] **SESS-12**: Navigation supports next/previous and direct jump to any step
 - [ ] **SESS-13**: Post-session summary screen shows recap of all answers, notes, and new action items
@@ -244,10 +244,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SESS-04 | Phase 5 | Complete |
 | SESS-05 | Phase 5 | Complete |
 | SESS-06 | Phase 5 | Complete |
-| SESS-07 | Phase 5 | Pending |
-| SESS-08 | Phase 5 | Pending |
-| SESS-09 | Phase 5 | Pending |
-| SESS-10 | Phase 5 | Pending |
+| SESS-07 | Phase 5 | Complete |
+| SESS-08 | Phase 5 | Complete |
+| SESS-09 | Phase 5 | Complete |
+| SESS-10 | Phase 5 | Complete |
 | SESS-11 | Phase 5 | Complete |
 | SESS-12 | Phase 5 | Complete |
 | SESS-13 | Phase 5 | Pending |

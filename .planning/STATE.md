@@ -5,13 +5,13 @@ milestone_name: milestone
 status: completed
 stopped_at: Phase 6 context gathered
 last_updated: "2026-03-04T15:05:25.689Z"
-last_activity: 2026-03-04 -- Plan 05-05 completed (session summary, scoring, completion flow)
+last_activity: 2026-03-04 -- Plan 06-01 completed (action items page and APIs)
 progress:
   total_phases: 10
   completed_phases: 5
-  total_plans: 18
-  completed_plans: 18
-  percent: 60
+  total_plans: 21
+  completed_plans: 19
+  percent: 63
 ---
 
 # Project State
@@ -21,23 +21,23 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-03)
 
 **Core value:** The AI context layer that makes every meeting smarter than the last
-**Current focus:** Phase 5 complete - Meeting Series & Session Wizard. Ready for Phase 6/7/9.
+**Current focus:** Phase 6 in progress - Action Items & Session History. Plan 1/3 complete.
 
 ## Current Position
 
-Phase: 5 of 10 (Meeting Series & Session Wizard) -- COMPLETE
-Plan: 5 of 5 in current phase -- COMPLETE
-Status: Phase 05 complete -- Session summary, scoring, completion flow, end-to-end wizard
-Last activity: 2026-03-04 -- Plan 05-05 completed (session summary, scoring, completion flow)
+Phase: 6 of 10 (Action Items & Session History)
+Plan: 1 of 3 in current phase -- COMPLETE
+Status: Plan 06-01 complete -- Action items page, standalone APIs, overdue indicators
+Last activity: 2026-03-04 -- Plan 06-01 completed (action items page and APIs)
 
-Progress: [▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░] 60%
+Progress: [▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░] 63%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 18
+- Total plans completed: 19
 - Average duration: 8 min
-- Total execution time: 2.33 hours
+- Total execution time: 2.41 hours
 
 **By Phase:**
 
@@ -48,10 +48,11 @@ Progress: [▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░] 60%
 | 03-user-team-management | 4 | 24 min | 6 min |
 | 04-questionnaire-templates | 3 | 18 min | 6 min |
 | 05-meeting-series-session-wizard | 5/5 | 32 min | 6 min |
+| 06-action-items-session-history | 1/3 | 5 min | 5 min |
 
 **Recent Trend:**
-- Last 5 plans: 05-01 (11 min), 05-02 (8 min), 05-03 (3 min), 05-04 (10 min), 05-05 (8 min)
-- Trend: consistent (05-05: scoring + completion API + summary screen + series card navigation)
+- Last 5 plans: 05-02 (8 min), 05-03 (3 min), 05-04 (10 min), 05-05 (8 min), 06-01 (5 min)
+- Trend: consistent (06-01: action items page + standalone APIs + overdue indicators)
 
 *Updated after each plan completion*
 
@@ -66,6 +67,7 @@ Progress: [▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░] 60%
 | Phase 05 P03 | 3min | 1 task | 7 files |
 | Phase 05 P04 | 10min | 2 tasks | 13 files |
 | Phase 05 P05 | 8min | 2 tasks | 12 files |
+| Phase 06 P01 | 5min | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -151,6 +153,11 @@ Recent decisions affecting current work:
 - [05-05]: Summary screen computes score client-side for display; server re-computes authoritatively on completion
 - [05-05]: Wizard navigation hides Next button on summary step; Complete Session button in summary screen handles final action
 
+- [06-01]: Drizzle alias() for self-join on users table (assignee + report in single query)
+- [06-01]: Optimistic update on status toggle: completed items removed from list immediately, then query invalidated
+- [06-01]: Sheet component (slide-in panel) for editing action items -- keeps user on the same page
+- [06-01]: Two-state status model in UI (Open/Done) mapping to DB enum values (open/completed)
+
 ### Pending Todos
 
 None yet.
@@ -164,6 +171,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-04T15:05:25.686Z
-Stopped at: Phase 6 context gathered
-Resume file: .planning/phases/06-action-items-session-history/06-CONTEXT.md
+Last session: 2026-03-04T15:30:00Z
+Stopped at: Completed 06-01-PLAN.md
+Resume file: .planning/phases/06-action-items-session-history/06-02-PLAN.md

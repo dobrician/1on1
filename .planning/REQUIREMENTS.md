@@ -83,11 +83,11 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Action Items
 
-- [ ] **ACTN-01**: User can create action items with title, description, assignee, and optional due date
-- [ ] **ACTN-02**: Action items track status: Open → In Progress → Completed / Cancelled
-- [ ] **ACTN-03**: Unfinished action items automatically carry over and appear flagged in the next session's context panel
-- [ ] **ACTN-04**: Dedicated list view shows all open action items across all series
-- [ ] **ACTN-05**: Action items are visible in the session wizard context panel during future sessions
+- [x] **ACTN-01**: User can create action items with title, description, assignee, and optional due date
+- [x] **ACTN-02**: Action items track status: Open → In Progress → Completed / Cancelled
+- [x] **ACTN-03**: Unfinished action items automatically carry over and appear flagged in the next session's context panel
+- [x] **ACTN-04**: Dedicated list view shows all open action items across all series
+- [x] **ACTN-05**: Action items are visible in the session wizard context panel during future sessions
 
 ### Session History
 
@@ -253,11 +253,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SESS-13 | Phase 5 | Complete |
 | SESS-14 | Phase 5 | Complete |
 | SESS-15 | Phase 5 | Complete |
-| ACTN-01 | Phase 6 | Pending |
-| ACTN-02 | Phase 6 | Pending |
-| ACTN-03 | Phase 6 | Pending |
-| ACTN-04 | Phase 6 | Pending |
-| ACTN-05 | Phase 6 | Pending |
+| ACTN-01 | Phase 6 | Complete |
+| ACTN-02 | Phase 6 | Complete |
+| ACTN-03 | Phase 6 | Complete |
+| ACTN-04 | Phase 6 | Complete |
+| ACTN-05 | Phase 6 | Complete |
 | HIST-01 | Phase 6 | Pending |
 | HIST-02 | Phase 6 | Pending |
 | HIST-03 | Phase 6 | Pending |

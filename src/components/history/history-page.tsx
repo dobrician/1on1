@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useRef } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
@@ -14,7 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ScoreSparkline } from "@/components/session/score-sparkline";
-import { Loader2, X } from "lucide-react";
+import { Loader2, Search, X } from "lucide-react";
 
 // --- Types ---
 
@@ -52,6 +52,15 @@ interface HistoryApiResponse {
   seriesScores: Record<string, number[]>;
   hasMore: boolean;
   nextCursor: string | null;
+}
+
+interface SearchSessionResult {
+  sessionId: string;
+  sessionNumber: number;
+  snippet: string;
+  seriesId: string;
+  reportName: string;
+  scheduledAt: string;
 }
 
 // --- Helpers ---
@@ -94,6 +103,12 @@ export function HistoryPage({
   const [seriesFilter, setSeriesFilter] = useState(
     searchParams.get("seriesId") ?? "all"
   );
+
+  // Search state
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<SearchSessionResult[] | null>(null);
+  const [isSearching, setIsSearching] = useState(false);
+  const searchDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Accumulated sessions for "Load more" behavior
   const [allSessions, setAllSessions] = useState<HistorySession[]>(initialSessions);
@@ -181,6 +196,48 @@ export function HistoryPage({
     applyFilters("all", "", "", "all");
   }, [applyFilters]);
 
+  // Search handler with debounce
+  const handleSearchChange = useCallback((value: string) => {
+    setSearchQuery(value);
+
+    if (searchDebounceRef.current) {
+      clearTimeout(searchDebounceRef.current);
+    }
+
+    const trimmed = value.trim();
+    if (!trimmed) {
+      setSearchResults(null);
+      setIsSearching(false);
+      return;
+    }
+
+    setIsSearching(true);
+    searchDebounceRef.current = setTimeout(async () => {
+      try {
+        const res = await fetch(
+          `/api/search?q=${encodeURIComponent(trimmed)}&limit=20`
+        );
+        if (!res.ok) throw new Error("Search failed");
+        const data = await res.json();
+        setSearchResults(data.results.sessions);
+      } catch (err) {
+        console.error("Search error:", err);
+        setSearchResults(null);
+      } finally {
+        setIsSearching(false);
+      }
+    }, 500);
+  }, []);
+
+  const clearSearch = useCallback(() => {
+    setSearchQuery("");
+    setSearchResults(null);
+    setIsSearching(false);
+    if (searchDebounceRef.current) {
+      clearTimeout(searchDebounceRef.current);
+    }
+  }, []);
+
   // Group sessions by series
   const groupedSessions = useMemo(() => {
     const groups = new Map<
@@ -208,8 +265,30 @@ export function HistoryPage({
     return Array.from(groups.values());
   }, [allSessions]);
 
+  const isShowingSearch = searchResults !== null || isSearching;
+
   return (
     <div className="space-y-6">
+      {/* Search bar */}
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+        <Input
+          type="text"
+          placeholder="Search notes, answers, talking points..."
+          className="pl-9 pr-9"
+          value={searchQuery}
+          onChange={(e) => handleSearchChange(e.target.value)}
+        />
+        {searchQuery && (
+          <button
+            onClick={clearSearch}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        )}
+      </div>
+
       {/* Filter bar */}
       <div className="flex flex-wrap items-end gap-3">
         <div className="space-y-1">
@@ -298,135 +377,198 @@ export function HistoryPage({
         )}
       </div>
 
-      {/* Session groups */}
-      {groupedSessions.length === 0 ? (
-        <div className="py-12 text-center">
-          <p className="text-lg font-medium text-muted-foreground">
-            No sessions found.
-          </p>
-          {hasActiveFilters && (
-            <p className="mt-1 text-sm text-muted-foreground">
-              Try adjusting your filters.
-            </p>
-          )}
-        </div>
-      ) : (
-        <div className="space-y-6">
-          {groupedSessions.map((group) => (
-            <div key={group.seriesId} className="rounded-lg border">
-              {/* Group header */}
-              <div className="flex items-center justify-between border-b px-4 py-3">
-                <div className="flex items-center gap-3 min-w-0">
-                  <div className="min-w-0">
-                    <p className="font-medium truncate">
-                      {group.reportName}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      with {group.managerName}
-                    </p>
-                  </div>
-                </div>
-                <div className="w-24 shrink-0">
-                  <ScoreSparkline
-                    data={allSeriesScores[group.seriesId] ?? []}
-                    height={32}
-                  />
-                </div>
-              </div>
-
-              {/* Session rows */}
-              <div className="divide-y">
-                {group.sessions.map((s) => {
-                  const isCompleted = s.status === "completed";
-                  const isInProgress = s.status === "in_progress";
-
-                  const row = (
-                    <div
-                      className={`flex items-center justify-between px-4 py-3 text-sm transition-colors ${
-                        isCompleted || isInProgress
-                          ? "hover:bg-muted/50 cursor-pointer"
-                          : ""
-                      }`}
-                    >
-                      <div className="flex items-center gap-3 min-w-0">
-                        <span className="font-medium tabular-nums">
-                          #{s.sessionNumber}
-                        </span>
-                        <span className="text-muted-foreground">
-                          {new Date(s.scheduledAt).toLocaleDateString(
-                            "en-US",
-                            {
-                              month: "short",
-                              day: "numeric",
-                              year: "numeric",
-                            }
-                          )}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-3 shrink-0">
-                        {s.sessionScore !== null && (
-                          <span
-                            className={`font-medium tabular-nums ${getScoreColor(s.sessionScore)}`}
-                          >
-                            {s.sessionScore.toFixed(1)}
-                          </span>
-                        )}
-                        {s.durationMinutes && (
-                          <span className="text-xs text-muted-foreground">
-                            {s.durationMinutes} min
-                          </span>
-                        )}
-                        <Badge
-                          variant={statusVariant[s.status] ?? "outline"}
-                          className="text-xs"
-                        >
-                          {s.status.replace("_", " ")}
-                        </Badge>
-                      </div>
-                    </div>
-                  );
-
-                  if (isCompleted) {
-                    return (
-                      <Link key={s.id} href={`/sessions/${s.id}/summary`}>
-                        {row}
-                      </Link>
-                    );
-                  }
-                  if (isInProgress) {
-                    return (
-                      <Link key={s.id} href={`/wizard/${s.id}`}>
-                        {row}
-                      </Link>
-                    );
-                  }
-
-                  return <div key={s.id}>{row}</div>;
-                })}
-              </div>
-            </div>
-          ))}
+      {/* Search results */}
+      {isSearching && (
+        <div className="flex items-center justify-center gap-2 py-12 text-sm text-muted-foreground">
+          <Loader2 className="h-4 w-4 animate-spin" />
+          Searching...
         </div>
       )}
 
-      {/* Load more */}
-      {hasMore && (
-        <div className="flex justify-center pt-2">
-          <Button
-            variant="outline"
-            onClick={loadMore}
-            disabled={isLoadingMore}
-          >
-            {isLoadingMore ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Loading...
-              </>
-            ) : (
-              "Load more"
-            )}
-          </Button>
+      {!isSearching && isShowingSearch && searchResults && searchResults.length === 0 && (
+        <div className="py-12 text-center">
+          <p className="text-lg font-medium text-muted-foreground">
+            No sessions found matching &quot;{searchQuery.trim()}&quot;.
+          </p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Try different keywords or clear the search.
+          </p>
         </div>
+      )}
+
+      {!isSearching && isShowingSearch && searchResults && searchResults.length > 0 && (
+        <div className="space-y-2">
+          <p className="text-sm text-muted-foreground">
+            {searchResults.length} session{searchResults.length !== 1 ? "s" : ""} found
+          </p>
+          <div className="rounded-lg border divide-y">
+            {searchResults.map((r) => (
+              <Link
+                key={r.sessionId}
+                href={`/sessions/${r.sessionId}/summary`}
+              >
+                <div className="flex items-center justify-between px-4 py-3 text-sm transition-colors hover:bg-muted/50 cursor-pointer">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-3">
+                      <span className="font-medium tabular-nums">
+                        #{r.sessionNumber}
+                      </span>
+                      <span className="text-muted-foreground">
+                        {r.reportName}
+                      </span>
+                      <span className="text-muted-foreground">
+                        {new Date(r.scheduledAt).toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        })}
+                      </span>
+                    </div>
+                    <p
+                      className="mt-1 truncate text-xs text-muted-foreground"
+                      dangerouslySetInnerHTML={{ __html: r.snippet }}
+                    />
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Session groups (hidden during search) */}
+      {!isShowingSearch && (
+        <>
+          {groupedSessions.length === 0 ? (
+            <div className="py-12 text-center">
+              <p className="text-lg font-medium text-muted-foreground">
+                No sessions found.
+              </p>
+              {hasActiveFilters && (
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Try adjusting your filters.
+                </p>
+              )}
+            </div>
+          ) : (
+            <div className="space-y-6">
+              {groupedSessions.map((group) => (
+                <div key={group.seriesId} className="rounded-lg border">
+                  {/* Group header */}
+                  <div className="flex items-center justify-between border-b px-4 py-3">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="min-w-0">
+                        <p className="font-medium truncate">
+                          {group.reportName}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          with {group.managerName}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="w-24 shrink-0">
+                      <ScoreSparkline
+                        data={allSeriesScores[group.seriesId] ?? []}
+                        height={32}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Session rows */}
+                  <div className="divide-y">
+                    {group.sessions.map((s) => {
+                      const isCompleted = s.status === "completed";
+                      const isInProgress = s.status === "in_progress";
+
+                      const row = (
+                        <div
+                          className={`flex items-center justify-between px-4 py-3 text-sm transition-colors ${
+                            isCompleted || isInProgress
+                              ? "hover:bg-muted/50 cursor-pointer"
+                              : ""
+                          }`}
+                        >
+                          <div className="flex items-center gap-3 min-w-0">
+                            <span className="font-medium tabular-nums">
+                              #{s.sessionNumber}
+                            </span>
+                            <span className="text-muted-foreground">
+                              {new Date(s.scheduledAt).toLocaleDateString(
+                                "en-US",
+                                {
+                                  month: "short",
+                                  day: "numeric",
+                                  year: "numeric",
+                                }
+                              )}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-3 shrink-0">
+                            {s.sessionScore !== null && (
+                              <span
+                                className={`font-medium tabular-nums ${getScoreColor(s.sessionScore)}`}
+                              >
+                                {s.sessionScore.toFixed(1)}
+                              </span>
+                            )}
+                            {s.durationMinutes && (
+                              <span className="text-xs text-muted-foreground">
+                                {s.durationMinutes} min
+                              </span>
+                            )}
+                            <Badge
+                              variant={statusVariant[s.status] ?? "outline"}
+                              className="text-xs"
+                            >
+                              {s.status.replace("_", " ")}
+                            </Badge>
+                          </div>
+                        </div>
+                      );
+
+                      if (isCompleted) {
+                        return (
+                          <Link key={s.id} href={`/sessions/${s.id}/summary`}>
+                            {row}
+                          </Link>
+                        );
+                      }
+                      if (isInProgress) {
+                        return (
+                          <Link key={s.id} href={`/wizard/${s.id}`}>
+                            {row}
+                          </Link>
+                        );
+                      }
+
+                      return <div key={s.id}>{row}</div>;
+                    })}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Load more */}
+          {hasMore && (
+            <div className="flex justify-center pt-2">
+              <Button
+                variant="outline"
+                onClick={loadMore}
+                disabled={isLoadingMore}
+              >
+                {isLoadingMore ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Loading...
+                  </>
+                ) : (
+                  "Load more"
+                )}
+              </Button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

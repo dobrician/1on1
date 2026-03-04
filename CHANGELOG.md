@@ -9,6 +9,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Added
 - Full-text search API (`GET /api/search`) with PostgreSQL tsvector/GIN indexes across sessions, action items, templates, and people
 - GIN expression indexes on action_item, talking_point, and session_answer tables for fast full-text search
+- Global Cmd+K command palette for universal search across sessions, action items, templates, and people
+- Search trigger button in dashboard header with keyboard shortcut hint
+- History page inline search bar with debounced session content search
 - Standalone action items API: GET `/api/action-items` (cross-series, grouped), PATCH `/api/action-items/[id]` (full edit)
 - Sidebar navigation for Action Items and History pages
 - Zod validation schema for standalone action item updates

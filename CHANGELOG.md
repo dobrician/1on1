@@ -7,6 +7,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## [Unreleased]
 
 ### Added
+- Period selector component with 30d/3mo/6mo/1yr presets and custom date range picker
+- Analytics overview page listing reports with latest scores and session counts (RBAC: members auto-redirect to own analytics)
+- Analytics nav item in sidebar (BarChart3 icon, visible to all roles)
 - Dashboard query layer (`src/lib/queries/dashboard.ts`): getUpcomingSessions, getOverdueActionItems, getQuickStats, getRecentSessions with role-based filtering
 - Dashboard overview rebuild: upcoming sessions with inline AI nudges, quick stats cards, overdue items grouped by report, recent sessions with score badges
 - Start Session button on today's sessions with Resume for in-progress sessions

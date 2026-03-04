@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { LayoutDashboard, Users, Building2, ScrollText, FileText, CalendarDays, ListChecks, History } from "lucide-react";
+import { LayoutDashboard, Users, Building2, ScrollText, FileText, CalendarDays, ListChecks, History, BarChart3 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface NavItem {
@@ -46,6 +46,12 @@ const mainNavItems: NavItem[] = [
     label: "History",
     href: "/history",
     icon: History,
+  },
+  {
+    label: "Analytics",
+    href: "/analytics",
+    icon: BarChart3,
+    matchAlso: ["/analytics"],
   },
 ];
 

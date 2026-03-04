@@ -298,6 +298,7 @@ export async function getTeamAverages(
   teamId: string,
   startDate: string,
   endDate: string,
+  anonymize: boolean = false,
 ): Promise<TeamAverage[]> {
   // Get team member user IDs
   const members = await tx
@@ -332,11 +333,57 @@ export async function getTeamAverages(
     )
     .groupBy(analyticsSnapshots.metricName);
 
-  // Enforce minimum 3 data points for anonymization
-  return results
-    .filter((r) => r.memberCount >= 3)
+  const snapshotData = results
+    .filter((r) => !anonymize || r.memberCount >= 3)
     .map((r) => ({
       category: r.metricName,
+      avgScore: Number(r.avgScore),
+      memberCount: r.memberCount,
+    }));
+
+  if (snapshotData.length > 0) {
+    return snapshotData;
+  }
+
+  // Fallback: live query from session_answers
+  const liveResults = await tx
+    .select({
+      sectionName: templateSections.name,
+      avgScore: sql<string>`AVG(${sessionAnswers.answerNumeric}::numeric)`,
+      memberCount:
+        sql<number>`COUNT(DISTINCT ${meetingSeries.reportId})::int`,
+    })
+    .from(sessionAnswers)
+    .innerJoin(
+      templateQuestions,
+      eq(sessionAnswers.questionId, templateQuestions.id),
+    )
+    .innerJoin(
+      templateSections,
+      eq(templateQuestions.sectionId, templateSections.id),
+    )
+    .innerJoin(sessions, eq(sessionAnswers.sessionId, sessions.id))
+    .innerJoin(meetingSeries, eq(sessions.seriesId, meetingSeries.id))
+    .where(
+      and(
+        eq(sessions.status, "completed"),
+        sql`${sessionAnswers.answerNumeric} IS NOT NULL`,
+        sql`${sessionAnswers.skipped} = false`,
+        sql`${sessions.completedAt} >= ${startDate}::date`,
+        sql`${sessions.completedAt} <= ${endDate}::date + interval '1 day'`,
+        inArray(meetingSeries.reportId, memberIds),
+        sql`${templateQuestions.answerType} IN (${sql.join(
+          [...SCORABLE_ANSWER_TYPES].map((t) => sql`${t}`),
+          sql`, `,
+        )})`,
+      ),
+    )
+    .groupBy(templateSections.name);
+
+  return liveResults
+    .filter((r) => !anonymize || r.memberCount >= 3)
+    .map((r) => ({
+      category: r.sectionName.trim(),
       avgScore: Number(r.avgScore),
       memberCount: r.memberCount,
     }));
@@ -407,7 +454,7 @@ export async function getTeamHeatmapData(
     );
   });
 
-  return snapshots
+  const snapshotData = snapshots
     .filter((s) => s.userId !== null)
     .map((s) => ({
       userId: anonymize ? "" : s.userId!,
@@ -415,6 +462,55 @@ export async function getTeamHeatmapData(
       category: s.metricName,
       score: Number(s.avgScore),
       sampleCount: s.sampleCount ?? 0,
+    }));
+
+  if (snapshotData.length > 0) {
+    return snapshotData;
+  }
+
+  // Fallback: live query from session_answers
+  const liveResults = await tx
+    .select({
+      userId: meetingSeries.reportId,
+      sectionName: templateSections.name,
+      avgScore: sql<string>`AVG(${sessionAnswers.answerNumeric}::numeric)`,
+      sampleCount: sql<number>`COUNT(*)::int`,
+    })
+    .from(sessionAnswers)
+    .innerJoin(
+      templateQuestions,
+      eq(sessionAnswers.questionId, templateQuestions.id),
+    )
+    .innerJoin(
+      templateSections,
+      eq(templateQuestions.sectionId, templateSections.id),
+    )
+    .innerJoin(sessions, eq(sessionAnswers.sessionId, sessions.id))
+    .innerJoin(meetingSeries, eq(sessions.seriesId, meetingSeries.id))
+    .where(
+      and(
+        eq(sessions.status, "completed"),
+        sql`${sessionAnswers.answerNumeric} IS NOT NULL`,
+        sql`${sessionAnswers.skipped} = false`,
+        sql`${sessions.completedAt} >= ${startDate}::date`,
+        sql`${sessions.completedAt} <= ${endDate}::date + interval '1 day'`,
+        inArray(meetingSeries.reportId, memberIds),
+        sql`${templateQuestions.answerType} IN (${sql.join(
+          [...SCORABLE_ANSWER_TYPES].map((t) => sql`${t}`),
+          sql`, `,
+        )})`,
+      ),
+    )
+    .groupBy(meetingSeries.reportId, templateSections.name);
+
+  return liveResults
+    .filter((r) => r.userId !== null)
+    .map((r) => ({
+      userId: anonymize ? "" : r.userId!,
+      userName: nameMap.get(r.userId!) ?? "Unknown",
+      category: r.sectionName.trim(),
+      score: Number(r.avgScore),
+      sampleCount: r.sampleCount ?? 0,
     }));
 }
 
@@ -444,11 +540,14 @@ export async function getActionItemVelocity(
   if (role === "admin") {
     roleFilter = sql`1=1`; // org-wide (RLS handles tenant)
   } else if (role === "manager") {
-    roleFilter = sql`${actionItems.sessionId} IN (
-      SELECT s.id FROM session s
-      JOIN meeting_series ms ON s.series_id = ms.id
-      WHERE ms.manager_id = ${userId}
-    )`;
+    roleFilter = inArray(
+      actionItems.sessionId,
+      tx
+        .select({ id: sessions.id })
+        .from(sessions)
+        .innerJoin(meetingSeries, eq(sessions.seriesId, meetingSeries.id))
+        .where(eq(meetingSeries.managerId, userId)),
+    );
   } else {
     roleFilter = eq(actionItems.assigneeId, userId);
   }

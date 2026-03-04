@@ -107,7 +107,7 @@ export async function GET(
 
         // Fetch analytics in parallel
         const [teamAverages, heatmapData] = await Promise.all([
-          getTeamAverages(tx, teamId, startDate, endDate),
+          getTeamAverages(tx, teamId, startDate, endDate, anonymize),
           getTeamHeatmapData(tx, teamId, startDate, endDate, anonymize),
         ]);
 

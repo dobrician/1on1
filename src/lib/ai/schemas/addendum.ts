@@ -8,11 +8,9 @@ export const managerAddendumSchema = z.object({
     ),
   patterns: z
     .array(z.string())
-    .max(3)
-    .describe("Recurring themes or patterns noticed across sessions"),
+    .describe("Recurring themes or patterns noticed across sessions (max 3)"),
   coachingSuggestions: z
     .array(z.string())
-    .max(3)
     .describe(
       "Suggestions for the manager to improve support for this report"
     ),

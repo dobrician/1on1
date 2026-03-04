@@ -6,12 +6,10 @@ export const actionSuggestionsSchema = z.object({
       z.object({
         title: z
           .string()
-          .max(200)
-          .describe("Clear, actionable title for the action item"),
+          .describe("Clear, actionable title for the action item (max 200 chars)"),
         description: z
           .string()
-          .max(500)
-          .describe("Brief description with context"),
+          .describe("Brief description with context (max 500 chars)"),
         suggestedAssignee: z
           .enum(["manager", "report"])
           .describe("Who should own this action item"),
@@ -20,8 +18,6 @@ export const actionSuggestionsSchema = z.object({
           .describe("Why this action item was suggested"),
       })
     )
-    .min(1)
-    .max(3)
     .describe("1-3 suggested action items based on session content"),
 });
 

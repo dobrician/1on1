@@ -15,8 +15,6 @@ export const nudgesSchema = z.object({
           .describe("Session ID that triggered this nudge"),
       })
     )
-    .min(2)
-    .max(3)
     .describe("2-3 pre-session nudges for the manager"),
 });
 

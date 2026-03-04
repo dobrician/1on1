@@ -3,8 +3,6 @@ import { z } from "zod";
 export const summarySchema = z.object({
   keyTakeaways: z
     .array(z.string())
-    .min(2)
-    .max(5)
     .describe("3-5 key takeaways from the session as bullet points"),
   discussionHighlights: z
     .array(
@@ -20,7 +18,6 @@ export const summarySchema = z.object({
     .describe("Per-category discussion highlights"),
   followUpItems: z
     .array(z.string())
-    .max(5)
     .describe("Items that need follow-up or attention"),
   overallSentiment: z
     .enum(["positive", "neutral", "mixed", "concerning"])

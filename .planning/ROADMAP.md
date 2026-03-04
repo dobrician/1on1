@@ -139,13 +139,13 @@ Plans:
   2. Before a session, AI generates 2-3 specific follow-up suggestions based on previous session data (e.g., "Last time Alex mentioned burnout -- follow up?")
   3. Pre-session nudges appear on the dashboard and in the pre-session state
   4. After completion, AI suggests 1-3 action items based on session content
-  5. All AI pipelines run as durable Inngest background functions with retry, using Vercel AI SDK with provider-agnostic routing, and session embeddings are stored via pgvector
-**Plans**: TBD
+  5. All AI pipelines run as durable Inngest background functions with retry, using Vercel AI SDK with provider-agnostic routing (pgvector embeddings deferred to v2 -- full-text search used for AI context retrieval)
+**Plans**: 3 plans in 2 waves (Wave 1: foundation, Wave 2: post-session pipeline + nudge pipeline in parallel)
 
 Plans:
-- [ ] 07-01: AI service layer, tenant guard, and Vercel AI SDK configuration
-- [ ] 07-02: Post-session pipeline (summary generation, action item suggestions, embedding storage)
-- [ ] 07-03: Pre-session nudge pipeline and dashboard/session integration
+- [ ] 07-01-PLAN.md -- AI SDK + Inngest installation, DB schema migration (AI columns + ai_nudge table), Inngest client/serve route, AI service layer with Zod schemas and prompt templates (Wave 1)
+- [ ] 07-02-PLAN.md -- Post-session Inngest pipeline (summary, addendum, suggestions), completion endpoint integration, AI summary/suggestions API endpoints, session summary page UI (Wave 2)
+- [ ] 07-03-PLAN.md -- Pre-session nudge cron pipeline, nudge refresh handler, nudge API endpoints, dashboard nudge cards, wizard context panel nudge integration (Wave 2)
 
 ### Phase 8: Manager Dashboard & Analytics
 **Goal**: Managers have a home screen that surfaces everything they need, and analytics charts reveal trends across sessions and teams

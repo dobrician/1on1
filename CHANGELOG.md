@@ -7,6 +7,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## [Unreleased]
 
 ### Added
+- Tiptap rich text editor for session notes with formatting toolbar (bold, italic, lists, links)
+- Shared notes tab with auto-save per category via debounced PUT to `/api/sessions/[id]/notes`
+- Private notes tab with "Only you can see this" indicator, server-side AES-256-GCM encryption
+- Shared notes API (`PUT /api/sessions/[id]/notes`) updates session JSONB per-category key
+- Private notes API (`GET/PUT /api/sessions/[id]/notes/private`) with encrypt-on-write, decrypt-on-read
+- Talking points list per category with add (Enter to submit), check-off, delete, and carried-from session badge
+- Talking points API (`GET/POST/PATCH/DELETE /api/sessions/[id]/talking-points`) with category filtering
+- Inline action item creation per category with title, assignee select, optional due date
+- Action items API (`GET/POST/PATCH /api/sessions/[id]/action-items`) with assignee name resolution
+- Context panel integrated into wizard shell layout (right sidebar on desktop, mobile slide-in overlay)
+- Question history dialog wired into wizard shell for per-question answer timeline
+- Aggregate save status indicator: tracks all pending mutations (answers, notes, talking points, action items)
+- `visibilitychange` event handler in wizard to flush pending debounced saves on tab switch
+- `@tiptap/react`, `@tiptap/pm`, `@tiptap/starter-kit`, `@tiptap/extension-link` dependencies
+- Zod schemas: `sharedNotesUpsertSchema`, `privateNoteUpsertSchema`, `createTalkingPointSchema`, `toggleTalkingPointSchema`, `createActionItemSchema`, `updateActionItemSchema`
 - Session wizard: full-page immersive layout without sidebar for focused 1:1 experience
 - Session data API (`GET /api/sessions/[id]`) returns comprehensive wizard payload: session, series, template questions, existing answers, previous sessions, and open action items
 - Answer upsert API (`PUT /api/sessions/[id]/answers`) with `onConflictDoUpdate` for 500ms debounced auto-save

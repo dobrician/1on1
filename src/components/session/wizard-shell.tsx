@@ -1,13 +1,17 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useReducer, useRef } from "react";
+import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { WizardTopBar, type SaveStatus } from "./wizard-top-bar";
 import { WizardNavigation } from "./wizard-navigation";
 import { CategoryStep } from "./category-step";
 import { RecapScreen } from "./recap-screen";
+import { ContextPanel, type OpenActionItem } from "./context-panel";
+import { QuestionHistoryDialog, type PreviousSession } from "./question-history-dialog";
 import { type AnswerValue } from "./question-widget";
+import { type TalkingPoint } from "./talking-point-list";
+import { type ActionItemData } from "./action-item-inline";
 import { useDebounce } from "@/lib/hooks/use-debounce";
 
 // --- Types ---
@@ -97,6 +101,8 @@ interface WizardState {
   categories: CategoryGroup[];
   saveStatus: SaveStatus;
   pendingSaves: Set<string>;
+  /** Track number of active saving operations (notes, talking points, action items) */
+  activeSavingCount: number;
 }
 
 type WizardAction =
@@ -105,7 +111,9 @@ type WizardAction =
   | { type: "SET_ANSWER"; questionId: string; value: AnswerValue }
   | { type: "SET_SAVE_STATUS"; status: SaveStatus }
   | { type: "ADD_PENDING"; questionId: string }
-  | { type: "REMOVE_PENDING"; questionId: string };
+  | { type: "REMOVE_PENDING"; questionId: string }
+  | { type: "INC_SAVING" }
+  | { type: "DEC_SAVING" };
 
 function wizardReducer(state: WizardState, action: WizardAction): WizardState {
   switch (action.type) {
@@ -134,6 +142,13 @@ function wizardReducer(state: WizardState, action: WizardAction): WizardState {
       newPending.delete(action.questionId);
       return { ...state, pendingSaves: newPending };
     }
+    case "INC_SAVING":
+      return { ...state, activeSavingCount: state.activeSavingCount + 1 };
+    case "DEC_SAVING":
+      return {
+        ...state,
+        activeSavingCount: Math.max(0, state.activeSavingCount - 1),
+      };
     default:
       return state;
   }
@@ -228,6 +243,7 @@ export function WizardShell({ sessionId }: WizardShellProps) {
     categories: [],
     saveStatus: "saved" as SaveStatus,
     pendingSaves: new Set<string>(),
+    activeSavingCount: 0,
   });
 
   const initializedRef = useRef(false);
@@ -236,6 +252,23 @@ export function WizardShell({ sessionId }: WizardShellProps) {
     questionId: string;
     value: AnswerValue;
   } | null>(null);
+
+  // --- Private notes state ---
+  const [privateNotes, setPrivateNotes] = useState<Record<string, string>>({});
+
+  // --- Talking points state keyed by category ---
+  const [talkingPointsByCategory, setTalkingPointsByCategory] = useState<
+    Record<string, TalkingPoint[]>
+  >({});
+
+  // --- Action items state keyed by category ---
+  const [actionItemsByCategory, setActionItemsByCategory] = useState<
+    Record<string, ActionItemData[]>
+  >({});
+
+  // --- Question history dialog ---
+  const [historyDialogOpen, setHistoryDialogOpen] = useState(false);
+  const [historyQuestionId, setHistoryQuestionId] = useState<string>("");
 
   // Fetch session data
   const { data, isLoading, error } = useQuery<SessionData>({
@@ -246,6 +279,76 @@ export function WizardShell({ sessionId }: WizardShellProps) {
       return res.json();
     },
   });
+
+  // Fetch private notes
+  const { data: privateNotesData } = useQuery<{ notes: Record<string, string> }>({
+    queryKey: ["session", sessionId, "private-notes"],
+    queryFn: async () => {
+      const res = await fetch(`/api/sessions/${sessionId}/notes/private`);
+      if (!res.ok) throw new Error("Failed to load private notes");
+      return res.json();
+    },
+    enabled: !!data,
+  });
+
+  // Fetch talking points
+  const { data: talkingPointsData } = useQuery<{
+    talkingPoints: TalkingPoint[];
+  }>({
+    queryKey: ["session", sessionId, "talking-points"],
+    queryFn: async () => {
+      const res = await fetch(`/api/sessions/${sessionId}/talking-points`);
+      if (!res.ok) throw new Error("Failed to load talking points");
+      return res.json();
+    },
+    enabled: !!data,
+  });
+
+  // Fetch action items
+  const { data: actionItemsData } = useQuery<{
+    actionItems: ActionItemData[];
+  }>({
+    queryKey: ["session", sessionId, "action-items"],
+    queryFn: async () => {
+      const res = await fetch(`/api/sessions/${sessionId}/action-items`);
+      if (!res.ok) throw new Error("Failed to load action items");
+      return res.json();
+    },
+    enabled: !!data,
+  });
+
+  // Populate private notes from fetch
+  useEffect(() => {
+    if (privateNotesData?.notes) {
+      setPrivateNotes(privateNotesData.notes);
+    }
+  }, [privateNotesData]);
+
+  // Populate talking points keyed by category
+  useEffect(() => {
+    if (talkingPointsData?.talkingPoints) {
+      const byCategory: Record<string, TalkingPoint[]> = {};
+      for (const tp of talkingPointsData.talkingPoints) {
+        const cat = tp.category ?? "general";
+        if (!byCategory[cat]) byCategory[cat] = [];
+        byCategory[cat].push(tp);
+      }
+      setTalkingPointsByCategory(byCategory);
+    }
+  }, [talkingPointsData]);
+
+  // Populate action items keyed by category
+  useEffect(() => {
+    if (actionItemsData?.actionItems) {
+      const byCategory: Record<string, ActionItemData[]> = {};
+      for (const ai of actionItemsData.actionItems) {
+        const cat = ai.category ?? "general";
+        if (!byCategory[cat]) byCategory[cat] = [];
+        byCategory[cat].push(ai);
+      }
+      setActionItemsByCategory(byCategory);
+    }
+  }, [actionItemsData]);
 
   // Initialize state from fetched data
   useEffect(() => {
@@ -324,12 +427,25 @@ export function WizardShell({ sessionId }: WizardShellProps) {
     []
   );
 
+  // Handle saving state from child components (notes, talking points, action items)
+  const handleSavingChange = useCallback(
+    (saving: boolean) => {
+      dispatch({ type: saving ? "INC_SAVING" : "DEC_SAVING" });
+    },
+    []
+  );
+
+  // Aggregate save status: if any component is saving, show "saving"
+  const aggregatedSaveStatus: SaveStatus = useMemo(() => {
+    if (state.saveStatus === "error") return "error";
+    if (state.saveStatus === "saving" || state.activeSavingCount > 0) return "saving";
+    return "saved";
+  }, [state.saveStatus, state.activeSavingCount]);
+
   // beforeunload: save pending changes immediately
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (lastChangedRef.current && state.saveStatus === "saving") {
-        // Fire immediate save (navigator.sendBeacon would be ideal but
-        // we need auth headers, so we use a sync-ish fetch)
         const { questionId, value } = lastChangedRef.current;
         const body = JSON.stringify({
           questionId,
@@ -337,7 +453,6 @@ export function WizardShell({ sessionId }: WizardShellProps) {
           answerNumeric: value.answerNumeric,
           answerJson: value.answerJson,
         });
-        // Use sendBeacon for reliability on page close
         navigator.sendBeacon(
           `/api/sessions/${sessionId}/answers`,
           new Blob([body], { type: "application/json" })
@@ -349,6 +464,36 @@ export function WizardShell({ sessionId }: WizardShellProps) {
     window.addEventListener("beforeunload", handleBeforeUnload);
     return () => window.removeEventListener("beforeunload", handleBeforeUnload);
   }, [sessionId, state.saveStatus]);
+
+  // visibilitychange: flush all pending debounced saves
+  useEffect(() => {
+    const handleVisibility = () => {
+      if (document.visibilityState === "hidden") {
+        // Flush pending answer save
+        if (lastChangedRef.current) {
+          const { questionId, value } = lastChangedRef.current;
+          navigator.sendBeacon(
+            `/api/sessions/${sessionId}/answers`,
+            new Blob(
+              [
+                JSON.stringify({
+                  questionId,
+                  answerText: value.answerText,
+                  answerNumeric: value.answerNumeric,
+                  answerJson: value.answerJson,
+                }),
+              ],
+              { type: "application/json" }
+            )
+          );
+        }
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibility);
+    return () =>
+      document.removeEventListener("visibilitychange", handleVisibility);
+  }, [sessionId]);
 
   // Evaluate conditional visibility
   const isQuestionVisible = useCallback(
@@ -398,6 +543,109 @@ export function WizardShell({ sessionId }: WizardShellProps) {
     }
   }, [state.currentStep, totalSteps]);
 
+  // Question history dialog handler
+  const handleQuestionHistoryOpen = useCallback((questionId: string) => {
+    setHistoryQuestionId(questionId);
+    setHistoryDialogOpen(true);
+  }, []);
+
+  // Build participants list for action item assignee picker
+  const seriesParticipants = useMemo(() => {
+    if (!data) return [];
+    const participants: Array<{ id: string; firstName: string; lastName: string }> = [];
+    if (data.series.manager) {
+      participants.push({
+        id: data.series.manager.id,
+        firstName: data.series.manager.firstName,
+        lastName: data.series.manager.lastName,
+      });
+    }
+    if (data.series.report) {
+      participants.push({
+        id: data.series.report.id,
+        firstName: data.series.report.firstName,
+        lastName: data.series.report.lastName,
+      });
+    }
+    return participants;
+  }, [data]);
+
+  // Build session number map for "carried from" badges
+  const sessionNumberMap = useMemo(() => {
+    const map = new Map<string, number>();
+    if (!data) return map;
+    for (const ps of data.previousSessions) {
+      map.set(ps.id, ps.sessionNumber);
+    }
+    return map;
+  }, [data]);
+
+  // Build previous sessions for context panel (with question text enrichment)
+  const previousSessionsForContext: PreviousSession[] = useMemo(() => {
+    if (!data) return [];
+    const questionMap = new Map<string, { text: string; type: string; cat: string }>();
+    for (const q of data.template.questions) {
+      questionMap.set(q.id, {
+        text: q.questionText,
+        type: q.answerType,
+        cat: q.category,
+      });
+    }
+
+    return data.previousSessions.map((ps) => ({
+      id: ps.id,
+      sessionNumber: ps.sessionNumber,
+      completedAt: ps.completedAt ?? ps.scheduledAt,
+      sessionScore: ps.sessionScore !== null ? String(ps.sessionScore) : null,
+      sharedNotes: ps.sharedNotes,
+      answers: ps.answers.map((a) => {
+        const q = questionMap.get(a.questionId);
+        return {
+          questionId: a.questionId,
+          questionText: q?.text ?? "Unknown question",
+          answerType: q?.type ?? "text",
+          answerText: a.answerText,
+          answerNumeric: a.answerNumeric !== null ? String(a.answerNumeric) : null,
+          answerJson: a.answerJson,
+          category: q?.cat ?? "general",
+        };
+      }),
+    }));
+  }, [data]);
+
+  // Build open action items for context panel
+  const openActionItemsForContext: OpenActionItem[] = useMemo(() => {
+    if (!data) return [];
+    return data.openActionItems.map((ai) => {
+      const assignee = seriesParticipants.find((p) => p.id === ai.assigneeId);
+      const sessionNum = sessionNumberMap.get(ai.createdAt) ?? 0;
+      return {
+        id: ai.id,
+        title: ai.title,
+        assignee: assignee ?? { firstName: "Unknown", lastName: "" },
+        dueDate: ai.dueDate,
+        status: ai.status,
+        category: ai.category,
+        sessionNumber: sessionNum,
+      };
+    });
+  }, [data, seriesParticipants, sessionNumberMap]);
+
+  // Session scores for sparkline
+  const sessionScores = useMemo(() => {
+    if (!data) return [];
+    return data.previousSessions
+      .filter((ps) => ps.sessionScore !== null)
+      .map((ps) => ps.sessionScore as number)
+      .reverse(); // oldest first for sparkline
+  }, [data]);
+
+  // Find the question for history dialog
+  const historyQuestion = useMemo(() => {
+    if (!historyQuestionId || !data) return null;
+    return data.template.questions.find((q) => q.id === historyQuestionId) ?? null;
+  }, [historyQuestionId, data]);
+
   // Loading state
   if (isLoading) {
     return (
@@ -423,8 +671,6 @@ export function WizardShell({ sessionId }: WizardShellProps) {
     ? `${data.series.report.firstName} ${data.series.report.lastName}`
     : "Unknown";
 
-  const hasUnsavedChanges = state.saveStatus === "saving";
-
   // Determine current step content
   const isRecapStep = state.currentStep === 0;
   const categoryIndex = state.currentStep - 1; // -1 for recap
@@ -440,37 +686,60 @@ export function WizardShell({ sessionId }: WizardShellProps) {
         reportName={reportName}
         sessionNumber={data.session.sessionNumber}
         date={data.session.startedAt ?? data.session.scheduledAt}
-        saveStatus={state.saveStatus}
-        hasUnsavedChanges={hasUnsavedChanges}
+        saveStatus={aggregatedSaveStatus}
+        hasUnsavedChanges={aggregatedSaveStatus === "saving"}
       />
 
-      {/* Main content area */}
-      {isRecapStep ? (
-        <RecapScreen
-          reportName={reportName}
-          previousSessions={data.previousSessions}
-          openActionItems={data.openActionItems}
-        />
-      ) : currentCategory ? (
-        <CategoryStep
-          categoryName={currentCategory.name}
-          questions={currentCategory.questions}
-          answers={state.answers}
-          onAnswerChange={handleAnswerChange}
-          isQuestionVisible={isQuestionVisible}
-          disabled={data.session.status === "completed"}
-        />
-      ) : (
-        // Summary step placeholder (filled in Plan 05)
-        <div className="flex flex-1 items-center justify-center">
-          <div className="text-center text-muted-foreground">
-            <p className="text-lg font-medium">Summary</p>
-            <p className="text-sm">
-              Session summary and completion will be available in Plan 05.
-            </p>
+      {/* Main content area with context panel */}
+      <div className="flex flex-1 overflow-hidden">
+        {/* Left: main wizard content */}
+        {isRecapStep ? (
+          <RecapScreen
+            reportName={reportName}
+            previousSessions={data.previousSessions}
+            openActionItems={data.openActionItems}
+          />
+        ) : currentCategory ? (
+          <CategoryStep
+            sessionId={sessionId}
+            categoryName={currentCategory.name}
+            questions={currentCategory.questions}
+            answers={state.answers}
+            onAnswerChange={handleAnswerChange}
+            isQuestionVisible={isQuestionVisible}
+            disabled={data.session.status === "completed"}
+            sharedNotesContent={
+              data.session.sharedNotes?.[currentCategory.name] ?? ""
+            }
+            privateNotesContent={privateNotes[currentCategory.name] ?? ""}
+            talkingPoints={talkingPointsByCategory[currentCategory.name] ?? []}
+            actionItems={actionItemsByCategory[currentCategory.name] ?? []}
+            seriesParticipants={seriesParticipants}
+            sessionNumberMap={sessionNumberMap}
+            onSavingChange={handleSavingChange}
+          />
+        ) : (
+          // Summary step placeholder (filled in Plan 05)
+          <div className="flex flex-1 items-center justify-center">
+            <div className="text-center text-muted-foreground">
+              <p className="text-lg font-medium">Summary</p>
+              <p className="text-sm">
+                Session summary and completion will be available in Plan 05.
+              </p>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+
+        {/* Right: context panel */}
+        <ContextPanel
+          currentStep={state.currentStep}
+          currentCategory={currentCategory?.name ?? null}
+          previousSessions={previousSessionsForContext}
+          openActionItems={openActionItemsForContext}
+          sessionScores={sessionScores}
+          onQuestionHistoryOpen={handleQuestionHistoryOpen}
+        />
+      </div>
 
       <WizardNavigation
         currentStep={state.currentStep}
@@ -480,6 +749,18 @@ export function WizardShell({ sessionId }: WizardShellProps) {
         onPrev={handlePrev}
         onNext={handleNext}
       />
+
+      {/* Question history dialog */}
+      {historyQuestion && (
+        <QuestionHistoryDialog
+          open={historyDialogOpen}
+          onOpenChange={setHistoryDialogOpen}
+          questionId={historyQuestion.id}
+          questionText={historyQuestion.questionText}
+          answerType={historyQuestion.answerType}
+          previousSessions={previousSessionsForContext}
+        />
+      )}
     </>
   );
 }

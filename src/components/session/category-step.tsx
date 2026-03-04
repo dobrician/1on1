@@ -1,8 +1,13 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { FileText, ListChecks, MessageSquare } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 import { QuestionWidget, type AnswerValue } from "./question-widget";
+import { NotesEditor } from "./notes-editor";
+import { TalkingPointList, type TalkingPoint } from "./talking-point-list";
+import { ActionItemInline, type ActionItemData } from "./action-item-inline";
 
 interface TemplateQuestion {
   id: string;
@@ -18,13 +23,27 @@ interface TemplateQuestion {
   conditionalValue: string | null;
 }
 
+interface Participant {
+  id: string;
+  firstName: string;
+  lastName: string;
+}
+
 interface CategoryStepProps {
+  sessionId: string;
   categoryName: string;
   questions: TemplateQuestion[];
   answers: Map<string, AnswerValue>;
   onAnswerChange: (questionId: string, value: AnswerValue) => void;
   isQuestionVisible: (question: TemplateQuestion) => boolean;
   disabled?: boolean;
+  sharedNotesContent: string;
+  privateNotesContent: string;
+  talkingPoints: TalkingPoint[];
+  actionItems: ActionItemData[];
+  seriesParticipants: Participant[];
+  sessionNumberMap?: Map<string, number>;
+  onSavingChange?: (saving: boolean) => void;
 }
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -39,13 +58,36 @@ const CATEGORY_LABELS: Record<string, string> = {
   custom: "Custom",
 };
 
+function SectionLabel({
+  icon: Icon,
+  label,
+}: {
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+}) {
+  return (
+    <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground uppercase tracking-wide">
+      <Icon className="size-3.5" />
+      {label}
+    </div>
+  );
+}
+
 export function CategoryStep({
+  sessionId,
   categoryName,
   questions,
   answers,
   onAnswerChange,
   isQuestionVisible,
   disabled,
+  sharedNotesContent,
+  privateNotesContent,
+  talkingPoints,
+  actionItems,
+  seriesParticipants,
+  sessionNumberMap,
+  onSavingChange,
 }: CategoryStepProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -107,11 +149,46 @@ export function CategoryStep({
           );
         })}
 
-        {/* Placeholder slots for notes and action items (Plan 04) */}
-        <div className="space-y-4 pt-4">
-          <div className="rounded-lg border border-dashed p-4 text-sm text-muted-foreground">
-            Notes and action items will appear here
-          </div>
+        {/* Divider between questions and discussion tools */}
+        <Separator className="my-6" />
+
+        {/* Notes */}
+        <div className="space-y-3">
+          <SectionLabel icon={FileText} label="Notes" />
+          <NotesEditor
+            sessionId={sessionId}
+            category={categoryName}
+            initialSharedContent={sharedNotesContent}
+            initialPrivateContent={privateNotesContent}
+            readOnly={disabled}
+            onSavingChange={onSavingChange}
+          />
+        </div>
+
+        {/* Talking Points */}
+        <div className="space-y-3">
+          <SectionLabel icon={MessageSquare} label="Talking Points" />
+          <TalkingPointList
+            sessionId={sessionId}
+            category={categoryName}
+            initialPoints={talkingPoints}
+            readOnly={disabled}
+            onSavingChange={onSavingChange}
+            sessionNumberMap={sessionNumberMap}
+          />
+        </div>
+
+        {/* Action Items */}
+        <div className="space-y-3">
+          <SectionLabel icon={ListChecks} label="Action Items" />
+          <ActionItemInline
+            sessionId={sessionId}
+            category={categoryName}
+            seriesParticipants={seriesParticipants}
+            initialItems={actionItems}
+            readOnly={disabled}
+            onSavingChange={onSavingChange}
+          />
         </div>
       </div>
     </div>

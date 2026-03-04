@@ -8,14 +8,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 - Direct AI pipeline execution (`src/lib/ai/pipeline.ts`) — runs AI generation without Inngest dependency
-- Inngest CLI and concurrently as dev dependencies with `dev:inngest` and `dev:next` scripts
+- Analytics snapshot computation wired into direct AI pipeline — `computeSessionSnapshot()` called after AI completion (non-fatal on failure)
 
 ### Changed
 - Session completion and AI retry now use direct pipeline instead of Inngest events (more reliable in dev)
 - AI summary/suggestions polling timeout after 2 minutes — shows retry UI instead of infinite "Generating..." state
+- Dev server starts with plain `next dev` — no Inngest CLI or concurrently dependency
+
+### Removed
+- `inngest`, `inngest-cli`, `concurrently` packages removed from dependencies
+- `src/inngest/` directory (client, post-session, pre-session-nudges, analytics-snapshot functions) — replaced by direct pipeline
+- `src/app/api/inngest/route.ts` serve route removed
+- `dev:inngest` and `dev:next` scripts removed from package.json
+- `INNGEST_EVENT_KEY` and `INNGEST_SIGNING_KEY` from `.env.example`
 
 ### Fixed
 - Dashboard nudge section missing for managers — restored standalone `getManagerNudges` query and `NudgeCardsGrid` rendering on overview page (no date filter, shows all non-dismissed nudges)
+- Wizard NudgeList over-filtering nudges — removed `upcoming=true` parameter so all non-dismissed series nudges are shown in context panel
+- Nudge API `upcoming=true` filter silently dropping NULL targetSessionAt nudges — replaced with IS NULL OR range check
 - Analytics overview page crash caused by ungrouped column in correlated subquery — replaced with DISTINCT ON query for latest scores
 - Score trend chart NaN values caused by parseFloat on Drizzle decimal strings — replaced with Number() and added NaN filtering across all analytics queries
 - Hardcoded CATEGORY_METRICS (6 English names) silently dropping 7 of 13 template sections — categories now derived dynamically from template section names

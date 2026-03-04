@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth/config";
 import { withTenantContext } from "@/lib/db/tenant-context";
 import { aiNudges, meetingSeries, users } from "@/lib/db/schema";
-import { eq, and, gte, sql } from "drizzle-orm";
+import { eq, and, sql } from "drizzle-orm";
 
 /**
  * GET /api/nudges
@@ -45,12 +45,9 @@ export async function GET(request: Request) {
           const in7Days = new Date(
             Date.now() + 7 * 24 * 60 * 60 * 1000
           );
+          // Include nudges with NULL targetSessionAt OR targetSessionAt within next 7 days
           conditions.push(
-            gte(aiNudges.targetSessionAt, new Date())
-          );
-          // targetSessionAt <= in7Days handled via raw SQL for precision
-          conditions.push(
-            sql`${aiNudges.targetSessionAt} <= ${in7Days}`
+            sql`(${aiNudges.targetSessionAt} IS NULL OR (${aiNudges.targetSessionAt} >= now() AND ${aiNudges.targetSessionAt} <= ${in7Days}))`
           );
         }
 

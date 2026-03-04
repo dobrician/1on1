@@ -38,7 +38,7 @@ export function NudgeList({ seriesId }: NudgeListProps) {
     queryKey: ["nudges", seriesId],
     queryFn: async () => {
       const res = await fetch(
-        `/api/nudges?seriesId=${seriesId}&upcoming=true`
+        `/api/nudges?seriesId=${seriesId}`
       );
       if (!res.ok) throw new Error("Failed to fetch nudges");
       return res.json();

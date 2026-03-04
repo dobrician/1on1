@@ -7,6 +7,7 @@ import {
 } from "./service";
 import { withTenantContext } from "@/lib/db/tenant-context";
 import { logAuditEvent } from "@/lib/audit/log";
+import { computeSessionSnapshot } from "@/lib/analytics/compute";
 import { sessions, meetingSeries, aiNudges } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 
@@ -133,6 +134,17 @@ export async function runAIPipelineDirect(input: PipelineInput): Promise<void> {
         },
       });
     });
+
+    // Compute analytics snapshot
+    try {
+      await withTenantContext(tenantId, managerId, async (tx) => {
+        await computeSessionSnapshot(tx, sessionId, tenantId, reportId, seriesId);
+      });
+      console.log(`[AI Pipeline] Analytics snapshot computed for session ${sessionId}`);
+    } catch (snapshotError) {
+      // Non-fatal: log but don't fail the pipeline for snapshot errors
+      console.error(`[AI Pipeline] Analytics snapshot failed for session ${sessionId}:`, snapshotError);
+    }
 
     console.log(`[AI Pipeline] Completed for session ${sessionId}`);
   } catch (error) {

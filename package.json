@@ -3,9 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently --kill-others \"next dev --port 4300\" \"inngest-cli dev -u http://localhost:4300/api/inngest --no-discovery --no-poll\"",
-    "dev:next": "next dev --port 4300",
-    "dev:inngest": "inngest-cli dev -u http://localhost:4300/api/inngest --no-discovery --no-poll",
+    "dev": "next dev --port 4300",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
@@ -41,7 +39,6 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "drizzle-orm": "^0.38.4",
-    "inngest": "^3.52.6",
     "lucide-react": "^0.576.0",
     "next": "16.1.6",
     "next-auth": "^5.0.0-beta.30",
@@ -69,12 +66,10 @@
     "@types/react-dom": "^19",
     "@types/ws": "^8.5.14",
     "@vitest/coverage-v8": "^4.0.18",
-    "concurrently": "^9.2.1",
     "dotenv": "^16.4.7",
     "drizzle-kit": "^0.30.4",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
-    "inngest-cli": "^1.17.1",
     "shadcn": "^3.8.5",
     "tailwindcss": "^4",
     "tsx": "^4.19.2",
@@ -82,7 +77,5 @@
     "typescript": "^5",
     "vitest": "^4.0.18"
   },
-  "trustedDependencies": [
-    "inngest-cli"
-  ]
+  "trustedDependencies": []
 }

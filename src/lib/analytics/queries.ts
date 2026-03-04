@@ -8,6 +8,8 @@ import {
   templateSections,
   teamMembers,
   users,
+  actionItems,
+  meetingSeries,
 } from "@/lib/db/schema";
 import {
   METRIC_NAMES,
@@ -46,6 +48,7 @@ export interface HeatmapDataPoint {
   userName: string;
   category: string;
   score: number;
+  sampleCount: number;
 }
 
 // ---------- Score Trend ----------
@@ -380,6 +383,7 @@ export async function getTeamHeatmapData(
       userId: analyticsSnapshots.userId,
       metricName: analyticsSnapshots.metricName,
       avgScore: sql<string>`AVG(${analyticsSnapshots.metricValue}::numeric)`,
+      sampleCount: sql<number>`SUM(${analyticsSnapshots.sampleCount})::int`,
     })
     .from(analyticsSnapshots)
     .where(
@@ -416,5 +420,143 @@ export async function getTeamHeatmapData(
       userName: nameMap.get(s.userId!) ?? "Unknown",
       category: metricToCategory[s.metricName] ?? s.metricName,
       score: parseFloat(s.avgScore),
+      sampleCount: s.sampleCount ?? 0,
+    }));
+}
+
+// ---------- Action Item Velocity ----------
+
+export interface VelocityPoint {
+  month: string;
+  avgDays: number;
+  count: number;
+}
+
+/**
+ * Get action item velocity: average days from creation to completion per month.
+ *
+ * For managers: filters items in their series. For admins: org-wide.
+ * For members: only their own assigned items.
+ */
+export async function getActionItemVelocity(
+  tx: TransactionClient,
+  userId: string,
+  role: string,
+  startDate: string,
+  endDate: string,
+): Promise<VelocityPoint[]> {
+  // Build role-specific filter
+  let roleFilter;
+  if (role === "admin") {
+    roleFilter = sql`1=1`; // org-wide (RLS handles tenant)
+  } else if (role === "manager") {
+    roleFilter = sql`${actionItems.sessionId} IN (
+      SELECT s.id FROM session s
+      JOIN meeting_series ms ON s.series_id = ms.id
+      WHERE ms.manager_id = ${userId}
+    )`;
+  } else {
+    roleFilter = eq(actionItems.assigneeId, userId);
+  }
+
+  const rows = await tx
+    .select({
+      month: sql<string>`to_char(${actionItems.completedAt}, 'YYYY-MM')`,
+      avgDays: sql<string>`AVG(EXTRACT(EPOCH FROM (${actionItems.completedAt} - ${actionItems.createdAt})) / 86400)`,
+      count: sql<number>`COUNT(*)::int`,
+    })
+    .from(actionItems)
+    .where(
+      and(
+        eq(actionItems.status, "completed"),
+        sql`${actionItems.completedAt} IS NOT NULL`,
+        sql`${actionItems.completedAt} >= ${startDate}::date`,
+        sql`${actionItems.completedAt} <= ${endDate}::date + interval '1 day'`,
+        roleFilter,
+      ),
+    )
+    .groupBy(sql`to_char(${actionItems.completedAt}, 'YYYY-MM')`)
+    .orderBy(sql`to_char(${actionItems.completedAt}, 'YYYY-MM')`);
+
+  return rows
+    .filter((r) => r.month !== null)
+    .map((r) => ({
+      month: r.month!,
+      avgDays: parseFloat(parseFloat(r.avgDays).toFixed(1)),
+      count: r.count,
+    }));
+}
+
+// ---------- Meeting Adherence ----------
+
+export interface AdherencePoint {
+  month: string;
+  completed: number;
+  cancelled: number;
+  missed: number;
+  total: number;
+  adherencePercent: number;
+}
+
+/**
+ * Get meeting adherence: percentage of scheduled sessions completed per month.
+ *
+ * Counts sessions by final status (completed, cancelled, missed).
+ * Excludes scheduled/in_progress (not yet resolved).
+ * For managers: their series. For admins: org-wide. For members: their series as report.
+ */
+export async function getMeetingAdherence(
+  tx: TransactionClient,
+  userId: string,
+  role: string,
+  startDate: string,
+  endDate: string,
+): Promise<AdherencePoint[]> {
+  // Build role-specific filter
+  let roleFilter;
+  if (role === "admin") {
+    roleFilter = sql`1=1`;
+  } else if (role === "manager") {
+    roleFilter = sql`${sessions.seriesId} IN (
+      SELECT id FROM meeting_series WHERE manager_id = ${userId}
+    )`;
+  } else {
+    roleFilter = sql`${sessions.seriesId} IN (
+      SELECT id FROM meeting_series WHERE report_id = ${userId}
+    )`;
+  }
+
+  const rows = await tx
+    .select({
+      month: sql<string>`to_char(${sessions.scheduledAt}, 'YYYY-MM')`,
+      completed: sql<number>`COUNT(*) FILTER (WHERE ${sessions.status} = 'completed')::int`,
+      cancelled: sql<number>`COUNT(*) FILTER (WHERE ${sessions.status} = 'cancelled')::int`,
+      missed: sql<number>`COUNT(*) FILTER (WHERE ${sessions.status} = 'missed')::int`,
+      total: sql<number>`COUNT(*)::int`,
+    })
+    .from(sessions)
+    .where(
+      and(
+        sql`${sessions.status} IN ('completed', 'cancelled', 'missed')`,
+        sql`${sessions.scheduledAt} >= ${startDate}::date`,
+        sql`${sessions.scheduledAt} <= ${endDate}::date + interval '1 day'`,
+        roleFilter,
+      ),
+    )
+    .groupBy(sql`to_char(${sessions.scheduledAt}, 'YYYY-MM')`)
+    .orderBy(sql`to_char(${sessions.scheduledAt}, 'YYYY-MM')`);
+
+  return rows
+    .filter((r) => r.month !== null)
+    .map((r) => ({
+      month: r.month!,
+      completed: r.completed,
+      cancelled: r.cancelled,
+      missed: r.missed,
+      total: r.total,
+      adherencePercent:
+        r.total > 0
+          ? parseFloat(((r.completed / r.total) * 100).toFixed(1))
+          : 0,
     }));
 }

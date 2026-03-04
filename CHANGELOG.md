@@ -7,6 +7,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## [Unreleased]
 
 ### Added
+- Team analytics page with aggregated category scores and SVG dot matrix heatmap (size=sample count, color=score)
+- Team analytics API route (`GET /api/analytics/team/[id]`) with RBAC (members blocked, managers need team lead role)
+- TeamOverview component showing category score cards with green/amber/red bar visualization and limited-data footnotes
+- TeamHeatmap SVG component: dot matrix with size+color encoding, hollow circles for insufficient data (<3 samples), hover tooltips
+- Anonymization toggle on team analytics: replaces names with "Member N" in heatmap
+- Teams section on analytics overview page linking to team-level analytics
 - Action item velocity area chart showing average days from creation to completion per month with 7-day target reference line
 - Meeting adherence stacked bar chart showing completed/cancelled/missed sessions per month with adherence percentage
 - Velocity and adherence query functions with role-based filtering (admin org-wide, manager their reports, member own data)

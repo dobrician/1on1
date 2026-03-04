@@ -3,11 +3,11 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { eq, and, sql } from "drizzle-orm";
 import { withTenantContext } from "@/lib/db/tenant-context";
-import { users, meetingSeries, sessions } from "@/lib/db/schema";
+import { users, meetingSeries, sessions, teams, teamMembers } from "@/lib/db/schema";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { BarChart3 } from "lucide-react";
+import { BarChart3, Users } from "lucide-react";
 
 interface ReportSummary {
   userId: string;
@@ -17,6 +17,12 @@ interface ReportSummary {
   jobTitle: string | null;
   sessionCount: number;
   latestScore: number | null;
+}
+
+interface TeamSummary {
+  id: string;
+  name: string;
+  memberCount: number;
 }
 
 export default async function AnalyticsPage() {
@@ -30,7 +36,7 @@ export default async function AnalyticsPage() {
     redirect(`/analytics/individual/${user.id}`);
   }
 
-  const reports = await withTenantContext(
+  const { reports, teamsList } = await withTenantContext(
     user.tenantId,
     user.id,
     async (tx) => {
@@ -98,11 +104,39 @@ export default async function AnalyticsPage() {
         }
       }
 
-      return Array.from(seen.values()).sort((a, b) =>
+      const reportsList = Array.from(seen.values()).sort((a, b) =>
         `${a.firstName} ${a.lastName}`.localeCompare(
           `${b.firstName} ${b.lastName}`,
         ),
       );
+
+      // Fetch teams the user can see analytics for
+      // Managers: teams they manage or lead; Admins: all teams
+      const teamRows =
+        user.role === "admin"
+          ? await tx
+              .select({
+                id: teams.id,
+                name: teams.name,
+                memberCount: sql<number>`(
+                  SELECT COUNT(*)::int FROM team_member WHERE team_id = ${teams.id}
+                )`,
+              })
+              .from(teams)
+              .orderBy(teams.name)
+          : await tx
+              .select({
+                id: teams.id,
+                name: teams.name,
+                memberCount: sql<number>`(
+                  SELECT COUNT(*)::int FROM team_member WHERE team_id = ${teams.id}
+                )`,
+              })
+              .from(teams)
+              .where(eq(teams.managerId, user.id))
+              .orderBy(teams.name);
+
+      return { reports: reportsList, teamsList: teamRows as TeamSummary[] };
     },
   );
 
@@ -115,61 +149,96 @@ export default async function AnalyticsPage() {
         </p>
       </div>
 
-      {reports.length === 0 ? (
-        <Card>
-          <CardContent className="flex flex-col items-center justify-center py-12 text-center">
-            <BarChart3 className="mb-3 h-10 w-10 text-muted-foreground/50" />
-            <p className="text-sm text-muted-foreground">
-              No session data available yet. Complete sessions to see analytics.
-            </p>
-          </CardContent>
-        </Card>
-      ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {reports.map((report) => {
-            const initials = `${report.firstName[0]}${report.lastName[0]}`;
-            return (
-              <Link
-                key={report.userId}
-                href={`/analytics/individual/${report.userId}`}
-              >
+      {/* Team analytics section */}
+      {teamsList.length > 0 && (
+        <div>
+          <h2 className="mb-3 text-lg font-medium">Teams</h2>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {teamsList.map((team) => (
+              <Link key={team.id} href={`/analytics/team/${team.id}`}>
                 <Card className="transition-colors hover:bg-accent/30">
                   <CardContent className="flex items-center gap-4 p-4">
-                    <Avatar className="h-10 w-10">
-                      <AvatarImage
-                        src={report.avatarUrl ?? undefined}
-                        alt={`${report.firstName} ${report.lastName}`}
-                      />
-                      <AvatarFallback>{initials}</AvatarFallback>
-                    </Avatar>
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted">
+                      <Users className="h-5 w-5 text-muted-foreground" />
+                    </div>
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-medium">
-                        {report.firstName} {report.lastName}
+                        {team.name}
                       </p>
-                      {report.jobTitle && (
-                        <p className="truncate text-xs text-muted-foreground">
-                          {report.jobTitle}
-                        </p>
-                      )}
-                    </div>
-                    <div className="flex flex-col items-end gap-1">
-                      {report.latestScore !== null && (
-                        <Badge variant="secondary" className="text-xs">
-                          {report.latestScore.toFixed(1)}
-                        </Badge>
-                      )}
-                      <span className="text-xs text-muted-foreground">
-                        {report.sessionCount}{" "}
-                        {report.sessionCount === 1 ? "session" : "sessions"}
-                      </span>
+                      <p className="text-xs text-muted-foreground">
+                        {team.memberCount}{" "}
+                        {team.memberCount === 1 ? "member" : "members"}
+                      </p>
                     </div>
                   </CardContent>
                 </Card>
               </Link>
-            );
-          })}
+            ))}
+          </div>
         </div>
       )}
+
+      {/* Individual reports section */}
+      <div>
+        {teamsList.length > 0 && (
+          <h2 className="mb-3 text-lg font-medium">Individuals</h2>
+        )}
+        {reports.length === 0 ? (
+          <Card>
+            <CardContent className="flex flex-col items-center justify-center py-12 text-center">
+              <BarChart3 className="mb-3 h-10 w-10 text-muted-foreground/50" />
+              <p className="text-sm text-muted-foreground">
+                No session data available yet. Complete sessions to see analytics.
+              </p>
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {reports.map((report) => {
+              const initials = `${report.firstName[0]}${report.lastName[0]}`;
+              return (
+                <Link
+                  key={report.userId}
+                  href={`/analytics/individual/${report.userId}`}
+                >
+                  <Card className="transition-colors hover:bg-accent/30">
+                    <CardContent className="flex items-center gap-4 p-4">
+                      <Avatar className="h-10 w-10">
+                        <AvatarImage
+                          src={report.avatarUrl ?? undefined}
+                          alt={`${report.firstName} ${report.lastName}`}
+                        />
+                        <AvatarFallback>{initials}</AvatarFallback>
+                      </Avatar>
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-sm font-medium">
+                          {report.firstName} {report.lastName}
+                        </p>
+                        {report.jobTitle && (
+                          <p className="truncate text-xs text-muted-foreground">
+                            {report.jobTitle}
+                          </p>
+                        )}
+                      </div>
+                      <div className="flex flex-col items-end gap-1">
+                        {report.latestScore !== null && (
+                          <Badge variant="secondary" className="text-xs">
+                            {report.latestScore.toFixed(1)}
+                          </Badge>
+                        )}
+                        <span className="text-xs text-muted-foreground">
+                          {report.sessionCount}{" "}
+                          {report.sessionCount === 1 ? "session" : "sessions"}
+                        </span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+              );
+            })}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

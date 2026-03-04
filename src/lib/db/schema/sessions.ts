@@ -11,7 +11,10 @@ import { relations } from "drizzle-orm";
 import { tenants } from "./tenants";
 import { meetingSeries } from "./series";
 import { questionnaireTemplates } from "./templates";
-import { sessionStatusEnum } from "./enums";
+import { sessionStatusEnum, aiStatusEnum } from "./enums";
+import type { AISummary } from "@/lib/ai/schemas/summary";
+import type { AIManagerAddendum } from "@/lib/ai/schemas/addendum";
+import type { AIActionSuggestions } from "@/lib/ai/schemas/action-items";
 
 export const sessions = pgTable(
   "session",
@@ -34,6 +37,11 @@ export const sessions = pgTable(
     sharedNotes: jsonb("shared_notes").$type<Record<string, string> | null>(),
     durationMinutes: integer("duration_minutes"),
     sessionScore: decimal("session_score", { precision: 4, scale: 2 }),
+    aiSummary: jsonb("ai_summary").$type<AISummary | null>(),
+    aiManagerAddendum: jsonb("ai_manager_addendum").$type<AIManagerAddendum | null>(),
+    aiSuggestions: jsonb("ai_suggestions").$type<AIActionSuggestions | null>(),
+    aiStatus: aiStatusEnum("ai_status").default("pending"),
+    aiCompletedAt: timestamp("ai_completed_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),

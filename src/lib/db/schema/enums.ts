@@ -102,3 +102,10 @@ export const periodTypeEnum = pgEnum("period_type", [
   "quarter",
   "year",
 ]);
+
+export const aiStatusEnum = pgEnum("ai_status", [
+  "pending",
+  "generating",
+  "completed",
+  "failed",
+]);

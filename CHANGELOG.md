@@ -7,6 +7,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## [Unreleased]
 
 ### Added
+- AI SDK v6 (`ai@6.0.111`) and Anthropic provider (`@ai-sdk/anthropic@3.0.54`) for structured AI generation
+- Inngest (`inngest@3.52.6`) for durable background job pipelines with typed event schemas
+- Inngest serve route at `/api/inngest` with typed client exporting `session/completed`, `session/nudges.refresh`, `session/ai.retry` events
+- AI status enum (`pending`, `generating`, `completed`, `failed`) for tracking AI pipeline progress
+- Session table AI columns: `ai_summary`, `ai_manager_addendum`, `ai_suggestions` (JSONB), `ai_status`, `ai_completed_at`
+- `ai_nudge` table with tenant isolation RLS policy, indexes on `(series_id, target_session_at)` and `(tenant_id, is_dismissed)`
+- Zod schemas for AI structured output: `summarySchema`, `managerAddendumSchema`, `nudgesSchema`, `actionSuggestionsSchema`
+- AI model configuration (`src/lib/ai/models.ts`) mapping tasks to Claude model tiers (Sonnet for summaries/addendum/suggestions, Haiku for nudges)
+- AI context builder (`src/lib/ai/context.ts`) assembling session data with token-budget truncation for AI prompts
+- AI prompt templates for summary, nudges, and action item suggestion generation
+- AI service layer (`src/lib/ai/service.ts`) with `generateSummary`, `generateManagerAddendum`, `generateNudges`, `generateActionSuggestions` using AI SDK v6 `generateText` + `Output.object` pattern
+- `ANTHROPIC_API_KEY`, `INNGEST_EVENT_KEY`, `INNGEST_SIGNING_KEY` placeholders in `.env.example`
 - Full-text search API (`GET /api/search`) with PostgreSQL tsvector/GIN indexes across sessions, action items, templates, and people
 - GIN expression indexes on action_item, talking_point, and session_answer tables for fast full-text search
 - Global Cmd+K command palette for universal search across sessions, action items, templates, and people

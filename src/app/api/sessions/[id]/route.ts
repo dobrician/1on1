@@ -1,0 +1,337 @@
+import { NextResponse } from "next/server";
+import { auth } from "@/lib/auth/config";
+import { withTenantContext } from "@/lib/db/tenant-context";
+import { isSeriesParticipant, isAdmin } from "@/lib/auth/rbac";
+import {
+  sessions,
+  meetingSeries,
+  users,
+  templateQuestions,
+  sessionAnswers,
+  actionItems,
+} from "@/lib/db/schema";
+import { eq, and, desc, asc, inArray, or } from "drizzle-orm";
+
+/**
+ * GET /api/sessions/[id]
+ *
+ * Returns the full session data needed by the wizard:
+ * - Session record (status, sessionNumber, startedAt)
+ * - Series info (managerId, reportId, report name/avatar, cadence)
+ * - Template questions (ordered by sortOrder, non-archived)
+ * - Existing answers (for restore on resume)
+ * - Previous sessions (last 3 completed, with answers and action items)
+ * - Open action items from previous sessions
+ */
+export async function GET(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const session = await auth();
+  if (!session?.user) {
+    return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+  }
+
+  const { id: sessionId } = await params;
+
+  try {
+    const result = await withTenantContext(
+      session.user.tenantId,
+      session.user.id,
+      async (tx) => {
+        // Fetch the session
+        const sessionRows = await tx
+          .select()
+          .from(sessions)
+          .where(
+            and(
+              eq(sessions.id, sessionId),
+              eq(sessions.tenantId, session.user.tenantId)
+            )
+          )
+          .limit(1);
+
+        if (sessionRows.length === 0) {
+          return { error: "NOT_FOUND" as const };
+        }
+
+        const sessionRecord = sessionRows[0];
+
+        // Fetch the series with manager and report info
+        const seriesRows = await tx
+          .select({
+            id: meetingSeries.id,
+            managerId: meetingSeries.managerId,
+            reportId: meetingSeries.reportId,
+            cadence: meetingSeries.cadence,
+            status: meetingSeries.status,
+          })
+          .from(meetingSeries)
+          .where(eq(meetingSeries.id, sessionRecord.seriesId))
+          .limit(1);
+
+        if (seriesRows.length === 0) {
+          return { error: "NOT_FOUND" as const };
+        }
+
+        const series = seriesRows[0];
+
+        // Authorization: user must be participant or admin
+        if (
+          !isAdmin(session.user.role) &&
+          !isSeriesParticipant(session.user.id, series)
+        ) {
+          return { error: "FORBIDDEN" as const };
+        }
+
+        // Fetch manager and report info in parallel
+        const [managerRows, reportRows] = await Promise.all([
+          tx
+            .select({
+              id: users.id,
+              firstName: users.firstName,
+              lastName: users.lastName,
+              avatarUrl: users.avatarUrl,
+            })
+            .from(users)
+            .where(eq(users.id, series.managerId))
+            .limit(1),
+          tx
+            .select({
+              id: users.id,
+              firstName: users.firstName,
+              lastName: users.lastName,
+              avatarUrl: users.avatarUrl,
+            })
+            .from(users)
+            .where(eq(users.id, series.reportId))
+            .limit(1),
+        ]);
+
+        // Fetch template questions (non-archived, ordered)
+        let questions: Array<{
+          id: string;
+          questionText: string;
+          helpText: string | null;
+          category: string;
+          answerType: string;
+          answerConfig: unknown;
+          isRequired: boolean;
+          sortOrder: number;
+          conditionalOnQuestionId: string | null;
+          conditionalOperator: string | null;
+          conditionalValue: string | null;
+        }> = [];
+
+        if (sessionRecord.templateId) {
+          questions = await tx
+            .select({
+              id: templateQuestions.id,
+              questionText: templateQuestions.questionText,
+              helpText: templateQuestions.helpText,
+              category: templateQuestions.category,
+              answerType: templateQuestions.answerType,
+              answerConfig: templateQuestions.answerConfig,
+              isRequired: templateQuestions.isRequired,
+              sortOrder: templateQuestions.sortOrder,
+              conditionalOnQuestionId:
+                templateQuestions.conditionalOnQuestionId,
+              conditionalOperator: templateQuestions.conditionalOperator,
+              conditionalValue: templateQuestions.conditionalValue,
+            })
+            .from(templateQuestions)
+            .where(
+              and(
+                eq(templateQuestions.templateId, sessionRecord.templateId),
+                eq(templateQuestions.isArchived, false)
+              )
+            )
+            .orderBy(asc(templateQuestions.sortOrder));
+        }
+
+        // Fetch existing answers for this session
+        const answers = await tx
+          .select({
+            id: sessionAnswers.id,
+            questionId: sessionAnswers.questionId,
+            answerText: sessionAnswers.answerText,
+            answerNumeric: sessionAnswers.answerNumeric,
+            answerJson: sessionAnswers.answerJson,
+            skipped: sessionAnswers.skipped,
+            answeredAt: sessionAnswers.answeredAt,
+          })
+          .from(sessionAnswers)
+          .where(eq(sessionAnswers.sessionId, sessionId));
+
+        // Fetch previous completed sessions for this series (last 3)
+        const previousSessions = await tx
+          .select({
+            id: sessions.id,
+            sessionNumber: sessions.sessionNumber,
+            scheduledAt: sessions.scheduledAt,
+            completedAt: sessions.completedAt,
+            status: sessions.status,
+            sessionScore: sessions.sessionScore,
+            sharedNotes: sessions.sharedNotes,
+          })
+          .from(sessions)
+          .where(
+            and(
+              eq(sessions.seriesId, sessionRecord.seriesId),
+              eq(sessions.status, "completed")
+            )
+          )
+          .orderBy(desc(sessions.sessionNumber))
+          .limit(3);
+
+        // Fetch answers for previous sessions
+        const prevSessionIds = previousSessions.map((s) => s.id);
+        let prevAnswers: Array<{
+          sessionId: string;
+          questionId: string;
+          answerText: string | null;
+          answerNumeric: string | null;
+          answerJson: unknown;
+          skipped: boolean;
+        }> = [];
+        if (prevSessionIds.length > 0) {
+          prevAnswers = await tx
+            .select({
+              sessionId: sessionAnswers.sessionId,
+              questionId: sessionAnswers.questionId,
+              answerText: sessionAnswers.answerText,
+              answerNumeric: sessionAnswers.answerNumeric,
+              answerJson: sessionAnswers.answerJson,
+              skipped: sessionAnswers.skipped,
+            })
+            .from(sessionAnswers)
+            .where(inArray(sessionAnswers.sessionId, prevSessionIds));
+        }
+
+        // Fetch open action items from the series
+        const openActionItems = await tx
+          .select({
+            id: actionItems.id,
+            title: actionItems.title,
+            status: actionItems.status,
+            dueDate: actionItems.dueDate,
+            category: actionItems.category,
+            assigneeId: actionItems.assigneeId,
+            sessionId: actionItems.sessionId,
+            createdAt: actionItems.createdAt,
+          })
+          .from(actionItems)
+          .where(
+            and(
+              eq(actionItems.tenantId, session.user.tenantId),
+              or(
+                eq(actionItems.status, "open"),
+                eq(actionItems.status, "in_progress")
+              )
+            )
+          );
+
+        // Filter action items to only those from sessions in this series
+        const allSeriesSessions = await tx
+          .select({ id: sessions.id })
+          .from(sessions)
+          .where(eq(sessions.seriesId, sessionRecord.seriesId));
+        const allSeriesSessionIds = new Set(allSeriesSessions.map((s) => s.id));
+
+        const filteredActionItems = openActionItems.filter((ai) =>
+          allSeriesSessionIds.has(ai.sessionId)
+        );
+
+        // Group previous answers by session
+        const prevAnswersBySession = new Map<string, typeof prevAnswers>();
+        for (const a of prevAnswers) {
+          const existing = prevAnswersBySession.get(a.sessionId) ?? [];
+          existing.push(a);
+          prevAnswersBySession.set(a.sessionId, existing);
+        }
+
+        return {
+          session: {
+            id: sessionRecord.id,
+            seriesId: sessionRecord.seriesId,
+            templateId: sessionRecord.templateId,
+            sessionNumber: sessionRecord.sessionNumber,
+            status: sessionRecord.status,
+            scheduledAt: sessionRecord.scheduledAt.toISOString(),
+            startedAt: sessionRecord.startedAt?.toISOString() ?? null,
+            completedAt: sessionRecord.completedAt?.toISOString() ?? null,
+            sharedNotes: sessionRecord.sharedNotes,
+          },
+          series: {
+            id: series.id,
+            managerId: series.managerId,
+            reportId: series.reportId,
+            cadence: series.cadence,
+            manager: managerRows[0] ?? null,
+            report: reportRows[0] ?? null,
+          },
+          template: {
+            questions,
+          },
+          answers: answers.map((a) => ({
+            id: a.id,
+            questionId: a.questionId,
+            answerText: a.answerText,
+            answerNumeric: a.answerNumeric
+              ? Number(a.answerNumeric)
+              : null,
+            answerJson: a.answerJson,
+            skipped: a.skipped,
+            answeredAt: a.answeredAt.toISOString(),
+          })),
+          previousSessions: previousSessions.map((s) => ({
+            id: s.id,
+            sessionNumber: s.sessionNumber,
+            scheduledAt: s.scheduledAt.toISOString(),
+            completedAt: s.completedAt?.toISOString() ?? null,
+            sessionScore: s.sessionScore ? Number(s.sessionScore) : null,
+            sharedNotes: s.sharedNotes,
+            answers: (prevAnswersBySession.get(s.id) ?? []).map((a) => ({
+              questionId: a.questionId,
+              answerText: a.answerText,
+              answerNumeric: a.answerNumeric
+                ? Number(a.answerNumeric)
+                : null,
+              answerJson: a.answerJson,
+              skipped: a.skipped,
+            })),
+          })),
+          openActionItems: filteredActionItems.map((ai) => ({
+            id: ai.id,
+            title: ai.title,
+            status: ai.status,
+            dueDate: ai.dueDate,
+            category: ai.category,
+            assigneeId: ai.assigneeId,
+            createdAt: ai.createdAt.toISOString(),
+          })),
+        };
+      }
+    );
+
+    if ("error" in result) {
+      if (result.error === "NOT_FOUND") {
+        return NextResponse.json(
+          { error: "Session not found" },
+          { status: 404 }
+        );
+      }
+      if (result.error === "FORBIDDEN") {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
+    }
+
+    return NextResponse.json(result);
+  } catch (error) {
+    console.error("Failed to fetch session:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch session" },
+      { status: 500 }
+    );
+  }
+}

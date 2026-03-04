@@ -20,6 +20,9 @@ export const proxy = auth((req) => {
     req.nextUrl.pathname.startsWith("/reset-password") ||
     req.nextUrl.pathname.startsWith("/invite");
 
+  // Wizard routes require authentication (handled by the redirect below)
+  // No special treatment needed - /wizard/* is a protected route like /overview
+
   const baseUrl = getBaseUrl(req);
 
   // Unauthenticated users can only access auth pages and API routes

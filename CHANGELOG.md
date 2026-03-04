@@ -7,6 +7,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## [Unreleased]
 
 ### Added
+- Action item velocity area chart showing average days from creation to completion per month with 7-day target reference line
+- Meeting adherence stacked bar chart showing completed/cancelled/missed sessions per month with adherence percentage
+- Velocity and adherence query functions with role-based filtering (admin org-wide, manager their reports, member own data)
 - Period selector component with 30d/3mo/6mo/1yr presets and custom date range picker
 - Analytics overview page listing reports with latest scores and session counts (RBAC: members auto-redirect to own analytics)
 - Analytics nav item in sidebar (BarChart3 icon, visible to all roles)

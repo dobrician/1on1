@@ -3,20 +3,16 @@ import { z } from "zod";
 export const managerAddendumSchema = z.object({
   sentimentAnalysis: z
     .string()
-    .describe(
-      "Brief analysis of the report's emotional state and engagement level"
-    ),
+    .describe("1-2 sentences on report's engagement and emotional state"),
   patterns: z
     .array(z.string())
-    .describe("Recurring themes or patterns noticed across sessions (max 3)"),
+    .describe("Recurring themes across sessions, a few words each — only if data supports it"),
   coachingSuggestions: z
     .array(z.string())
-    .describe(
-      "Suggestions for the manager to improve support for this report"
-    ),
+    .describe("1 sentence each, max 3 — actionable coaching tips"),
   followUpPriority: z
     .enum(["low", "medium", "high"])
-    .describe("How urgently the manager should follow up on this session"),
+    .describe("How urgently to follow up"),
 });
 
 export type AIManagerAddendum = z.infer<typeof managerAddendumSchema>;

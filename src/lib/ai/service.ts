@@ -62,16 +62,14 @@ export async function generateManagerAddendum(
   context: SessionContext
 ): Promise<AIManagerAddendum> {
   try {
-    const systemPrompt = `You are an AI assistant providing a confidential manager addendum for a 1-on-1 session. This section is visible ONLY to the manager, not to the report.
+    const systemPrompt = `Confidential manager-only addendum for a 1-on-1 session. NOT visible to the report.
 
-Guidelines:
-- Analyze the report's emotional state and engagement based on their answers and the discussion
-- Identify recurring themes or patterns across sessions (if history is available)
-- Provide specific, actionable coaching suggestions for the manager
-- Assess how urgently the manager should follow up
-- Consider the manager's private notes for additional context
-- Be honest but constructive -- flag concerns without being alarmist
-- Keep each section concise and actionable`;
+Rules:
+- Sentiment analysis: 1-2 sentences max
+- Patterns: only if supported by data, max 3 items of a few words each
+- Coaching suggestions: 1 sentence each, max 3
+- Be proportional to input — short session data = short addendum
+- Use the language of the session answers`;
 
     const parts: string[] = [];
     parts.push(
@@ -118,9 +116,7 @@ Guidelines:
       parts.push("");
     }
 
-    parts.push(
-      `Generate a manager-only addendum with sentiment analysis, patterns across sessions, coaching suggestions, and follow-up priority.`
-    );
+    parts.push(`Generate a brief addendum proportional to the data above.`);
 
     const { output } = await generateText({
       model: models.managerAddendum,

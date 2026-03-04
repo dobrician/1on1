@@ -755,6 +755,9 @@ export function WizardShell({ sessionId }: WizardShellProps) {
           openActionItems={openActionItemsForContext}
           sessionScores={sessionScores}
           onQuestionHistoryOpen={handleQuestionHistoryOpen}
+          seriesId={data.session.seriesId}
+          sessionId={data.session.id}
+          isManager={isManager}
         />
       </div>
 

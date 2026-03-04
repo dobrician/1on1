@@ -21,6 +21,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { ScoreSparkline } from "./score-sparkline";
+import { NudgeList } from "./nudge-list";
 import type { PreviousSession } from "./question-history-dialog";
 
 export interface OpenActionItem {
@@ -41,6 +42,9 @@ export interface ContextPanelProps {
   openActionItems: OpenActionItem[];
   sessionScores: number[];
   onQuestionHistoryOpen: (questionId: string) => void;
+  seriesId?: string;
+  sessionId?: string;
+  isManager?: boolean;
 }
 
 function formatDate(dateStr: string): string {
@@ -475,6 +479,9 @@ export function ContextPanel({
   openActionItems,
   sessionScores,
   onQuestionHistoryOpen,
+  seriesId,
+  sessionId,
+  isManager,
 }: ContextPanelProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -497,6 +504,13 @@ export function ContextPanel({
       </div>
 
       <div className="flex-1 overflow-y-auto p-3">
+        {/* AI Nudges section -- manager only, shown as first section */}
+        {isManager && seriesId && sessionId && (
+          <div className="mb-2">
+            <NudgeList seriesId={seriesId} sessionId={sessionId} />
+          </div>
+        )}
+
         {previousSessions.length === 0 && openActionItems.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 text-center">
             <History className="size-8 text-muted-foreground/40 mb-2" />

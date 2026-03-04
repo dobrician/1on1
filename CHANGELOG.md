@@ -11,6 +11,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Individual nudge refresh handler (`nudgeRefreshHandler`): gathers context from last completed session, generates fresh nudges, replaces non-dismissed ones
 - Nudge API endpoint (`GET /api/nudges`): returns upcoming non-dismissed nudges with report names, sorted by priority
 - Nudge dismiss endpoint (`POST /api/nudges/[id]/dismiss`): marks a nudge as permanently dismissed (manager-only)
+- Dashboard nudge cards: overview page shows AI nudge cards grouped by report for upcoming sessions (managers only)
+- Wizard context panel nudge section: NudgeList rendered as first section in context panel for managers
+- NudgeCard component: minimalistic card with coaching suggestion, dismiss button, priority indicator, report name and relative time
 - Post-session AI pipeline (`postSessionPipeline`): 9-step Inngest function generating summary, manager addendum, action suggestions, and base nudges after session completion
 - AI retry handler (`aiRetryHandler`): re-runs the full AI pipeline for sessions with failed AI generation
 - AI retry API endpoint (`POST /api/sessions/[id]/ai-retry`): allows managers to re-trigger failed AI pipelines

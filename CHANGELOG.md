@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+- Standalone action items API: GET `/api/action-items` (cross-series, grouped), PATCH `/api/action-items/[id]` (full edit)
+- Sidebar navigation for Action Items and History pages
+- Zod validation schema for standalone action item updates
+
 ### Changed
 - Replace hardcoded category enums with user-defined sections and labels
 - Template questions now belong to sections (wizard steps) instead of fixed categories

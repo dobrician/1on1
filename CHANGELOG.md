@@ -10,6 +10,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Period selector component with 30d/3mo/6mo/1yr presets and custom date range picker
 - Analytics overview page listing reports with latest scores and session counts (RBAC: members auto-redirect to own analytics)
 - Analytics nav item in sidebar (BarChart3 icon, visible to all roles)
+- Score trend line chart (Recharts) with date-formatted X axis, 1-5 Y domain, custom tooltips
+- Category breakdown horizontal bar chart with HSL color rotation and limited-data visual treatment
+- Session comparison delta table with dual session selectors and green/red/gray delta indicators
+- Individual analytics API route (`GET /api/analytics/individual/[id]`) with RBAC enforcement and period/comparison params
+- Individual analytics page (Server Component + Client wrapper) with TanStack Query for period changes
 - Dashboard query layer (`src/lib/queries/dashboard.ts`): getUpcomingSessions, getOverdueActionItems, getQuickStats, getRecentSessions with role-based filtering
 - Dashboard overview rebuild: upcoming sessions with inline AI nudges, quick stats cards, overdue items grouped by report, recent sessions with score badges
 - Start Session button on today's sessions with Resume for in-progress sessions

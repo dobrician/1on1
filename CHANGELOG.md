@@ -7,6 +7,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## [Unreleased]
 
 ### Added
+- Context panel sidebar (`context-panel.tsx`): always-visible right sidebar with session history context, category-scoped data, and mobile slide-in overlay
+- Question history dialog (`question-history-dialog.tsx`): per-question answer timeline across previous sessions with formatted values per answer type
+- Score sparkline component (`score-sparkline.tsx`): Recharts mini line chart for score trends with hidden axes
+- `recharts` dependency for score trend sparklines and chart components
+- `shadcn/ui` collapsible component for context panel sections
 - Meeting series CRUD: create, update, archive series with cadence, preferred day/time, and default template
 - Series list API (`GET /api/series`) with report info, latest session status, sorted by next meeting date (soonest first)
 - Series detail API (`GET /api/series/[id]`) with session history, manager/report info

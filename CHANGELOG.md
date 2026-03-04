@@ -18,6 +18,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Private notes displayed on summary page only for the note author (server-side decrypted)
 - In-progress sessions redirect from summary page to wizard
 - Enhanced session timeline: completed sessions link to summary, in-progress sessions show Resume button
+- History page at `/history` showing sessions grouped by series with score sparklines
+- History API endpoint (`GET /api/history`) with cursor-based pagination and filters (status, date range, series)
+- History page filters: status, date range, series/report with URL-based state
+- Load more button for paginated history results
 
 ### Changed
 - Replace hardcoded category enums with user-defined sections and labels

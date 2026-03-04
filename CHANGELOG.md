@@ -23,6 +23,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `INNGEST_EVENT_KEY` and `INNGEST_SIGNING_KEY` from `.env.example`
 
 ### Fixed
+- Team analytics page showing no data — added live fallback queries for team averages and heatmap when analytics_snapshots is empty
+- Velocity chart empty for managers — fixed raw SQL with wrong table names (`session` instead of Drizzle table reference) in manager roleFilter
+- Team anonymization filter too aggressive — memberCount>=3 filter now only applies when anonymize=true
+- Seed data missing completed action items for velocity chart — added 3 completed items for Dave spread across 3 months
 - Dashboard nudge section missing for managers — restored standalone `getManagerNudges` query and `NudgeCardsGrid` rendering on overview page (no date filter, shows all non-dismissed nudges)
 - Wizard NudgeList over-filtering nudges — removed `upcoming=true` parameter so all non-dismissed series nudges are shown in context panel
 - Nudge API `upcoming=true` filter silently dropping NULL targetSessionAt nudges — replaced with IS NULL OR range check

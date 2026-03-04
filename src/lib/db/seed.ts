@@ -145,6 +145,23 @@ const SESSION_3_ID = '99999999-0003-4000-9000-000000000003';
 const ACTION_OPEN_1_ID = '88888888-0001-4000-8000-000000000001';
 const ACTION_OPEN_2_ID = '88888888-0002-4000-8000-000000000002';
 const ACTION_DONE_ID = '88888888-0003-4000-8000-000000000003';
+const ACTION_DONE_DAVE_1_ID = '88888888-0004-4000-8000-000000000004';
+const ACTION_DONE_DAVE_2_ID = '88888888-0005-4000-8000-000000000005';
+const ACTION_DONE_DAVE_3_ID = '88888888-0006-4000-8000-000000000006';
+
+// Analytics Snapshots
+const SNAPSHOT_S1_SCORE_ID = '55555555-0001-4000-5000-000000000001';
+const SNAPSHOT_S1_WELLBEING_ID = '55555555-0002-4000-5000-000000000002';
+const SNAPSHOT_S1_PERFORMANCE_ID = '55555555-0003-4000-5000-000000000003';
+const SNAPSHOT_S1_CHECKIN_ID = '55555555-0004-4000-5000-000000000004';
+const SNAPSHOT_S2_SCORE_ID = '55555555-0005-4000-5000-000000000005';
+const SNAPSHOT_S2_WELLBEING_ID = '55555555-0006-4000-5000-000000000006';
+const SNAPSHOT_S2_PERFORMANCE_ID = '55555555-0007-4000-5000-000000000007';
+const SNAPSHOT_S2_CHECKIN_ID = '55555555-0008-4000-5000-000000000008';
+const SNAPSHOT_S3_SCORE_ID = '55555555-0009-4000-5000-000000000009';
+const SNAPSHOT_S3_WELLBEING_ID = '55555555-0010-4000-5000-000000000010';
+const SNAPSHOT_S3_PERFORMANCE_ID = '55555555-0011-4000-5000-000000000011';
+const SNAPSHOT_S3_CHECKIN_ID = '55555555-0012-4000-5000-000000000012';
 
 // Acme Private Note
 const PRIVATE_NOTE_ID = '77777777-0001-4000-7000-000000000001';
@@ -1210,6 +1227,46 @@ async function seedActionItems() {
       status: 'completed' as const,
       completedAt: new Date(lastWeek.getTime() + 2 * 24 * 60 * 60 * 1000),
     },
+    // Completed action items assigned to Dave (for velocity chart)
+    {
+      id: ACTION_DONE_DAVE_1_ID,
+      sessionId: SESSION_1_ID,
+      tenantId: ACME_TENANT_ID,
+      assigneeId: DAVE_ID,
+      createdById: BOB_ID,
+      title: 'Refactor authentication module',
+      description: 'Modernize the auth module to use the new session middleware pattern.',
+      category: 'performance',
+      dueDate: new Date(now.getTime() - 55 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      status: 'completed' as const,
+      completedAt: new Date(now.getTime() - 60 * 24 * 60 * 60 * 1000 + 5 * 24 * 60 * 60 * 1000),
+    },
+    {
+      id: ACTION_DONE_DAVE_2_ID,
+      sessionId: SESSION_2_ID,
+      tenantId: ACME_TENANT_ID,
+      assigneeId: DAVE_ID,
+      createdById: BOB_ID,
+      title: 'Write unit tests for API endpoints',
+      description: 'Add comprehensive test coverage for the user and team management API routes.',
+      category: 'performance',
+      dueDate: new Date(now.getTime() - 25 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      status: 'completed' as const,
+      completedAt: new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000 + 3 * 24 * 60 * 60 * 1000),
+    },
+    {
+      id: ACTION_DONE_DAVE_3_ID,
+      sessionId: SESSION_3_ID,
+      tenantId: ACME_TENANT_ID,
+      assigneeId: DAVE_ID,
+      createdById: BOB_ID,
+      title: 'Update deployment documentation',
+      description: 'Revise the deployment docs to reflect the new CI/CD pipeline and staging setup.',
+      category: 'check_in',
+      dueDate: new Date(now.getTime() - 12 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      status: 'completed' as const,
+      completedAt: new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000 + 2 * 24 * 60 * 60 * 1000),
+    },
   ];
 
   for (const item of items) {
@@ -1257,6 +1314,59 @@ async function seedPrivateNotes() {
     });
 }
 
+async function seedAnalyticsSnapshots() {
+  console.log('  Seeding analytics snapshots...');
+
+  const now = new Date();
+  const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+  const twoWeeksAgo = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000);
+  const threeWeeksAgo = new Date(now.getTime() - 21 * 24 * 60 * 60 * 1000);
+
+  // Compute period boundaries (month of completion)
+  function monthRange(d: Date) {
+    const y = d.getFullYear();
+    const m = d.getMonth();
+    const start = new Date(y, m, 1).toISOString().split('T')[0]!;
+    const end = new Date(y, m + 1, 0).toISOString().split('T')[0]!;
+    return { start, end };
+  }
+
+  // Session 1 completed ~3 weeks ago: Wellbeing avg 3.00 (workload), Check-in avg 7.00 (satisfaction), score 7.50
+  const s1Period = monthRange(threeWeeksAgo);
+  // Session 2 completed ~2 weeks ago: Wellbeing avg 4.00, Check-in avg 8.00, score 8.00
+  const s2Period = monthRange(twoWeeksAgo);
+  // Session 3 completed ~1 week ago: Wellbeing avg 3.00, Check-in avg 9.00, score 8.25
+  const s3Period = monthRange(oneWeekAgo);
+
+  const snapshots = [
+    // Session 1 snapshots
+    { id: SNAPSHOT_S1_SCORE_ID, tenantId: ACME_TENANT_ID, userId: DAVE_ID, seriesId: SERIES_BOB_DAVE_ID, periodType: 'month' as const, periodStart: s1Period.start, periodEnd: s1Period.end, metricName: 'session_score', metricValue: '7.500', sampleCount: 1 },
+    { id: SNAPSHOT_S1_WELLBEING_ID, tenantId: ACME_TENANT_ID, userId: DAVE_ID, seriesId: SERIES_BOB_DAVE_ID, periodType: 'month' as const, periodStart: s1Period.start, periodEnd: s1Period.end, metricName: 'Wellbeing', metricValue: '3.000', sampleCount: 1 },
+    { id: SNAPSHOT_S1_PERFORMANCE_ID, tenantId: ACME_TENANT_ID, userId: DAVE_ID, seriesId: SERIES_BOB_DAVE_ID, periodType: 'month' as const, periodStart: s1Period.start, periodEnd: s1Period.end, metricName: 'Performance', metricValue: '0.000', sampleCount: 0 },
+    { id: SNAPSHOT_S1_CHECKIN_ID, tenantId: ACME_TENANT_ID, userId: DAVE_ID, seriesId: SERIES_BOB_DAVE_ID, periodType: 'month' as const, periodStart: s1Period.start, periodEnd: s1Period.end, metricName: 'Check-in', metricValue: '7.000', sampleCount: 1 },
+
+    // Session 2 snapshots
+    { id: SNAPSHOT_S2_SCORE_ID, tenantId: ACME_TENANT_ID, userId: DAVE_ID, seriesId: SERIES_BOB_DAVE_ID, periodType: 'month' as const, periodStart: s2Period.start, periodEnd: s2Period.end, metricName: 'session_score', metricValue: '8.000', sampleCount: 1 },
+    { id: SNAPSHOT_S2_WELLBEING_ID, tenantId: ACME_TENANT_ID, userId: DAVE_ID, seriesId: SERIES_BOB_DAVE_ID, periodType: 'month' as const, periodStart: s2Period.start, periodEnd: s2Period.end, metricName: 'Wellbeing', metricValue: '4.000', sampleCount: 1 },
+    { id: SNAPSHOT_S2_PERFORMANCE_ID, tenantId: ACME_TENANT_ID, userId: DAVE_ID, seriesId: SERIES_BOB_DAVE_ID, periodType: 'month' as const, periodStart: s2Period.start, periodEnd: s2Period.end, metricName: 'Performance', metricValue: '0.000', sampleCount: 0 },
+    { id: SNAPSHOT_S2_CHECKIN_ID, tenantId: ACME_TENANT_ID, userId: DAVE_ID, seriesId: SERIES_BOB_DAVE_ID, periodType: 'month' as const, periodStart: s2Period.start, periodEnd: s2Period.end, metricName: 'Check-in', metricValue: '8.000', sampleCount: 1 },
+
+    // Session 3 snapshots
+    { id: SNAPSHOT_S3_SCORE_ID, tenantId: ACME_TENANT_ID, userId: DAVE_ID, seriesId: SERIES_BOB_DAVE_ID, periodType: 'month' as const, periodStart: s3Period.start, periodEnd: s3Period.end, metricName: 'session_score', metricValue: '8.250', sampleCount: 1 },
+    { id: SNAPSHOT_S3_WELLBEING_ID, tenantId: ACME_TENANT_ID, userId: DAVE_ID, seriesId: SERIES_BOB_DAVE_ID, periodType: 'month' as const, periodStart: s3Period.start, periodEnd: s3Period.end, metricName: 'Wellbeing', metricValue: '3.000', sampleCount: 1 },
+    { id: SNAPSHOT_S3_PERFORMANCE_ID, tenantId: ACME_TENANT_ID, userId: DAVE_ID, seriesId: SERIES_BOB_DAVE_ID, periodType: 'month' as const, periodStart: s3Period.start, periodEnd: s3Period.end, metricName: 'Performance', metricValue: '0.000', sampleCount: 0 },
+    { id: SNAPSHOT_S3_CHECKIN_ID, tenantId: ACME_TENANT_ID, userId: DAVE_ID, seriesId: SERIES_BOB_DAVE_ID, periodType: 'month' as const, periodStart: s3Period.start, periodEnd: s3Period.end, metricName: 'Check-in', metricValue: '9.000', sampleCount: 1 },
+  ];
+
+  for (const snap of snapshots) {
+    // Delete-then-insert pattern for NULL-safe unique index (consistent with compute.ts)
+    await db.delete(schema.analyticsSnapshots).where(
+      sql`id = ${snap.id}`,
+    );
+    await db.insert(schema.analyticsSnapshots).values(snap);
+  }
+}
+
 // =============================================================================
 // Main
 // =============================================================================
@@ -1271,6 +1381,7 @@ async function seed() {
   await seedMeetingSeries();
   await seedSessions();
   await seedAnswers();
+  await seedAnalyticsSnapshots();
   await seedActionItems();
   await seedPrivateNotes();
 

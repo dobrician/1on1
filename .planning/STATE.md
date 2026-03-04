@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: completed
-stopped_at: Completed 07-05-PLAN.md
-last_updated: "2026-03-04T22:07:00Z"
-last_activity: 2026-03-04 -- Plan 07-05 completed (Inngest cleanup & analytics pipeline integration)
+status: in_progress
+stopped_at: Completed 08-07-PLAN.md
+last_updated: "2026-03-04T22:11:48Z"
+last_activity: 2026-03-04 -- Plan 08-07 completed (Team analytics gap closure - live fallbacks & seed data)
 progress:
   total_phases: 10
   completed_phases: 8
-  total_plans: 31
-  completed_plans: 32
+  total_plans: 32
+  completed_plans: 33
   percent: 100
 ---
 
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-03)
 
 **Core value:** The AI context layer that makes every meeting smarter than the last
-**Current focus:** Phase 7 gap closure COMPLETE -- Inngest removed, analytics pipeline integrated
+**Current focus:** Phase 8 complete -- team analytics gap closure with live fallbacks and velocity fix
 
 ## Current Position
 
-Phase: 7 of 10 (AI Pipeline - gap closure)
-Plan: 5 of 5 in current phase
-Status: Phase 7 gap closure complete -- all 5 plans done
-Last activity: 2026-03-04 -- Plan 07-05 completed (Inngest cleanup & analytics pipeline integration)
+Phase: 8 of 10 (Manager Dashboard Analytics)
+Plan: 7 of 7 in current phase
+Status: Phase 8 complete -- all 7 plans done (including gap closure)
+Last activity: 2026-03-04 -- Plan 08-07 completed (Team analytics gap closure - live fallbacks & seed data)
 
 Progress: [████████████████████] 100%
 
@@ -210,6 +210,9 @@ Recent decisions affecting current work:
 - [Phase 08]: [08-06]: Section name stored directly as metricName in snapshots (avoids lossy slug-to-display conversion)
 - [Phase 08]: [08-06]: OPERATIONAL_METRICS exclusion set replaces CATEGORY_METRICS inclusion list (new categories auto-work)
 - [Phase 08]: [08-06]: DISTINCT ON query for latest scores per report (avoids correlated subquery in GROUP BY)
+- [Phase 08]: [08-07]: Live fallback queries join session_answers through meeting_series.reportId for team member filtering
+- [Phase 08]: [08-07]: memberCount>=3 filter conditional on anonymize flag (non-anonymized views show all data)
+- [Phase 08]: [08-07]: Delete-then-insert for analytics snapshot seeding (consistent with compute.ts NULL-safe pattern)
 - [07-04]: getManagerNudges is standalone query with no date filter -- nudges show regardless of upcoming sessions
 - [07-04]: Wizard NudgeList fetches all non-dismissed nudges (no upcoming param) -- context panel shows full picture
 - [07-04]: API upcoming filter uses IS NULL OR range check -- defensive fix for NULL targetSessionAt
@@ -229,6 +232,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-04T22:07:00Z
-Stopped at: Completed 07-05-PLAN.md
+Last session: 2026-03-04T22:11:48Z
+Stopped at: Completed 08-07-PLAN.md
 Resume file: None

@@ -1,6 +1,7 @@
 import {
   pgTable,
   uuid,
+  varchar,
   text,
   integer,
   boolean,
@@ -22,6 +23,7 @@ export const privateNotes = pgTable(
       .notNull()
       .references(() => users.id),
     content: text("content").notNull(),
+    category: varchar("category", { length: 50 }),
     keyVersion: integer("key_version").notNull().default(1),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
@@ -31,9 +33,10 @@ export const privateNotes = pgTable(
       .defaultNow(),
   },
   (table) => [
-    uniqueIndex("private_note_session_author_idx").on(
+    uniqueIndex("private_note_session_author_category_idx").on(
       table.sessionId,
-      table.authorId
+      table.authorId,
+      table.category
     ),
   ]
 );
@@ -58,6 +61,7 @@ export const talkingPoints = pgTable("talking_point", {
     .notNull()
     .references(() => users.id),
   content: text("content").notNull(),
+  category: varchar("category", { length: 50 }),
   sortOrder: integer("sort_order").notNull(),
   isDiscussed: boolean("is_discussed").notNull().default(false),
   discussedAt: timestamp("discussed_at", { withTimezone: true }),

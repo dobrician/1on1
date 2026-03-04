@@ -2,7 +2,7 @@ import {
   pgTable,
   uuid,
   integer,
-  text,
+  jsonb,
   decimal,
   timestamp,
   index,
@@ -31,7 +31,7 @@ export const sessions = pgTable(
     startedAt: timestamp("started_at", { withTimezone: true }),
     completedAt: timestamp("completed_at", { withTimezone: true }),
     status: sessionStatusEnum("status").notNull().default("scheduled"),
-    sharedNotes: text("shared_notes"),
+    sharedNotes: jsonb("shared_notes").$type<Record<string, string> | null>(),
     durationMinutes: integer("duration_minutes"),
     sessionScore: decimal("session_score", { precision: 4, scale: 2 }),
     createdAt: timestamp("created_at", { withTimezone: true })

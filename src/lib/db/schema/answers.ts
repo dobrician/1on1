@@ -7,6 +7,7 @@ import {
   boolean,
   timestamp,
   index,
+  uniqueIndex,
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import { sessions } from "./sessions";
@@ -35,7 +36,7 @@ export const sessionAnswers = pgTable(
       .defaultNow(),
   },
   (table) => [
-    index("session_answer_session_question_idx").on(
+    uniqueIndex("session_answer_session_question_unique_idx").on(
       table.sessionId,
       table.questionId
     ),

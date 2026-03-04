@@ -35,6 +35,23 @@ export function canManageTemplates(role: string): boolean {
 }
 
 /**
+ * Check if user can manage meeting series (admin or manager).
+ */
+export function canManageSeries(role: string): boolean {
+  return role === "admin" || role === "manager";
+}
+
+/**
+ * Check if user is a participant in a series (manager or report).
+ */
+export function isSeriesParticipant(
+  userId: string,
+  series: { managerId: string; reportId: string }
+): boolean {
+  return userId === series.managerId || userId === series.reportId;
+}
+
+/**
  * Check if user can perform admin-only actions.
  */
 export function isAdmin(role: string): boolean {

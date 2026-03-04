@@ -7,6 +7,7 @@ import {
   timestamp,
   index,
 } from "drizzle-orm/pg-core";
+
 import { relations } from "drizzle-orm";
 import { tenants } from "./tenants";
 import { sessions } from "./sessions";
@@ -31,6 +32,7 @@ export const actionItems = pgTable(
       .references(() => users.id),
     title: varchar("title", { length: 500 }).notNull(),
     description: text("description"),
+    category: varchar("category", { length: 50 }),
     dueDate: date("due_date"),
     status: actionItemStatusEnum("status").notNull().default("open"),
     completedAt: timestamp("completed_at", { withTimezone: true }),

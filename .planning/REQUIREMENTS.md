@@ -120,8 +120,8 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **ANLT-01**: Line chart showing individual session scores over time per report
 - [x] **ANLT-02**: Bar chart showing per-category average scores (wellbeing, engagement, performance, career)
 - [x] **ANLT-03**: Session-over-session comparison showing how each category score changed
-- [ ] **ANLT-04**: Team analytics with aggregated scores across all reports (anonymized option)
-- [ ] **ANLT-05**: Heatmap displaying team × question category matrix with color-coded scores
+- [x] **ANLT-04**: Team analytics with aggregated scores across all reports (anonymized option)
+- [x] **ANLT-05**: Heatmap displaying team × question category matrix with color-coded scores
 - [ ] **ANLT-06**: Action item velocity chart (average time from creation to completion)
 - [ ] **ANLT-07**: Meeting adherence chart (% of scheduled sessions completed per month)
 - [x] **ANLT-08**: Analytics powered by pre-computed ANALYTICS_SNAPSHOT table (Inngest background job)
@@ -278,8 +278,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | ANLT-01 | Phase 8 | Complete |
 | ANLT-02 | Phase 8 | Complete |
 | ANLT-03 | Phase 8 | Complete |
-| ANLT-04 | Phase 8 | Pending |
-| ANLT-05 | Phase 8 | Pending |
+| ANLT-04 | Phase 8 | Complete |
+| ANLT-05 | Phase 8 | Complete |
 | ANLT-06 | Phase 8 | Pending |
 | ANLT-07 | Phase 8 | Pending |
 | ANLT-08 | Phase 8 | Complete |

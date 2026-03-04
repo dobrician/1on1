@@ -13,6 +13,7 @@ The dashboard is a Server Component rebuild of `src/app/(dashboard)/overview/pag
 **Primary recommendation:** Build the Inngest snapshot pipeline first (Plan 08-02), then the dashboard (Plan 08-01) which can use live queries, then individual analytics (Plan 08-03), team analytics (Plan 08-04), and finally velocity/adherence/export (Plan 08-05).
 
 <user_constraints>
+
 ## User Constraints (from CONTEXT.md)
 
 ### Locked Decisions
@@ -51,9 +52,11 @@ The dashboard is a Server Component rebuild of `src/app/(dashboard)/overview/pag
 - AI anomaly detection (v2 AI-V2-04)
 - Manager scoring/ranking (explicitly excluded)
 - PDF export with branding (v2 MISC-04)
+
 </user_constraints>
 
 <phase_requirements>
+
 ## Phase Requirements
 
 | ID | Description | Research Support |
@@ -68,10 +71,11 @@ The dashboard is a Server Component rebuild of `src/app/(dashboard)/overview/pag
 | ANLT-03 | Session-over-session comparison | Delta table component; diff between two session scores per category |
 | ANLT-04 | Team analytics with aggregated scores | Team-level analytics_snapshot rows; anonymization toggle |
 | ANLT-05 | Heatmap: team x category matrix | Custom SVG dot-matrix component (Recharts ScatterChart or custom) |
-| ANLT-06 | Action item velocity chart | Recharts AreaChart or BarChart; avg days from creation to completion |
+| ANLT-06 | Action item velocity chart | Recharts AreaChart; avg days from creation to completion |
 | ANLT-07 | Meeting adherence chart | Recharts stacked BarChart; completed/missed/cancelled per month |
 | ANLT-08 | Analytics powered by pre-computed snapshots | Inngest function triggered by session/completed; cron safety net |
 | ANLT-09 | CSV export | API route generating CSV with proper Content-Type and Content-Disposition headers |
+
 </phase_requirements>
 
 ## Standard Stack
@@ -89,11 +93,10 @@ The dashboard is a Server Component rebuild of `src/app/(dashboard)/overview/pag
 | Library | Version | Purpose | When to Use |
 |---------|---------|---------|-------------|
 | lucide-react | 0.576.0 | Icons for dashboard sections | All UI icons |
-| date-fns | N/A | Date formatting/manipulation | NOT installed -- use native Intl.DateTimeFormat and Date math (project pattern) |
 | sonner | 2.0.7 | Toast notifications | CSV export success/error feedback |
 
 ### No New Dependencies Needed
-The entire phase can be built with existing installed libraries. No new packages required.
+The entire phase can be built with existing installed libraries. No new packages required. Note: project does NOT use date-fns -- use native `Intl.DateTimeFormat` and `Date` math (established project pattern).
 
 ## Architecture Patterns
 
@@ -169,8 +172,8 @@ export default async function OverviewPage() {
   return (
     <div className="mx-auto max-w-5xl space-y-8 px-4 py-8">
       <UpcomingSessions sessions={upcoming} />
-      <OverdueItems items={overdueItems} />
       <QuickStats stats={stats} />
+      <OverdueItems items={overdueItems} />
       <RecentSessions sessions={recentSessions} />
     </div>
   );
@@ -202,6 +205,7 @@ export function ScoreTrendChart({ initialData, userId }: Props) {
 **Example:**
 ```typescript
 // New Inngest function triggered by same "session/completed" event
+// Inngest supports multiple functions listening to the same event
 export const computeAnalyticsSnapshot = inngest.createFunction(
   { id: "compute-analytics-snapshot", retries: 3 },
   { event: "session/completed" },
@@ -295,11 +299,17 @@ export async function GET(request: NextRequest) {
 **How to avoid:** Per docs/analytics.md, team averages require minimum 3 data points. Display "Insufficient data" for categories with fewer than 3 contributors.
 **Warning signs:** Team analytics showing individual-level data
 
+### Pitfall 7: Unique Index with NULL Columns in Upsert
+**What goes wrong:** Upserts fail to match existing rows because PostgreSQL treats NULLs as distinct in unique indexes
+**Why it happens:** `analytics_unique_snapshot_idx` includes `userId`, `teamId`, `seriesId` which can all be NULL
+**How to avoid:** For user-level snapshots, always provide non-NULL userId/seriesId. For team aggregates, always provide non-NULL teamId. Avoid combinations where multiple indexed columns are NULL. Alternatively, use `COALESCE` with sentinel UUID in the unique index or handle via raw SQL `INSERT ... ON CONFLICT`.
+**Warning signs:** Duplicate snapshot rows for the same metric/period, constraint violations on some inserts but not others
+
 ## Code Examples
 
 ### Recharts Line Chart (Score Trend)
 ```typescript
-// Recharts 3.7 pattern used in project
+// Recharts 3.7 pattern -- consistent with existing ScoreSparkline
 "use client";
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid,
@@ -422,7 +432,7 @@ async function upsertSnapshot(
 
 ### CSV Export Utility
 ```typescript
-// Safe CSV generation with proper escaping
+// Safe CSV generation with proper escaping (RFC 4180)
 function escapeCsvField(value: unknown): string {
   if (value === null || value === undefined) return "";
   const str = String(value);
@@ -438,6 +448,60 @@ function generateCSV(headers: string[], rows: unknown[][]): string {
     (row) => row.map(escapeCsvField).join(",")
   );
   return [headerLine, ...dataLines].join("\n");
+}
+```
+
+### Score Normalization (Shared Utility)
+```typescript
+// Normalize different answer types to 1-5 scale
+// Consistent with SCORABLE_TYPES from Phase 5 session completion
+function normalizeScore(value: number, answerType: string): number | null {
+  switch (answerType) {
+    case "rating_1_5":
+    case "mood":
+      return value; // Already 1-5
+    case "rating_1_10":
+      return ((value - 1) / 9) * 4 + 1; // Map 1-10 to 1-5
+    case "yes_no":
+      return value * 4 + 1; // Map 0/1 to 1/5
+    default:
+      return null; // text, multiple_choice not scorable
+  }
+}
+```
+
+### Dashboard Upcoming Sessions Query
+```typescript
+// Fetch upcoming sessions with integrated nudges for a manager
+async function getUpcomingSessions(tenantId: string, managerId: string, days: number) {
+  const endDate = new Date(Date.now() + days * 24 * 60 * 60 * 1000);
+  const now = new Date();
+
+  return await withTenantContext(tenantId, managerId, async (tx) => {
+    const rows = await tx
+      .select({
+        sessionId: sessions.id,
+        seriesId: sessions.seriesId,
+        scheduledAt: sessions.scheduledAt,
+        status: sessions.status,
+        reportFirstName: users.firstName,
+        reportLastName: users.lastName,
+        reportAvatar: users.avatarUrl,
+      })
+      .from(sessions)
+      .innerJoin(meetingSeries, eq(sessions.seriesId, meetingSeries.id))
+      .innerJoin(users, eq(meetingSeries.reportId, users.id))
+      .where(and(
+        eq(sessions.tenantId, tenantId),
+        eq(meetingSeries.managerId, managerId),
+        gte(sessions.scheduledAt, now),
+        lte(sessions.scheduledAt, endDate),
+        inArray(sessions.status, ["scheduled", "in_progress"]),
+      ))
+      .orderBy(sessions.scheduledAt);
+
+    return rows;
+  });
 }
 ```
 
@@ -502,47 +566,66 @@ In Drizzle schema (`src/lib/db/schema/sessions.ts`):
 analyticsIngestedAt: timestamp("analytics_ingested_at", { withTimezone: true }),
 ```
 
-### Inngest Events: Add analytics-related
+### Sidebar Navigation: Add Analytics
+In `src/components/layout/sidebar.tsx`, add to `mainNavItems`:
 ```typescript
-// Add to src/inngest/client.ts Events type
-"analytics/snapshot.compute": {
-  data: {
-    sessionId: string;
-    tenantId: string;
-    managerId: string;
-    reportId: string;
-    seriesId: string;
-  };
-};
+{
+  label: "Analytics",
+  href: "/analytics",
+  icon: BarChart3, // from lucide-react
+  matchAlso: ["/analytics"],
+}
 ```
 
-Note: The snapshot computation can also listen directly to the existing `session/completed` event. Inngest supports multiple functions listening to the same event -- no conflict with the AI pipeline.
+### Inngest Client: No New Events Needed
+The snapshot computation listens to the existing `session/completed` event. Inngest supports multiple functions on one event -- no conflict with the AI pipeline. The cron sweep uses `{ cron: "..." }` syntax, no event needed.
+
+### Metric Name Constants
+Define standard metric names used in analytics_snapshot:
+```typescript
+export const METRIC_NAMES = {
+  SESSION_SCORE: "session_score",
+  WELLBEING_SCORE: "wellbeing_score",
+  ENGAGEMENT_SCORE: "engagement_score",
+  PERFORMANCE_SCORE: "performance_score",
+  CAREER_SCORE: "career_score",
+  FEEDBACK_SCORE: "feedback_score",
+  MOOD_SCORE: "mood_score",
+  ACTION_COMPLETION_RATE: "action_completion_rate",
+  MEETING_ADHERENCE: "meeting_adherence",
+} as const;
+```
 
 ## Open Questions
 
 1. **Unique index with nullable columns**
    - What we know: `analytics_unique_snapshot_idx` includes `userId`, `teamId`, `seriesId` which can all be NULL. PostgreSQL treats NULLs as distinct in unique indexes.
    - What's unclear: This means upsert with `onConflictDoUpdate` on this index won't match rows where any of these are NULL (two NULL values are never equal).
-   - Recommendation: For user-level snapshots (teamId=NULL, seriesId=NULL), either use a sentinel value or create separate unique indexes for each combination. Alternatively, use `COALESCE` in the index or handle upsert with manual `INSERT ... ON CONFLICT` raw SQL. This needs to be addressed in Plan 08-02.
+   - Recommendation: For user-level snapshots, always provide non-NULL userId and seriesId. For team aggregates, always provide non-NULL teamId. If a truly global metric is needed, use a sentinel UUID. This needs attention in Plan 08-02.
 
-2. **Analytics_snapshot metricName values**
-   - What we know: The column is varchar(100) with no enum constraint
-   - What's unclear: Exact metric name strings to use
-   - Recommendation: Define constants: `session_score`, `wellbeing_score`, `engagement_score`, `performance_score`, `career_score`, `feedback_score`, `mood_score`, `action_completion_rate`, `meeting_adherence`. Use these consistently in compute and query code.
+2. **Anonymization toggle scope**
+   - What we know: CONTEXT.md says "anonymized option" for team analytics (ANLT-04)
+   - What's unclear: Whether anonymization is a tenant-level setting or per-view toggle
+   - Recommendation: Implement as per-view toggle (manager can choose to see anonymized or named). The data access matrix in docs/analytics.md describes the privacy rules. Minimum sample size of 3 prevents individual identification.
 
 ## Sources
 
 ### Primary (HIGH confidence)
-- Project codebase: `src/lib/db/schema/analytics.ts` -- analytics_snapshot table fully designed
-- Project codebase: `src/lib/db/schema/sessions.ts` -- session schema (no analyticsIngestedAt yet)
+- Project codebase: `src/lib/db/schema/analytics.ts` -- analytics_snapshot table fully designed with indexes
+- Project codebase: `src/lib/db/schema/sessions.ts` -- session schema (no analyticsIngestedAt yet, needs migration)
+- Project codebase: `src/lib/db/schema/answers.ts` -- session_answer schema with answerNumeric decimal column
+- Project codebase: `src/lib/db/schema/action-items.ts` -- action_item schema with status, dueDate
+- Project codebase: `src/lib/db/schema/series.ts` -- meeting_series with managerId, reportId, nextSessionAt
 - Project codebase: `src/inngest/` -- established Inngest patterns (post-session, pre-session, cron)
 - Project codebase: `src/components/session/score-sparkline.tsx` -- Recharts 3.7 usage pattern
-- Project codebase: `src/components/dashboard/nudge-card.tsx` -- existing nudge display
+- Project codebase: `src/components/dashboard/nudge-card.tsx` -- existing nudge display component
+- Project codebase: `src/components/layout/sidebar.tsx` -- current nav items (no Analytics yet)
+- Project codebase: `src/app/(dashboard)/overview/page.tsx` -- current stub to rebuild
 - Project docs: `docs/analytics.md` -- metrics, chart types, aggregation strategy, privacy matrix
-- Project: `package.json` -- Recharts 3.7.0, Inngest 3.52.6 confirmed
+- Project: `package.json` -- Recharts 3.7.0, Inngest 3.52.6, TanStack Query 5.90.21
 
 ### Secondary (MEDIUM confidence)
-- Recharts 3.x API -- based on project's existing usage and Recharts documentation patterns
+- Recharts 3.x API -- based on project's existing usage patterns
 - CSV export patterns -- standard HTTP response with Content-Type/Content-Disposition headers
 
 ## Metadata
@@ -550,8 +633,11 @@ Note: The snapshot computation can also listen directly to the existing `session
 **Confidence breakdown:**
 - Standard stack: HIGH -- all libraries already installed and used in project
 - Architecture: HIGH -- follows established Server Component + Client Component + Inngest patterns
-- Pitfalls: HIGH -- based on existing codebase patterns and known PostgreSQL/Recharts behaviors
-- Heatmap dot-matrix: MEDIUM -- custom component, no existing pattern in codebase to follow
+- Dashboard queries: HIGH -- similar to existing overview page data fetching patterns
+- Chart implementation: HIGH -- Recharts API well-established, sparkline already working
+- Dot-matrix heatmap: MEDIUM -- custom component, no existing pattern in codebase to follow
+- Snapshot computation: HIGH -- follows exact Inngest pattern from post-session pipeline
+- CSV export: HIGH -- straightforward API route pattern
 
 **Research date:** 2026-03-04
 **Valid until:** 2026-04-04 (stable stack, no version changes expected)

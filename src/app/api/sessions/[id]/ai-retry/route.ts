@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth/config";
 import { withTenantContext } from "@/lib/db/tenant-context";
-import { inngest } from "@/inngest/client";
+import { runAIPipelineDirect } from "@/lib/ai/pipeline";
 import { sessions, meetingSeries } from "@/lib/db/schema";
 import { eq, and } from "drizzle-orm";
 
@@ -75,7 +75,21 @@ export async function POST(
           .set({ aiStatus: "pending", updatedAt: new Date() })
           .where(eq(sessions.id, sessionId));
 
-        return { success: true as const };
+        // Fetch reportId for pipeline
+        const [seriesFull] = await tx
+          .select({
+            reportId: meetingSeries.reportId,
+          })
+          .from(meetingSeries)
+          .where(eq(meetingSeries.id, sessionRecord.seriesId))
+          .limit(1);
+
+        return {
+          success: true as const,
+          seriesId: sessionRecord.seriesId,
+          managerId: series.managerId,
+          reportId: seriesFull?.reportId ?? "",
+        };
       }
     );
 
@@ -99,19 +113,16 @@ export async function POST(
       }
     }
 
-    // Fire-and-forget: trigger AI retry via Inngest
-    inngest
-      .send({
-        name: "session/ai.retry",
-        data: {
-          sessionId,
-          tenantId: session.user.tenantId,
-          managerId: session.user.id,
-        },
-      })
-      .catch((err) =>
-        console.error("Failed to send Inngest ai.retry event:", err)
-      );
+    // Fire-and-forget: run AI pipeline directly
+    runAIPipelineDirect({
+      sessionId,
+      seriesId: result.seriesId,
+      tenantId: session.user.tenantId,
+      managerId: result.managerId,
+      reportId: result.reportId,
+    }).catch((err) =>
+      console.error("Failed to run AI retry pipeline:", err)
+    );
 
     return NextResponse.json({ ok: true });
   } catch (error) {

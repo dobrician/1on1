@@ -7,6 +7,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## [Unreleased]
 
 ### Added
+- Direct AI pipeline execution (`src/lib/ai/pipeline.ts`) — runs AI generation without Inngest dependency
+- Inngest CLI and concurrently as dev dependencies with `dev:inngest` and `dev:next` scripts
+
+### Changed
+- Session completion and AI retry now use direct pipeline instead of Inngest events (more reliable in dev)
+- AI summary/suggestions polling timeout after 2 minutes — shows retry UI instead of infinite "Generating..." state
+
+### Fixed
+- AI pipeline never completing due to Inngest dev server not running — direct execution path resolves this
+- Infinite "Generating..." spinner on session summary page when AI pipeline fails to start
 - CSV export API endpoint (`GET /api/analytics/export`) supporting full, score-trend, categories, velocity, and adherence export types with RBAC
 - CSV generation utilities (`generateCSV`, `escapeCsvField`, `sessionDataToRows`) with RFC 4180 escaping
 - CsvExportButton component with icon and full variants, browser download trigger, and toast notifications

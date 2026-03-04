@@ -1,7 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+
+const AI_POLLING_TIMEOUT_MS = 2 * 60 * 1000; // 2 minutes
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -51,6 +53,13 @@ export function AISuggestionsSection({
   const [editTitle, setEditTitle] = useState("");
   const [editDescription, setEditDescription] = useState("");
   const [editAssigneeId, setEditAssigneeId] = useState("");
+  const [pollingTimedOut, setPollingTimedOut] = useState(false);
+
+  // Timeout polling after 2 minutes
+  useEffect(() => {
+    const timer = setTimeout(() => setPollingTimedOut(true), AI_POLLING_TIMEOUT_MS);
+    return () => clearTimeout(timer);
+  }, []);
 
   const { data, isLoading } = useQuery<SuggestionsResponse>({
     queryKey: ["ai-suggestions", sessionId],
@@ -60,6 +69,7 @@ export function AISuggestionsSection({
       return res.json();
     },
     refetchInterval: (query) => {
+      if (pollingTimedOut) return false;
       const status = query.state.data?.status;
       if (status === "pending" || status === "generating") return 3000;
       return false;
@@ -90,6 +100,14 @@ export function AISuggestionsSection({
 
   const status = data?.status;
   const suggestions = data?.suggestions?.suggestions;
+
+  // Timed-out state
+  if (
+    pollingTimedOut &&
+    (status === "pending" || status === "generating")
+  ) {
+    return null; // AI summary section already shows the timeout/retry UI
+  }
 
   // Loading / generating state
   if (isLoading || status === "pending" || status === "generating") {

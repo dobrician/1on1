@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -15,6 +16,8 @@ import {
 } from "lucide-react";
 import type { AISummary } from "@/lib/ai/schemas/summary";
 import type { AIManagerAddendum } from "@/lib/ai/schemas/addendum";
+
+const AI_POLLING_TIMEOUT_MS = 2 * 60 * 1000; // 2 minutes
 
 interface AISummarySectionProps {
   sessionId: string;
@@ -52,6 +55,18 @@ export function AISummarySection({
   initialAddendum,
 }: AISummarySectionProps) {
   const queryClient = useQueryClient();
+  const [pollingTimedOut, setPollingTimedOut] = useState(false);
+
+  // Timeout polling after 2 minutes to avoid infinite "Generating..." state
+  useEffect(() => {
+    if (
+      initialStatus === "pending" ||
+      initialStatus === "generating"
+    ) {
+      const timer = setTimeout(() => setPollingTimedOut(true), AI_POLLING_TIMEOUT_MS);
+      return () => clearTimeout(timer);
+    }
+  }, [initialStatus]);
 
   const { data, isLoading } = useQuery<AISummaryResponse>({
     queryKey: ["ai-summary", sessionId],
@@ -67,6 +82,7 @@ export function AISummarySection({
       completedAt: null,
     },
     refetchInterval: (query) => {
+      if (pollingTimedOut) return false;
       const status = query.state.data?.status;
       // Poll every 3s while pending or generating
       if (status === "pending" || status === "generating") return 3000;
@@ -90,6 +106,45 @@ export function AISummarySection({
   const status = data?.status;
   const summary = data?.summary;
   const addendum = data?.addendum;
+
+  // Timed-out state — pipeline never completed
+  if (
+    pollingTimedOut &&
+    (status === "pending" || status === "generating")
+  ) {
+    return (
+      <div className="mb-8 rounded-lg border border-dashed p-6">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2 text-muted-foreground">
+            <AlertTriangle className="h-5 w-5 text-amber-500" />
+            <h3 className="font-medium">AI Summary</h3>
+          </div>
+          {isManager && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setPollingTimedOut(false);
+                retryMutation.mutate();
+              }}
+              disabled={retryMutation.isPending}
+            >
+              <RefreshCw
+                className={`mr-1.5 h-3.5 w-3.5 ${retryMutation.isPending ? "animate-spin" : ""}`}
+              />
+              {retryMutation.isPending ? "Retrying..." : "Retry"}
+            </Button>
+          )}
+        </div>
+        <p className="mt-2 text-sm text-muted-foreground">
+          AI generation is taking longer than expected.{" "}
+          {isManager
+            ? "Click retry to re-trigger the pipeline."
+            : "The manager can retry generation."}
+        </p>
+      </div>
+    );
+  }
 
   // Loading / generating state
   if (

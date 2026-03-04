@@ -4,7 +4,7 @@ import { withTenantContext } from "@/lib/db/tenant-context";
 import { logAuditEvent } from "@/lib/audit/log";
 import { computeSessionScore } from "@/lib/utils/scoring";
 import { computeNextSessionDate } from "@/lib/utils/scheduling";
-import { inngest } from "@/inngest/client";
+import { runAIPipelineDirect } from "@/lib/ai/pipeline";
 import {
   sessions,
   meetingSeries,
@@ -188,22 +188,17 @@ export async function POST(
       }
     }
 
-    // Fire-and-forget: trigger AI pipeline via Inngest
+    // Fire-and-forget: run AI pipeline directly
     // Do NOT await -- session completion must never be blocked by AI
-    inngest
-      .send({
-        name: "session/completed",
-        data: {
-          sessionId: result.sessionId,
-          seriesId: result.seriesId,
-          tenantId: session.user.tenantId,
-          managerId: result.managerId,
-          reportId: result.reportId,
-        },
-      })
-      .catch((err) =>
-        console.error("Failed to send Inngest session/completed event:", err)
-      );
+    runAIPipelineDirect({
+      sessionId: result.sessionId,
+      seriesId: result.seriesId,
+      tenantId: session.user.tenantId,
+      managerId: result.managerId,
+      reportId: result.reportId,
+    }).catch((err) =>
+      console.error("Failed to run AI pipeline:", err)
+    );
 
     return NextResponse.json({
       sessionId: result.sessionId,

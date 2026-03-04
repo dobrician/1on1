@@ -143,6 +143,12 @@ export async function PATCH(request: Request, { params }: RouteContext) {
         );
       }
 
+      // Helper: null out q-{index} temporary refs (not valid UUIDs for DB insert)
+      const resolveRefForInsert = (ref: string | null | undefined): string | null => {
+        if (!ref) return null;
+        return ref.match(/^q-\d+$/) ? null : ref;
+      };
+
       const result = await withTenantContext(
         session.user.tenantId,
         session.user.id,
@@ -223,7 +229,7 @@ export async function PATCH(request: Request, { params }: RouteContext) {
                 isRequired: q.isRequired,
                 sortOrder: q.sortOrder,
                 conditionalOnQuestionId:
-                  q.conditionalOnQuestionId ?? null,
+                  resolveRefForInsert(q.conditionalOnQuestionId),
                 conditionalOperator: q.conditionalOperator ?? null,
                 conditionalValue: q.conditionalValue ?? null,
               });

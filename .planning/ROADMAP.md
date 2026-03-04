@@ -157,14 +157,14 @@ Plans:
   3. Analytics shows line charts of individual scores over time, bar charts of per-category averages, and session-over-session comparison
   4. Team analytics shows aggregated scores across reports (with anonymized option) and a heatmap of team x category scores
   5. Action item velocity chart, meeting adherence chart, and CSV export are available, all powered by pre-computed analytics snapshots
-**Plans**: TBD
+**Plans**: 5 plans in 3 waves (Wave 1: snapshot pipeline + dashboard in parallel, Wave 2: individual analytics, Wave 3: team analytics + velocity/adherence/export in parallel)
 
 Plans:
-- [ ] 08-01: Dashboard layout (upcoming sessions, overdue items, quick stats, recent sessions)
-- [ ] 08-02: Analytics snapshot computation (Inngest background job)
-- [ ] 08-03: Individual analytics charts (score trends, category breakdown, session comparison)
-- [ ] 08-04: Team analytics (aggregated scores, heatmap, anonymization)
-- [ ] 08-05: Action item velocity, meeting adherence, and CSV export
+- [ ] 08-01-PLAN.md -- Analytics snapshot pipeline: schema migration (analyticsIngestedAt), Inngest snapshot computation on session/completed, cron safety net, analytics query layer (Wave 1)
+- [ ] 08-02-PLAN.md -- Dashboard rebuild: upcoming sessions with integrated AI nudges, overdue items by report, quick stats, recent sessions, Start Session button (Wave 1)
+- [ ] 08-03-PLAN.md -- Individual analytics: score trend line chart, category breakdown bar chart, session comparison delta table, period selector, sidebar nav (Wave 2)
+- [ ] 08-04-PLAN.md -- Team analytics: aggregated scores with anonymization toggle, dot matrix heatmap (team x category), RBAC enforcement (Wave 3)
+- [ ] 08-05-PLAN.md -- Action item velocity area chart, meeting adherence stacked bar chart, CSV export (full + per-view) (Wave 3)
 
 ### Phase 9: Email Notifications
 **Goal**: The application keeps users engaged between sessions with timely, well-designed email notifications

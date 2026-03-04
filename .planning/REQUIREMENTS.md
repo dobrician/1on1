@@ -56,16 +56,16 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Meeting Series
 
-- [ ] **MEET-01**: Manager can create a 1:1 series by selecting themselves and a report
-- [ ] **MEET-02**: Series has configurable cadence: weekly, biweekly, monthly, or custom interval
-- [ ] **MEET-03**: Series can have a default questionnaire template
-- [ ] **MEET-04**: Series can have a preferred day and time
-- [ ] **MEET-05**: Next session date is auto-computed based on cadence
-- [ ] **MEET-06**: Series lifecycle supports Active, Paused, and Archived states
+- [x] **MEET-01**: Manager can create a 1:1 series by selecting themselves and a report
+- [x] **MEET-02**: Series has configurable cadence: weekly, biweekly, monthly, or custom interval
+- [x] **MEET-03**: Series can have a default questionnaire template
+- [x] **MEET-04**: Series can have a preferred day and time
+- [x] **MEET-05**: Next session date is auto-computed based on cadence
+- [x] **MEET-06**: Series lifecycle supports Active, Paused, and Archived states
 
 ### Session Wizard
 
-- [ ] **SESS-01**: Manager can start a session for a scheduled meeting in a series
+- [x] **SESS-01**: Manager can start a session for a scheduled meeting in a series
 - [ ] **SESS-02**: Session wizard presents questions one at a time (or in category groups) with progress indicator
 - [ ] **SESS-03**: Context panel (sidebar) shows notes from last 3 sessions (collapsible)
 - [ ] **SESS-04**: Context panel shows open action items from past sessions
@@ -232,13 +232,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 | TMPL-08 | Phase 4 | Complete |
 | TMPL-09 | Phase 4 | Complete |
 | TMPL-10 | Phase 4 | Complete |
-| MEET-01 | Phase 5 | Pending |
-| MEET-02 | Phase 5 | Pending |
-| MEET-03 | Phase 5 | Pending |
-| MEET-04 | Phase 5 | Pending |
-| MEET-05 | Phase 5 | Pending |
-| MEET-06 | Phase 5 | Pending |
-| SESS-01 | Phase 5 | Pending |
+| MEET-01 | Phase 5 | Complete |
+| MEET-02 | Phase 5 | Complete |
+| MEET-03 | Phase 5 | Complete |
+| MEET-04 | Phase 5 | Complete |
+| MEET-05 | Phase 5 | Complete |
+| MEET-06 | Phase 5 | Complete |
+| SESS-01 | Phase 5 | Complete |
 | SESS-02 | Phase 5 | Pending |
 | SESS-03 | Phase 5 | Pending |
 | SESS-04 | Phase 5 | Pending |

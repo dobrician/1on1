@@ -62,6 +62,9 @@ const PRODUCT_TEAM_ID = 'cccccccc-0002-4000-c000-000000000002';
 const WEEKLY_TEMPLATE_ID = 'dddddddd-0001-4000-d000-000000000001';
 const CAREER_TEMPLATE_ID = 'dddddddd-0002-4000-d000-000000000002';
 
+// Structured 1:1 Template (Acme default)
+const STRUCTURED_TEMPLATE_ID = 'dddddddd-0004-4000-d000-000000000004';
+
 // Beta Template
 const BETA_TEMPLATE_ID = 'dddddddd-0003-4000-d000-000000000003';
 
@@ -74,12 +77,40 @@ const SEC_WEEKLY_CHECKIN_ID = 'aaaabbbb-0003-4000-ab00-000000000003';
 const SEC_CAREER_GOALS_ID = 'aaaabbbb-0004-4000-ab00-000000000004';
 const SEC_CAREER_FEEDBACK_ID = 'aaaabbbb-0005-4000-ab00-000000000005';
 
+// Structured 1:1 Sections
+const SEC_S11_FOLLOWUP_ID = 'aaaabbbb-0010-4000-ab00-000000000010';
+const SEC_S11_ENERGY_ID = 'aaaabbbb-0011-4000-ab00-000000000011';
+const SEC_S11_PROGRESS_ID = 'aaaabbbb-0012-4000-ab00-000000000012';
+const SEC_S11_BLOCKERS_ID = 'aaaabbbb-0013-4000-ab00-000000000013';
+const SEC_S11_COLLAB_ID = 'aaaabbbb-0014-4000-ab00-000000000014';
+const SEC_S11_LEARNING_ID = 'aaaabbbb-0015-4000-ab00-000000000015';
+const SEC_S11_CAPACITY_ID = 'aaaabbbb-0016-4000-ab00-000000000016';
+
+// Structured 1:1 Questions
+const Q_S11_RESOLVE_SCORE_ID = 'eeeeeeee-0020-4000-e000-000000000020';
+const Q_S11_RESOLVE_COMMENT_ID = 'eeeeeeee-0021-4000-e000-000000000021';
+const Q_S11_ENERGY_SCORE_ID = 'eeeeeeee-0022-4000-e000-000000000022';
+const Q_S11_ENERGY_COMMENT_ID = 'eeeeeeee-0023-4000-e000-000000000023';
+const Q_S11_PROGRESS_SCORE_ID = 'eeeeeeee-0024-4000-e000-000000000024';
+const Q_S11_PROGRESS_COMMENT_ID = 'eeeeeeee-0025-4000-e000-000000000025';
+const Q_S11_BLOCKERS_SCORE_ID = 'eeeeeeee-0026-4000-e000-000000000026';
+const Q_S11_BLOCKERS_MAIN_ID = 'eeeeeeee-0027-4000-e000-000000000027';
+const Q_S11_BLOCKERS_HELP_ID = 'eeeeeeee-0028-4000-e000-000000000028';
+const Q_S11_COLLAB_SCORE_ID = 'eeeeeeee-0029-4000-e000-000000000029';
+const Q_S11_COLLAB_COMMENT_ID = 'eeeeeeee-0030-4000-e000-000000000030';
+const Q_S11_LEARNED_YN_ID = 'eeeeeeee-0031-4000-e000-000000000031';
+const Q_S11_LEARNED_WHAT_ID = 'eeeeeeee-0032-4000-e000-000000000032';
+const Q_S11_EXPLORE_ID = 'eeeeeeee-0033-4000-e000-000000000033';
+const Q_S11_CAPACITY_SCORE_ID = 'eeeeeeee-0034-4000-e000-000000000034';
+const Q_S11_CAPACITY_COMMENT_ID = 'eeeeeeee-0035-4000-e000-000000000035';
+
 // Beta Template Sections
 const SEC_BETA_CHECKIN_ID = 'aaaabbbb-0006-4000-ab00-000000000006';
 
 // Acme Labels
 const LABEL_CHECKIN_ID = 'aabbccee-0001-4000-ab00-000000000001';
 const LABEL_CAREER_ID = 'aabbccee-0002-4000-ab00-000000000002';
+const LABEL_STRUCTURED_ID = 'aabbccee-0003-4000-ab00-000000000003';
 
 // Acme Template Questions (Weekly Check-in)
 const Q_MOOD_ID = 'eeeeeeee-0001-4000-e000-000000000001';
@@ -446,6 +477,24 @@ async function seedTemplates() {
       },
     });
 
+  // Structured 1:1 Template (Acme)
+  await db
+    .insert(schema.questionnaireTemplates)
+    .values({
+      id: STRUCTURED_TEMPLATE_ID,
+      tenantId: ACME_TENANT_ID,
+      name: 'Structured 1:1',
+      description: 'Comprehensive weekly 1:1 covering follow-up, energy, progress, blockers, collaboration, learning, and capacity',
+      isDefault: false,
+      isPublished: true,
+      createdBy: ALICE_ID,
+      version: 1,
+    })
+    .onConflictDoUpdate({
+      target: schema.questionnaireTemplates.id,
+      set: { name: sql`excluded.name`, description: sql`excluded.description`, updatedAt: sql`now()` },
+    });
+
   // Acme Labels
   console.log('  Seeding labels...');
   await db
@@ -453,6 +502,7 @@ async function seedTemplates() {
     .values([
       { id: LABEL_CHECKIN_ID, tenantId: ACME_TENANT_ID, name: 'Check-in', color: '#3b82f6' },
       { id: LABEL_CAREER_ID, tenantId: ACME_TENANT_ID, name: 'Career', color: '#8b5cf6' },
+      { id: LABEL_STRUCTURED_ID, tenantId: ACME_TENANT_ID, name: '1:1 Structurat', color: '#10b981' },
     ])
     .onConflictDoUpdate({
       target: schema.templateLabels.id,
@@ -468,6 +518,7 @@ async function seedTemplates() {
     .values([
       { templateId: WEEKLY_TEMPLATE_ID, labelId: LABEL_CHECKIN_ID },
       { templateId: CAREER_TEMPLATE_ID, labelId: LABEL_CAREER_ID },
+      { templateId: STRUCTURED_TEMPLATE_ID, labelId: LABEL_STRUCTURED_ID },
     ])
     .onConflictDoNothing();
 
@@ -479,6 +530,13 @@ async function seedTemplates() {
     { id: SEC_WEEKLY_CHECKIN_ID, templateId: WEEKLY_TEMPLATE_ID, tenantId: ACME_TENANT_ID, name: 'Check-in', sortOrder: 2 },
     { id: SEC_CAREER_GOALS_ID, templateId: CAREER_TEMPLATE_ID, tenantId: ACME_TENANT_ID, name: 'Career Goals', sortOrder: 0 },
     { id: SEC_CAREER_FEEDBACK_ID, templateId: CAREER_TEMPLATE_ID, tenantId: ACME_TENANT_ID, name: 'Feedback', sortOrder: 1 },
+    { id: SEC_S11_FOLLOWUP_ID, templateId: STRUCTURED_TEMPLATE_ID, tenantId: ACME_TENANT_ID, name: 'Follow-up', sortOrder: 0 },
+    { id: SEC_S11_ENERGY_ID, templateId: STRUCTURED_TEMPLATE_ID, tenantId: ACME_TENANT_ID, name: 'Energie & Productivitate', sortOrder: 1 },
+    { id: SEC_S11_PROGRESS_ID, templateId: STRUCTURED_TEMPLATE_ID, tenantId: ACME_TENANT_ID, name: 'Progres pe obiective', sortOrder: 2 },
+    { id: SEC_S11_BLOCKERS_ID, templateId: STRUCTURED_TEMPLATE_ID, tenantId: ACME_TENANT_ID, name: 'Blocaje / Fricțiuni', sortOrder: 3 },
+    { id: SEC_S11_COLLAB_ID, templateId: STRUCTURED_TEMPLATE_ID, tenantId: ACME_TENANT_ID, name: 'Colaborare & Context', sortOrder: 4 },
+    { id: SEC_S11_LEARNING_ID, templateId: STRUCTURED_TEMPLATE_ID, tenantId: ACME_TENANT_ID, name: 'Învățare & Creștere', sortOrder: 5 },
+    { id: SEC_S11_CAPACITY_ID, templateId: STRUCTURED_TEMPLATE_ID, tenantId: ACME_TENANT_ID, name: 'Capacitate & Încărcare', sortOrder: 6 },
     { id: SEC_BETA_CHECKIN_ID, templateId: BETA_TEMPLATE_ID, tenantId: BETA_TENANT_ID, name: 'Check-in', sortOrder: 0 },
   ];
 
@@ -621,7 +679,195 @@ async function seedTemplates() {
     },
   ];
 
-  for (const q of [...weeklyQuestions, ...careerQuestions, ...betaQuestions]) {
+  // Structured 1:1 Questions
+  const structuredQuestions = [
+    // Section 1: Follow-up
+    {
+      id: Q_S11_RESOLVE_SCORE_ID,
+      templateId: STRUCTURED_TEMPLATE_ID,
+      sectionId: SEC_S11_FOLLOWUP_ID,
+      questionText: 'În ce măsură taskurile discutate la ultima întâlnire au fost rezolvate?',
+      helpText: 'Rezolvat complet / Parțial / Nerezolvat',
+      answerType: 'multiple_choice' as const,
+      answerConfig: { options: ['Rezolvat complet', 'Parțial', 'Nerezolvat'] },
+      isRequired: true,
+      sortOrder: 1,
+    },
+    {
+      id: Q_S11_RESOLVE_COMMENT_ID,
+      templateId: STRUCTURED_TEMPLATE_ID,
+      sectionId: SEC_S11_FOLLOWUP_ID,
+      questionText: 'Comentariu scurt pe follow-up',
+      helpText: 'Numirea taskurilor, blocaje, suport necesar, observații',
+      answerType: 'text' as const,
+      answerConfig: {},
+      isRequired: false,
+      sortOrder: 2,
+    },
+    // Section 2: Energie & Productivitate
+    {
+      id: Q_S11_ENERGY_SCORE_ID,
+      templateId: STRUCTURED_TEMPLATE_ID,
+      sectionId: SEC_S11_ENERGY_ID,
+      questionText: 'Cum îți evaluezi energia și productivitatea?',
+      helpText: '1 = foarte scăzută, 5 = excelentă',
+      answerType: 'rating_1_5' as const,
+      answerConfig: { labels: { 1: 'Foarte scăzută', 3: 'Medie', 5: 'Excelentă' } },
+      isRequired: true,
+      sortOrder: 3,
+    },
+    {
+      id: Q_S11_ENERGY_COMMENT_ID,
+      templateId: STRUCTURED_TEMPLATE_ID,
+      sectionId: SEC_S11_ENERGY_ID,
+      questionText: 'Ce a influențat cel mai mult scorul?',
+      helpText: '1-2 rânduri',
+      answerType: 'text' as const,
+      answerConfig: {},
+      isRequired: false,
+      sortOrder: 4,
+    },
+    // Section 3: Progres pe obiective
+    {
+      id: Q_S11_PROGRESS_SCORE_ID,
+      templateId: STRUCTURED_TEMPLATE_ID,
+      sectionId: SEC_S11_PROGRESS_ID,
+      questionText: 'Scor progres pe obiective',
+      helpText: '1 = stagnare | 3 = progres moderat | 5 = progres semnificativ',
+      answerType: 'rating_1_5' as const,
+      answerConfig: { labels: { 1: 'Stagnare', 3: 'Moderat', 5: 'Semnificativ' } },
+      isRequired: true,
+      sortOrder: 5,
+    },
+    {
+      id: Q_S11_PROGRESS_COMMENT_ID,
+      templateId: STRUCTURED_TEMPLATE_ID,
+      sectionId: SEC_S11_PROGRESS_ID,
+      questionText: 'Cum ai avansat concret?',
+      helpText: 'Max 3 bullet-uri scurte',
+      answerType: 'text' as const,
+      answerConfig: {},
+      isRequired: false,
+      sortOrder: 6,
+    },
+    // Section 4: Blocaje / Fricțiuni
+    {
+      id: Q_S11_BLOCKERS_SCORE_ID,
+      templateId: STRUCTURED_TEMPLATE_ID,
+      sectionId: SEC_S11_BLOCKERS_ID,
+      questionText: 'Nivel impact blocaje',
+      helpText: '1 = neglijabil | 5 = impact major',
+      answerType: 'rating_1_5' as const,
+      answerConfig: { labels: { 1: 'Neglijabil', 3: 'Moderat', 5: 'Impact major' } },
+      isRequired: true,
+      sortOrder: 7,
+    },
+    {
+      id: Q_S11_BLOCKERS_MAIN_ID,
+      templateId: STRUCTURED_TEMPLATE_ID,
+      sectionId: SEC_S11_BLOCKERS_ID,
+      questionText: 'Care este principalul blocaj?',
+      helpText: '1 frază',
+      answerType: 'text' as const,
+      answerConfig: {},
+      isRequired: false,
+      sortOrder: 8,
+    },
+    {
+      id: Q_S11_BLOCKERS_HELP_ID,
+      templateId: STRUCTURED_TEMPLATE_ID,
+      sectionId: SEC_S11_BLOCKERS_ID,
+      questionText: 'Ce ar ajuta cel mai mult?',
+      helpText: 'Timp / Claritate / Decizie / Suport tehnic / Altceva',
+      answerType: 'multiple_choice' as const,
+      answerConfig: { options: ['Timp', 'Claritate', 'Decizie', 'Suport tehnic', 'Altceva'] },
+      isRequired: false,
+      sortOrder: 9,
+    },
+    // Section 5: Colaborare & Context
+    {
+      id: Q_S11_COLLAB_SCORE_ID,
+      templateId: STRUCTURED_TEMPLATE_ID,
+      sectionId: SEC_S11_COLLAB_ID,
+      questionText: 'Scor colaborare',
+      helpText: '1 = probleme | 3 = normal | 5 = impresionant',
+      answerType: 'rating_1_5' as const,
+      answerConfig: { labels: { 1: 'Probleme', 3: 'Normal', 5: 'Impresionant' } },
+      isRequired: true,
+      sortOrder: 10,
+    },
+    {
+      id: Q_S11_COLLAB_COMMENT_ID,
+      templateId: STRUCTURED_TEMPLATE_ID,
+      sectionId: SEC_S11_COLLAB_ID,
+      questionText: 'Ce a funcționat bine / ce poate fi îmbunătățit?',
+      helpText: '1-2 rânduri',
+      answerType: 'text' as const,
+      answerConfig: {},
+      isRequired: false,
+      sortOrder: 11,
+    },
+    // Section 6: Învățare & Creștere
+    {
+      id: Q_S11_LEARNED_YN_ID,
+      templateId: STRUCTURED_TEMPLATE_ID,
+      sectionId: SEC_S11_LEARNING_ID,
+      questionText: 'Ai învățat ceva nou aplicabil?',
+      answerType: 'yes_no' as const,
+      answerConfig: {},
+      isRequired: true,
+      sortOrder: 12,
+    },
+    {
+      id: Q_S11_LEARNED_WHAT_ID,
+      templateId: STRUCTURED_TEMPLATE_ID,
+      sectionId: SEC_S11_LEARNING_ID,
+      questionText: 'Dacă da: ce anume?',
+      helpText: 'Exemplu concret, 1-2 rânduri',
+      answerType: 'text' as const,
+      answerConfig: {},
+      isRequired: false,
+      sortOrder: 13,
+      conditionalOnQuestionId: Q_S11_LEARNED_YN_ID,
+      conditionalOperator: 'eq' as const,
+      conditionalValue: '1',
+    },
+    {
+      id: Q_S11_EXPLORE_ID,
+      templateId: STRUCTURED_TEMPLATE_ID,
+      sectionId: SEC_S11_LEARNING_ID,
+      questionText: 'Vrei să explorezi ceva nou în următoarea perioadă?',
+      helpText: 'Opțional, 1 frază',
+      answerType: 'text' as const,
+      answerConfig: {},
+      isRequired: false,
+      sortOrder: 14,
+    },
+    // Section 7: Capacitate & Încărcare
+    {
+      id: Q_S11_CAPACITY_SCORE_ID,
+      templateId: STRUCTURED_TEMPLATE_ID,
+      sectionId: SEC_S11_CAPACITY_ID,
+      questionText: 'Nivel încărcare',
+      helpText: '1 = subîncărcat | 3 = echilibrat | 5 = supraîncărcat',
+      answerType: 'rating_1_5' as const,
+      answerConfig: { labels: { 1: 'Subîncărcat', 3: 'Echilibrat', 5: 'Supraîncărcat' } },
+      isRequired: true,
+      sortOrder: 15,
+    },
+    {
+      id: Q_S11_CAPACITY_COMMENT_ID,
+      templateId: STRUCTURED_TEMPLATE_ID,
+      sectionId: SEC_S11_CAPACITY_ID,
+      questionText: 'Comentariu scurt (dacă e cazul)',
+      answerType: 'text' as const,
+      answerConfig: {},
+      isRequired: false,
+      sortOrder: 16,
+    },
+  ];
+
+  for (const q of [...weeklyQuestions, ...careerQuestions, ...betaQuestions, ...structuredQuestions]) {
     await db
       .insert(schema.templateQuestions)
       .values(q)

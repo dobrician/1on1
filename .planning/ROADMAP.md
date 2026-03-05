@@ -46,11 +46,11 @@ Full details: `.planning/milestones/v1.0-ROADMAP.md`
   3. An authenticated user's DB-stored language preference propagates through JWT and renders the correct locale without extra DB calls on each request
   4. UI language (per-user) and content language (per-company) are stored independently and never conflated in the codebase
   5. Translation files use namespace-based JSON structure with TypeScript type safety via next-intl AppConfig
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 11-01: TBD
-- [ ] 11-02: TBD
+- [ ] 11-01-PLAN.md — i18n infrastructure: next-intl setup, DB migration, JWT extension, proxy locale detection, translation files
+- [ ] 11-02-PLAN.md — Proof-of-concept: login page translation (EN+RO), language switcher, formatting demo
 
 ### Phase 12: UI Translation
 **Goal**: Every user-facing page and component displays translated strings, locale-aware formatting, and translated validation errors -- the entire UI works in any supported language

@@ -179,12 +179,11 @@ Plans:
   2. Pre-meeting reminder email is sent configurable hours before a session (default 24h)
   3. Post-session summary email is sent to both manager and report with answers, notes, action items, and AI summary
   4. Agenda prep reminder email ("Add your talking points") is sent 48h before meeting
-**Plans**: TBD
+**Plans**: 2 plans in 2 waves (Wave 1: email infrastructure + templates + cron, Wave 2: lifecycle wiring + org language)
 
 Plans:
-- [ ] 09-01: Email infrastructure (Resend + React Email templates)
-- [ ] 09-02: Invite and reminder emails (Inngest scheduled jobs)
-- [ ] 09-03: Post-session summary and agenda prep emails
+- [ ] 09-01-PLAN.md -- Shared email layout, 3 new templates (reminder, agenda prep, summary), notification service layer, cron endpoint, schema migration (Wave 1)
+- [ ] 09-02-PLAN.md -- Post-session summary email via AI pipeline, notification scheduling on session completion, org language setting, series management wiring (Wave 2)
 
 ### Phase 10: Integration & Polish
 **Goal**: The application feels cohesive and polished with dark mode, consistent design, and verified end-to-end workflows
@@ -217,5 +216,5 @@ Note: Phases 6, 7, and 9 all depend only on Phase 5 and can execute in parallel.
 | 6. Action Items & Session History | 0/3 | Not started | - |
 | 7. AI Pipeline | 3/5 | Gap closure | - |
 | 8. Manager Dashboard & Analytics | 7/7 | Complete   | 2026-03-04 |
-| 9. Email Notifications | 0/3 | Not started | - |
+| 9. Email Notifications | 0/2 | Not started | - |
 | 10. Integration & Polish | 0/2 | Not started | - |

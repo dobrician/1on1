@@ -9,11 +9,11 @@ Requirements for internationalization milestone. Each maps to roadmap phases.
 
 ### Infrastructure
 
-- [ ] **INFRA-01**: App uses next-intl for all UI string translations with Server and Client Component support
-- [ ] **INFRA-02**: Locale resolves from user DB preference (authenticated) or browser Accept-Language (unauthenticated) via middleware cookie
-- [ ] **INFRA-03**: User language preference persists in DB and propagates through JWT without extra DB calls
-- [ ] **INFRA-04**: Translation files use namespace-based JSON structure with TypeScript type safety
-- [ ] **INFRA-05**: UI language (per-user) and content language (per-company) are independent, never conflated
+- [x] **INFRA-01**: App uses next-intl for all UI string translations with Server and Client Component support
+- [x] **INFRA-02**: Locale resolves from user DB preference (authenticated) or browser Accept-Language (unauthenticated) via middleware cookie
+- [x] **INFRA-03**: User language preference persists in DB and propagates through JWT without extra DB calls
+- [x] **INFRA-04**: Translation files use namespace-based JSON structure with TypeScript type safety
+- [x] **INFRA-05**: UI language (per-user) and content language (per-company) are independent, never conflated
 
 ### UI Translation
 
@@ -87,11 +87,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| INFRA-01 | Phase 11 | Pending |
-| INFRA-02 | Phase 11 | Pending |
-| INFRA-03 | Phase 11 | Pending |
-| INFRA-04 | Phase 11 | Pending |
-| INFRA-05 | Phase 11 | Pending |
+| INFRA-01 | Phase 11 | Complete |
+| INFRA-02 | Phase 11 | Complete |
+| INFRA-03 | Phase 11 | Complete |
+| INFRA-04 | Phase 11 | Complete |
+| INFRA-05 | Phase 11 | Complete |
 | UITR-01 | Phase 12 | Pending |
 | UITR-02 | Phase 12 | Pending |
 | UITR-03 | Phase 12 | Pending |

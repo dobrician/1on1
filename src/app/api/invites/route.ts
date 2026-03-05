@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { randomBytes } from "crypto";
 import { isNull } from "drizzle-orm";
 import { render } from "@react-email/render";
-import { createTransport } from "nodemailer";
 import { auth } from "@/lib/auth/config";
 import { requireRole } from "@/lib/auth/rbac";
 import { inviteUsersSchema } from "@/lib/validations/user";
@@ -11,27 +10,7 @@ import { adminDb } from "@/lib/db";
 import { inviteTokens } from "@/lib/db/schema";
 import { logAuditEvent } from "@/lib/audit/log";
 import { InviteEmail } from "@/lib/email/templates/invite";
-
-// Lazy-initialize SMTP transport (same pattern as send.ts)
-let _transport: ReturnType<typeof createTransport> | null = null;
-function getTransport() {
-  if (!_transport) {
-    _transport = createTransport({
-      host: process.env.SMTP_HOST,
-      port: Number(process.env.SMTP_PORT || 587),
-      secure: process.env.SMTP_SECURE === "ssl",
-      auth: {
-        user: process.env.SMTP_USERNAME,
-        pass: process.env.SMTP_PASSWORD,
-      },
-    });
-  }
-  return _transport;
-}
-
-function getEmailFrom(): string {
-  return process.env.EMAIL_FROM || "1on1 <noreply@example.com>";
-}
+import { getTransport, getEmailFrom } from "@/lib/email/send";
 
 function getBaseUrl(): string {
   if (process.env.NEXT_PUBLIC_APP_URL) return process.env.NEXT_PUBLIC_APP_URL;

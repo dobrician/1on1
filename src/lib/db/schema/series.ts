@@ -41,6 +41,7 @@ export const meetingSeries = pgTable(
     preferredDay: preferredDayEnum("preferred_day"),
     preferredTime: time("preferred_time"),
     status: seriesStatusEnum("status").notNull().default("active"),
+    reminderHoursBefore: integer("reminder_hours_before").notNull().default(24),
     nextSessionAt: timestamp("next_session_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()

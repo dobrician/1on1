@@ -12,6 +12,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Pre-meeting reminder email template with recipient, meeting date/time, and CTA
 - Agenda prep email template with manager/report variants and AI coaching nudges section (manager-only)
 - Session summary email template with score badge, AI summary, action items, and manager insights
+- `reminderHoursBefore` column on `meeting_series` with default 24 for configurable reminder timing
+- Notification queries module (`queries.ts`): claim-based pending fetch, mark sent/failed, cancel by series
+- Notification scheduler (`scheduler.ts`): schedules pre-meeting and agenda-prep notifications for series participants
+- Notification sender (`sender.ts`): processes notifications by type, renders templates, sends via SMTP
+- Cron endpoint (`/api/cron/notifications`): CRON_SECRET-authenticated GET that atomically claims and processes pending notifications
+- Vercel cron config (`vercel.json`): 5-minute schedule for notification processing
 - Per-question score weighting (`score_weight` column) — template authors can control each question's impact on session score (0 = excluded, 1 = normal, 2 = double impact, up to 10)
 - Score weight UI in template editor question form — shown only for scorable answer types (rating, mood, yes/no)
 - SoftexCo "1:1 Check-in (2 săptămâni)" template with 4 sections, 10 questions, and calibrated weights
@@ -20,6 +26,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 - Existing email templates (invite, verification, password-reset) refactored to use shared EmailLayout and styles
+- SMTP transport consolidated: invite routes now import `getTransport`/`getEmailFrom` from `send.ts` (removed duplicate transport code)
+- `send.ts` removed `"use server"` directive and exports transport functions for cross-module use
 - Session scoring now uses weighted averages instead of simple averages — backward compatible (default weight 1.0)
 - Analytics per-category scores now weighted by `score_weight`
 - Session completion and AI retry now use direct pipeline instead of Inngest events (more reliable in dev)

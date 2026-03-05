@@ -1,5 +1,3 @@
-"use server";
-
 import { createTransport } from "nodemailer";
 import { render } from "@react-email/render";
 import { randomBytes } from "crypto";
@@ -13,7 +11,7 @@ import { PasswordResetEmail } from "./templates/password-reset";
 
 // Lazy-initialize SMTP transport
 let _transport: ReturnType<typeof createTransport> | null = null;
-function getTransport() {
+export function getTransport() {
   if (!_transport) {
     _transport = createTransport({
       host: process.env.SMTP_HOST,
@@ -28,7 +26,7 @@ function getTransport() {
   return _transport;
 }
 
-function getEmailFrom(): string {
+export function getEmailFrom(): string {
   return process.env.EMAIL_FROM || "1on1 <noreply@example.com>";
 }
 

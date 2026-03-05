@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Added
+- next-intl v4 i18n infrastructure with non-routing setup (cookie-based locale resolution)
+- Translation files for EN and RO locales with namespace structure (`messages/{locale}/{namespace}.json`)
+- TypeScript compile-time translation key validation via `AppConfig` augmentation in `global.d.ts`
+- `i18n/request.ts` request config with locale resolution from `NEXT_LOCALE` cookie
+- `language` column on users table (UI language per-user, default `en`)
+- `content_language` column on tenants table (content language per-company, default `en`)
+- JWT carries `uiLanguage` and `contentLanguage` claims after sign-in
+- Proxy locale detection from JWT (authenticated) or Accept-Language header (unauthenticated)
+- `NEXT_LOCALE` cookie set on all proxy response paths (redirects and pass-through)
+- `NextIntlClientProvider` in root layout with dynamic `html lang` attribute
+
 ## [1.0.0] - 2026-03-05
 
 ### Added

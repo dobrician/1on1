@@ -1,0 +1,17 @@
+{
+  "common": {
+    "appName": "1on1",
+    "loading": "Se \u00eencarcă...",
+    "save": "Salvează",
+    "cancel": "Anulează",
+    "delete": "Șterge",
+    "edit": "Editează",
+    "create": "Creează",
+    "back": "\u00cenapoi",
+    "next": "Următorul",
+    "search": "Caută...",
+    "noResults": "Niciun rezultat găsit",
+    "error": "Ceva nu a funcționat",
+    "retry": "\u00cencearcă din nou"
+  }
+}

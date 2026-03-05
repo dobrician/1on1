@@ -1,0 +1,17 @@
+{
+  "common": {
+    "appName": "1on1",
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "back": "Back",
+    "next": "Next",
+    "search": "Search...",
+    "noResults": "No results found",
+    "error": "Something went wrong",
+    "retry": "Try again"
+  }
+}

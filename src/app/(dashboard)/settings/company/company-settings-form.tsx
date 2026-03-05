@@ -125,6 +125,14 @@ export function CompanySettingsForm({ initialData }: CompanySettingsFormProps) {
       }
 
       setMessage({ type: "success", text: "Settings saved successfully." });
+
+      // Apply color theme immediately without requiring a page refresh
+      const root = document.documentElement;
+      if (colorTheme && colorTheme !== "neutral") {
+        root.setAttribute("data-color-theme", colorTheme);
+      } else {
+        root.removeAttribute("data-color-theme");
+      }
     } catch (error) {
       setMessage({
         type: "error",

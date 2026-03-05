@@ -111,6 +111,7 @@ export async function GET(
           getTeamHeatmapData(tx, teamId, startDate, endDate, anonymize),
         ]);
 
+        console.log("[team-analytics] anonymize:", anonymize, "teamAverages:", JSON.stringify(teamAverages), "heatmap count:", heatmapData.length);
         return {
           team: { id: team.id, name: team.name },
           memberCount: members.length,

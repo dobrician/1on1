@@ -334,7 +334,8 @@ export async function getTeamAverages(
     .groupBy(analyticsSnapshots.metricName);
 
   const snapshotData = results
-    .filter((r) => !anonymize || r.memberCount >= 3)
+    .filter((r) => Number(r.avgScore) > 0)
+    .filter((r) => !anonymize || Number(r.memberCount) >= 2)
     .map((r) => ({
       category: r.metricName,
       avgScore: Number(r.avgScore),
@@ -381,7 +382,7 @@ export async function getTeamAverages(
     .groupBy(templateSections.name);
 
   return liveResults
-    .filter((r) => !anonymize || r.memberCount >= 3)
+    .filter((r) => !anonymize || Number(r.memberCount) >= 2)
     .map((r) => ({
       category: r.sectionName.trim(),
       avgScore: Number(r.avgScore),
@@ -455,7 +456,7 @@ export async function getTeamHeatmapData(
   });
 
   const snapshotData = snapshots
-    .filter((s) => s.userId !== null)
+    .filter((s) => s.userId !== null && (s.sampleCount ?? 0) > 0)
     .map((s) => ({
       userId: anonymize ? "" : s.userId!,
       userName: nameMap.get(s.userId!) ?? "Unknown",

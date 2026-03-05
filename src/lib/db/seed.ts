@@ -163,6 +163,79 @@ const SNAPSHOT_S3_WELLBEING_ID = '55555555-0010-4000-5000-000000000010';
 const SNAPSHOT_S3_PERFORMANCE_ID = '55555555-0011-4000-5000-000000000011';
 const SNAPSHOT_S3_CHECKIN_ID = '55555555-0012-4000-5000-000000000012';
 
+// Eve Sessions (Bob <-> Eve)
+const SESSION_EVE_1_ID = '99999999-0004-4000-9000-000000000004';
+const SESSION_EVE_2_ID = '99999999-0005-4000-9000-000000000005';
+
+// Frank Sessions (Carol <-> Frank)
+const SESSION_FRANK_1_ID = '99999999-0006-4000-9000-000000000006';
+const SESSION_FRANK_2_ID = '99999999-0007-4000-9000-000000000007';
+
+// Eve Session Answers
+const ANSWER_EVE_S1_MOOD_ID = '66666666-0020-4000-6000-000000000020';
+const ANSWER_EVE_S1_WORKLOAD_ID = '66666666-0021-4000-6000-000000000021';
+const ANSWER_EVE_S1_BLOCKERS_ID = '66666666-0022-4000-6000-000000000022';
+const ANSWER_EVE_S1_HELP_ID = '66666666-0023-4000-6000-000000000023';
+const ANSWER_EVE_S1_SATISFACTION_ID = '66666666-0024-4000-6000-000000000024';
+const ANSWER_EVE_S2_MOOD_ID = '66666666-0025-4000-6000-000000000025';
+const ANSWER_EVE_S2_WORKLOAD_ID = '66666666-0026-4000-6000-000000000026';
+const ANSWER_EVE_S2_BLOCKERS_ID = '66666666-0027-4000-6000-000000000027';
+const ANSWER_EVE_S2_HELP_ID = '66666666-0028-4000-6000-000000000028';
+const ANSWER_EVE_S2_SATISFACTION_ID = '66666666-0029-4000-6000-000000000029';
+
+// Frank Session Answers
+const ANSWER_FRANK_S1_MOOD_ID = '66666666-0030-4000-6000-000000000030';
+const ANSWER_FRANK_S1_WORKLOAD_ID = '66666666-0031-4000-6000-000000000031';
+const ANSWER_FRANK_S1_BLOCKERS_ID = '66666666-0032-4000-6000-000000000032';
+const ANSWER_FRANK_S1_HELP_ID = '66666666-0033-4000-6000-000000000033';
+const ANSWER_FRANK_S1_SATISFACTION_ID = '66666666-0034-4000-6000-000000000034';
+const ANSWER_FRANK_S2_MOOD_ID = '66666666-0035-4000-6000-000000000035';
+const ANSWER_FRANK_S2_WORKLOAD_ID = '66666666-0036-4000-6000-000000000036';
+const ANSWER_FRANK_S2_BLOCKERS_ID = '66666666-0037-4000-6000-000000000037';
+const ANSWER_FRANK_S2_HELP_ID = '66666666-0038-4000-6000-000000000038';
+const ANSWER_FRANK_S2_SATISFACTION_ID = '66666666-0039-4000-6000-000000000039';
+
+// Eve & Frank Analytics Snapshots
+const SNAPSHOT_EVE_S1_SCORE_ID = '55555555-0020-4000-5000-000000000020';
+const SNAPSHOT_EVE_S1_WELLBEING_ID = '55555555-0021-4000-5000-000000000021';
+const SNAPSHOT_EVE_S1_CHECKIN_ID = '55555555-0022-4000-5000-000000000022';
+const SNAPSHOT_EVE_S2_SCORE_ID = '55555555-0023-4000-5000-000000000023';
+const SNAPSHOT_EVE_S2_WELLBEING_ID = '55555555-0024-4000-5000-000000000024';
+const SNAPSHOT_EVE_S2_CHECKIN_ID = '55555555-0025-4000-5000-000000000025';
+const SNAPSHOT_FRANK_S1_SCORE_ID = '55555555-0030-4000-5000-000000000030';
+const SNAPSHOT_FRANK_S1_WELLBEING_ID = '55555555-0031-4000-5000-000000000031';
+const SNAPSHOT_FRANK_S1_CHECKIN_ID = '55555555-0032-4000-5000-000000000032';
+const SNAPSHOT_FRANK_S2_SCORE_ID = '55555555-0033-4000-5000-000000000033';
+const SNAPSHOT_FRANK_S2_WELLBEING_ID = '55555555-0034-4000-5000-000000000034';
+const SNAPSHOT_FRANK_S2_CHECKIN_ID = '55555555-0035-4000-5000-000000000035';
+
+// Grace Sessions (Carol <-> Grace)
+const SESSION_GRACE_1_ID = '99999999-0008-4000-9000-000000000008';
+const SESSION_GRACE_2_ID = '99999999-0009-4000-9000-000000000009';
+
+// Grace series
+const SERIES_CAROL_GRACE_ID = 'ffffffff-0005-4000-f000-000000000005';
+
+// Grace Session Answers
+const ANSWER_GRACE_S1_MOOD_ID = '66666666-0040-4000-6000-000000000040';
+const ANSWER_GRACE_S1_WORKLOAD_ID = '66666666-0041-4000-6000-000000000041';
+const ANSWER_GRACE_S1_BLOCKERS_ID = '66666666-0042-4000-6000-000000000042';
+const ANSWER_GRACE_S1_HELP_ID = '66666666-0043-4000-6000-000000000043';
+const ANSWER_GRACE_S1_SATISFACTION_ID = '66666666-0044-4000-6000-000000000044';
+const ANSWER_GRACE_S2_MOOD_ID = '66666666-0045-4000-6000-000000000045';
+const ANSWER_GRACE_S2_WORKLOAD_ID = '66666666-0046-4000-6000-000000000046';
+const ANSWER_GRACE_S2_BLOCKERS_ID = '66666666-0047-4000-6000-000000000047';
+const ANSWER_GRACE_S2_HELP_ID = '66666666-0048-4000-6000-000000000048';
+const ANSWER_GRACE_S2_SATISFACTION_ID = '66666666-0049-4000-6000-000000000049';
+
+// Grace Analytics Snapshots
+const SNAPSHOT_GRACE_S1_SCORE_ID = '55555555-0040-4000-5000-000000000040';
+const SNAPSHOT_GRACE_S1_WELLBEING_ID = '55555555-0041-4000-5000-000000000041';
+const SNAPSHOT_GRACE_S1_CHECKIN_ID = '55555555-0042-4000-5000-000000000042';
+const SNAPSHOT_GRACE_S2_SCORE_ID = '55555555-0043-4000-5000-000000000043';
+const SNAPSHOT_GRACE_S2_WELLBEING_ID = '55555555-0044-4000-5000-000000000044';
+const SNAPSHOT_GRACE_S2_CHECKIN_ID = '55555555-0045-4000-5000-000000000045';
+
 // Acme Private Note
 const PRIVATE_NOTE_ID = '77777777-0001-4000-7000-000000000001';
 
@@ -190,6 +263,7 @@ const TM_EVE_ENG_ID = 'aabbccdd-0003-4000-ab00-000000000003';
 const TM_CAROL_PROD_ID = 'aabbccdd-0004-4000-ab00-000000000004';
 const TM_FRANK_PROD_ID = 'aabbccdd-0005-4000-ab00-000000000005';
 const TM_GRACE_PROD_ID = 'aabbccdd-0006-4000-ab00-000000000006';
+const TM_FRANK_ENG_ID = 'aabbccdd-0007-4000-ab00-000000000007';
 
 // =============================================================================
 // Seed functions
@@ -413,6 +487,7 @@ async function seedTeams() {
     { id: TM_BOB_ENG_ID, teamId: ENGINEERING_TEAM_ID, userId: BOB_ID, role: 'lead' as const },
     { id: TM_DAVE_ENG_ID, teamId: ENGINEERING_TEAM_ID, userId: DAVE_ID, role: 'member' as const },
     { id: TM_EVE_ENG_ID, teamId: ENGINEERING_TEAM_ID, userId: EVE_ID, role: 'member' as const },
+    { id: TM_FRANK_ENG_ID, teamId: ENGINEERING_TEAM_ID, userId: FRANK_ID, role: 'member' as const },
     { id: TM_CAROL_PROD_ID, teamId: PRODUCT_TEAM_ID, userId: CAROL_ID, role: 'lead' as const },
     { id: TM_FRANK_PROD_ID, teamId: PRODUCT_TEAM_ID, userId: FRANK_ID, role: 'member' as const },
     { id: TM_GRACE_PROD_ID, teamId: PRODUCT_TEAM_ID, userId: GRACE_ID, role: 'member' as const },
@@ -944,6 +1019,18 @@ async function seedMeetingSeries() {
       status: 'active' as const,
     },
     {
+      id: SERIES_CAROL_GRACE_ID,
+      tenantId: ACME_TENANT_ID,
+      managerId: CAROL_ID,
+      reportId: GRACE_ID,
+      cadence: 'biweekly' as const,
+      defaultDurationMinutes: 30,
+      defaultTemplateId: WEEKLY_TEMPLATE_ID,
+      preferredDay: 'thu' as const,
+      preferredTime: '11:00',
+      status: 'active' as const,
+    },
+    {
       id: SERIES_YURI_XENA_ID,
       tenantId: BETA_TENANT_ID,
       managerId: YURI_ID,
@@ -1025,6 +1112,93 @@ async function seedSessions() {
       status: 'completed' as const,
       sharedNotes: { general: 'Discussed career growth. Dave interested in leading the next feature project.' },
       durationMinutes: 35,
+      sessionScore: '8.50',
+    },
+    // Eve sessions (Bob <-> Eve)
+    {
+      id: SESSION_EVE_1_ID,
+      seriesId: SERIES_BOB_EVE_ID,
+      tenantId: ACME_TENANT_ID,
+      templateId: WEEKLY_TEMPLATE_ID,
+      sessionNumber: 1,
+      scheduledAt: twoWeeksAgo,
+      startedAt: twoWeeksAgo,
+      completedAt: new Date(twoWeeksAgo.getTime() + 25 * 60 * 1000),
+      status: 'completed' as const,
+      sharedNotes: { general: 'Eve is ramping up well on the frontend. Discussed component library choices.' },
+      durationMinutes: 25,
+      sessionScore: '7.00',
+    },
+    {
+      id: SESSION_EVE_2_ID,
+      seriesId: SERIES_BOB_EVE_ID,
+      tenantId: ACME_TENANT_ID,
+      templateId: WEEKLY_TEMPLATE_ID,
+      sessionNumber: 2,
+      scheduledAt: oneWeekAgo,
+      startedAt: oneWeekAgo,
+      completedAt: new Date(oneWeekAgo.getTime() + 30 * 60 * 1000),
+      status: 'completed' as const,
+      sharedNotes: { general: 'Great progress on the dashboard redesign. Eve wants to explore accessibility testing.' },
+      durationMinutes: 30,
+      sessionScore: '8.00',
+    },
+    // Frank sessions (Carol <-> Frank) — use weekly template for numeric data
+    {
+      id: SESSION_FRANK_1_ID,
+      seriesId: SERIES_CAROL_FRANK_ID,
+      tenantId: ACME_TENANT_ID,
+      templateId: WEEKLY_TEMPLATE_ID,
+      sessionNumber: 1,
+      scheduledAt: threeWeeksAgo,
+      startedAt: threeWeeksAgo,
+      completedAt: new Date(threeWeeksAgo.getTime() + 40 * 60 * 1000),
+      status: 'completed' as const,
+      sharedNotes: { general: 'First monthly check-in. Frank settling into the product team nicely.' },
+      durationMinutes: 40,
+      sessionScore: '6.50',
+    },
+    {
+      id: SESSION_FRANK_2_ID,
+      seriesId: SERIES_CAROL_FRANK_ID,
+      tenantId: ACME_TENANT_ID,
+      templateId: WEEKLY_TEMPLATE_ID,
+      sessionNumber: 2,
+      scheduledAt: oneWeekAgo,
+      startedAt: oneWeekAgo,
+      completedAt: new Date(oneWeekAgo.getTime() + 45 * 60 * 1000),
+      status: 'completed' as const,
+      sharedNotes: { general: 'Frank raised concerns about deadline pressure. Discussed prioritization strategies.' },
+      durationMinutes: 45,
+      sessionScore: '7.50',
+    },
+    // Grace sessions (Carol <-> Grace)
+    {
+      id: SESSION_GRACE_1_ID,
+      seriesId: SERIES_CAROL_GRACE_ID,
+      tenantId: ACME_TENANT_ID,
+      templateId: WEEKLY_TEMPLATE_ID,
+      sessionNumber: 1,
+      scheduledAt: twoWeeksAgo,
+      startedAt: twoWeeksAgo,
+      completedAt: new Date(twoWeeksAgo.getTime() + 30 * 60 * 1000),
+      status: 'completed' as const,
+      sharedNotes: { general: 'Grace is doing great work on user research. Discussed synthesis methods.' },
+      durationMinutes: 30,
+      sessionScore: '8.00',
+    },
+    {
+      id: SESSION_GRACE_2_ID,
+      seriesId: SERIES_CAROL_GRACE_ID,
+      tenantId: ACME_TENANT_ID,
+      templateId: WEEKLY_TEMPLATE_ID,
+      sessionNumber: 2,
+      scheduledAt: oneWeekAgo,
+      startedAt: oneWeekAgo,
+      completedAt: new Date(oneWeekAgo.getTime() + 25 * 60 * 1000),
+      status: 'completed' as const,
+      sharedNotes: { general: 'Grace presented usability findings. Excellent stakeholder communication.' },
+      durationMinutes: 25,
       sessionScore: '8.50',
     },
   ];
@@ -1164,6 +1338,48 @@ async function seedAnswers() {
       respondentId: DAVE_ID,
       answerNumeric: '9.00',
     },
+
+    // Eve Session 1 answers
+    { id: ANSWER_EVE_S1_MOOD_ID, sessionId: SESSION_EVE_1_ID, questionId: Q_MOOD_ID, respondentId: EVE_ID, answerJson: { value: 'good' } },
+    { id: ANSWER_EVE_S1_WORKLOAD_ID, sessionId: SESSION_EVE_1_ID, questionId: Q_WORKLOAD_ID, respondentId: EVE_ID, answerNumeric: '4.00' },
+    { id: ANSWER_EVE_S1_BLOCKERS_ID, sessionId: SESSION_EVE_1_ID, questionId: Q_BLOCKERS_ID, respondentId: EVE_ID, answerText: 'Design system tokens are not fully documented. Some color variables are missing.' },
+    { id: ANSWER_EVE_S1_HELP_ID, sessionId: SESSION_EVE_1_ID, questionId: Q_HELP_ID, respondentId: EVE_ID, answerJson: { value: true } },
+    { id: ANSWER_EVE_S1_SATISFACTION_ID, sessionId: SESSION_EVE_1_ID, questionId: Q_SATISFACTION_ID, respondentId: EVE_ID, answerNumeric: '7.00' },
+
+    // Eve Session 2 answers
+    { id: ANSWER_EVE_S2_MOOD_ID, sessionId: SESSION_EVE_2_ID, questionId: Q_MOOD_ID, respondentId: EVE_ID, answerJson: { value: 'great' } },
+    { id: ANSWER_EVE_S2_WORKLOAD_ID, sessionId: SESSION_EVE_2_ID, questionId: Q_WORKLOAD_ID, respondentId: EVE_ID, answerNumeric: '4.00' },
+    { id: ANSWER_EVE_S2_BLOCKERS_ID, sessionId: SESSION_EVE_2_ID, questionId: Q_BLOCKERS_ID, respondentId: EVE_ID, answerText: 'No blockers. Accessibility audit went well.' },
+    { id: ANSWER_EVE_S2_HELP_ID, sessionId: SESSION_EVE_2_ID, questionId: Q_HELP_ID, respondentId: EVE_ID, answerJson: { value: false } },
+    { id: ANSWER_EVE_S2_SATISFACTION_ID, sessionId: SESSION_EVE_2_ID, questionId: Q_SATISFACTION_ID, respondentId: EVE_ID, answerNumeric: '8.00' },
+
+    // Frank Session 1 answers
+    { id: ANSWER_FRANK_S1_MOOD_ID, sessionId: SESSION_FRANK_1_ID, questionId: Q_MOOD_ID, respondentId: FRANK_ID, answerJson: { value: 'okay' } },
+    { id: ANSWER_FRANK_S1_WORKLOAD_ID, sessionId: SESSION_FRANK_1_ID, questionId: Q_WORKLOAD_ID, respondentId: FRANK_ID, answerNumeric: '2.00' },
+    { id: ANSWER_FRANK_S1_BLOCKERS_ID, sessionId: SESSION_FRANK_1_ID, questionId: Q_BLOCKERS_ID, respondentId: FRANK_ID, answerText: 'Getting familiar with the product roadmap. Need more context on Q2 priorities.' },
+    { id: ANSWER_FRANK_S1_HELP_ID, sessionId: SESSION_FRANK_1_ID, questionId: Q_HELP_ID, respondentId: FRANK_ID, answerJson: { value: true } },
+    { id: ANSWER_FRANK_S1_SATISFACTION_ID, sessionId: SESSION_FRANK_1_ID, questionId: Q_SATISFACTION_ID, respondentId: FRANK_ID, answerNumeric: '6.00' },
+
+    // Frank Session 2 answers
+    { id: ANSWER_FRANK_S2_MOOD_ID, sessionId: SESSION_FRANK_2_ID, questionId: Q_MOOD_ID, respondentId: FRANK_ID, answerJson: { value: 'good' } },
+    { id: ANSWER_FRANK_S2_WORKLOAD_ID, sessionId: SESSION_FRANK_2_ID, questionId: Q_WORKLOAD_ID, respondentId: FRANK_ID, answerNumeric: '3.00' },
+    { id: ANSWER_FRANK_S2_BLOCKERS_ID, sessionId: SESSION_FRANK_2_ID, questionId: Q_BLOCKERS_ID, respondentId: FRANK_ID, answerText: 'Deadline pressure on the feature launch. Could use help with QA.' },
+    { id: ANSWER_FRANK_S2_HELP_ID, sessionId: SESSION_FRANK_2_ID, questionId: Q_HELP_ID, respondentId: FRANK_ID, answerJson: { value: true } },
+    { id: ANSWER_FRANK_S2_SATISFACTION_ID, sessionId: SESSION_FRANK_2_ID, questionId: Q_SATISFACTION_ID, respondentId: FRANK_ID, answerNumeric: '7.00' },
+
+    // Grace Session 1 answers
+    { id: ANSWER_GRACE_S1_MOOD_ID, sessionId: SESSION_GRACE_1_ID, questionId: Q_MOOD_ID, respondentId: GRACE_ID, answerJson: { value: 'great' } },
+    { id: ANSWER_GRACE_S1_WORKLOAD_ID, sessionId: SESSION_GRACE_1_ID, questionId: Q_WORKLOAD_ID, respondentId: GRACE_ID, answerNumeric: '4.00' },
+    { id: ANSWER_GRACE_S1_BLOCKERS_ID, sessionId: SESSION_GRACE_1_ID, questionId: Q_BLOCKERS_ID, respondentId: GRACE_ID, answerText: 'Waiting on engineering for API changes to unblock prototype testing.' },
+    { id: ANSWER_GRACE_S1_HELP_ID, sessionId: SESSION_GRACE_1_ID, questionId: Q_HELP_ID, respondentId: GRACE_ID, answerJson: { value: false } },
+    { id: ANSWER_GRACE_S1_SATISFACTION_ID, sessionId: SESSION_GRACE_1_ID, questionId: Q_SATISFACTION_ID, respondentId: GRACE_ID, answerNumeric: '8.00' },
+
+    // Grace Session 2 answers
+    { id: ANSWER_GRACE_S2_MOOD_ID, sessionId: SESSION_GRACE_2_ID, questionId: Q_MOOD_ID, respondentId: GRACE_ID, answerJson: { value: 'great' } },
+    { id: ANSWER_GRACE_S2_WORKLOAD_ID, sessionId: SESSION_GRACE_2_ID, questionId: Q_WORKLOAD_ID, respondentId: GRACE_ID, answerNumeric: '3.00' },
+    { id: ANSWER_GRACE_S2_BLOCKERS_ID, sessionId: SESSION_GRACE_2_ID, questionId: Q_BLOCKERS_ID, respondentId: GRACE_ID, answerText: 'No blockers. Prototype validated with 5 users successfully.' },
+    { id: ANSWER_GRACE_S2_HELP_ID, sessionId: SESSION_GRACE_2_ID, questionId: Q_HELP_ID, respondentId: GRACE_ID, answerJson: { value: false } },
+    { id: ANSWER_GRACE_S2_SATISFACTION_ID, sessionId: SESSION_GRACE_2_ID, questionId: Q_SATISFACTION_ID, respondentId: GRACE_ID, answerNumeric: '9.00' },
   ];
 
   for (const a of answers) {
@@ -1356,6 +1572,36 @@ async function seedAnalyticsSnapshots() {
     { id: SNAPSHOT_S3_WELLBEING_ID, tenantId: ACME_TENANT_ID, userId: DAVE_ID, seriesId: SERIES_BOB_DAVE_ID, periodType: 'month' as const, periodStart: s3Period.start, periodEnd: s3Period.end, metricName: 'Wellbeing', metricValue: '3.000', sampleCount: 1 },
     { id: SNAPSHOT_S3_PERFORMANCE_ID, tenantId: ACME_TENANT_ID, userId: DAVE_ID, seriesId: SERIES_BOB_DAVE_ID, periodType: 'month' as const, periodStart: s3Period.start, periodEnd: s3Period.end, metricName: 'Performance', metricValue: '0.000', sampleCount: 0 },
     { id: SNAPSHOT_S3_CHECKIN_ID, tenantId: ACME_TENANT_ID, userId: DAVE_ID, seriesId: SERIES_BOB_DAVE_ID, periodType: 'month' as const, periodStart: s3Period.start, periodEnd: s3Period.end, metricName: 'Check-in', metricValue: '9.000', sampleCount: 1 },
+
+    // Eve Session 1 snapshots (2 weeks ago): Wellbeing 4.00, Check-in 7.00, score 7.00
+    { id: SNAPSHOT_EVE_S1_SCORE_ID, tenantId: ACME_TENANT_ID, userId: EVE_ID, seriesId: SERIES_BOB_EVE_ID, periodType: 'month' as const, periodStart: s2Period.start, periodEnd: s2Period.end, metricName: 'session_score', metricValue: '7.000', sampleCount: 1 },
+    { id: SNAPSHOT_EVE_S1_WELLBEING_ID, tenantId: ACME_TENANT_ID, userId: EVE_ID, seriesId: SERIES_BOB_EVE_ID, periodType: 'month' as const, periodStart: s2Period.start, periodEnd: s2Period.end, metricName: 'Wellbeing', metricValue: '4.000', sampleCount: 1 },
+    { id: SNAPSHOT_EVE_S1_CHECKIN_ID, tenantId: ACME_TENANT_ID, userId: EVE_ID, seriesId: SERIES_BOB_EVE_ID, periodType: 'month' as const, periodStart: s2Period.start, periodEnd: s2Period.end, metricName: 'Check-in', metricValue: '7.000', sampleCount: 1 },
+
+    // Eve Session 2 snapshots (1 week ago): Wellbeing 4.00, Check-in 8.00, score 8.00
+    { id: SNAPSHOT_EVE_S2_SCORE_ID, tenantId: ACME_TENANT_ID, userId: EVE_ID, seriesId: SERIES_BOB_EVE_ID, periodType: 'month' as const, periodStart: s3Period.start, periodEnd: s3Period.end, metricName: 'session_score', metricValue: '8.000', sampleCount: 1 },
+    { id: SNAPSHOT_EVE_S2_WELLBEING_ID, tenantId: ACME_TENANT_ID, userId: EVE_ID, seriesId: SERIES_BOB_EVE_ID, periodType: 'month' as const, periodStart: s3Period.start, periodEnd: s3Period.end, metricName: 'Wellbeing', metricValue: '4.000', sampleCount: 1 },
+    { id: SNAPSHOT_EVE_S2_CHECKIN_ID, tenantId: ACME_TENANT_ID, userId: EVE_ID, seriesId: SERIES_BOB_EVE_ID, periodType: 'month' as const, periodStart: s3Period.start, periodEnd: s3Period.end, metricName: 'Check-in', metricValue: '8.000', sampleCount: 1 },
+
+    // Frank Session 1 snapshots (3 weeks ago): Wellbeing 2.00, Check-in 6.00, score 6.50
+    { id: SNAPSHOT_FRANK_S1_SCORE_ID, tenantId: ACME_TENANT_ID, userId: FRANK_ID, seriesId: SERIES_CAROL_FRANK_ID, periodType: 'month' as const, periodStart: s1Period.start, periodEnd: s1Period.end, metricName: 'session_score', metricValue: '6.500', sampleCount: 1 },
+    { id: SNAPSHOT_FRANK_S1_WELLBEING_ID, tenantId: ACME_TENANT_ID, userId: FRANK_ID, seriesId: SERIES_CAROL_FRANK_ID, periodType: 'month' as const, periodStart: s1Period.start, periodEnd: s1Period.end, metricName: 'Wellbeing', metricValue: '2.000', sampleCount: 1 },
+    { id: SNAPSHOT_FRANK_S1_CHECKIN_ID, tenantId: ACME_TENANT_ID, userId: FRANK_ID, seriesId: SERIES_CAROL_FRANK_ID, periodType: 'month' as const, periodStart: s1Period.start, periodEnd: s1Period.end, metricName: 'Check-in', metricValue: '6.000', sampleCount: 1 },
+
+    // Frank Session 2 snapshots (1 week ago): Wellbeing 3.00, Check-in 7.00, score 7.50
+    { id: SNAPSHOT_FRANK_S2_SCORE_ID, tenantId: ACME_TENANT_ID, userId: FRANK_ID, seriesId: SERIES_CAROL_FRANK_ID, periodType: 'month' as const, periodStart: s3Period.start, periodEnd: s3Period.end, metricName: 'session_score', metricValue: '7.500', sampleCount: 1 },
+    { id: SNAPSHOT_FRANK_S2_WELLBEING_ID, tenantId: ACME_TENANT_ID, userId: FRANK_ID, seriesId: SERIES_CAROL_FRANK_ID, periodType: 'month' as const, periodStart: s3Period.start, periodEnd: s3Period.end, metricName: 'Wellbeing', metricValue: '3.000', sampleCount: 1 },
+    { id: SNAPSHOT_FRANK_S2_CHECKIN_ID, tenantId: ACME_TENANT_ID, userId: FRANK_ID, seriesId: SERIES_CAROL_FRANK_ID, periodType: 'month' as const, periodStart: s3Period.start, periodEnd: s3Period.end, metricName: 'Check-in', metricValue: '7.000', sampleCount: 1 },
+
+    // Grace Session 1 snapshots (2 weeks ago): Wellbeing 4.00, Check-in 8.00, score 8.00
+    { id: SNAPSHOT_GRACE_S1_SCORE_ID, tenantId: ACME_TENANT_ID, userId: GRACE_ID, seriesId: SERIES_CAROL_GRACE_ID, periodType: 'month' as const, periodStart: s2Period.start, periodEnd: s2Period.end, metricName: 'session_score', metricValue: '8.000', sampleCount: 1 },
+    { id: SNAPSHOT_GRACE_S1_WELLBEING_ID, tenantId: ACME_TENANT_ID, userId: GRACE_ID, seriesId: SERIES_CAROL_GRACE_ID, periodType: 'month' as const, periodStart: s2Period.start, periodEnd: s2Period.end, metricName: 'Wellbeing', metricValue: '4.000', sampleCount: 1 },
+    { id: SNAPSHOT_GRACE_S1_CHECKIN_ID, tenantId: ACME_TENANT_ID, userId: GRACE_ID, seriesId: SERIES_CAROL_GRACE_ID, periodType: 'month' as const, periodStart: s2Period.start, periodEnd: s2Period.end, metricName: 'Check-in', metricValue: '8.000', sampleCount: 1 },
+
+    // Grace Session 2 snapshots (1 week ago): Wellbeing 3.00, Check-in 9.00, score 8.50
+    { id: SNAPSHOT_GRACE_S2_SCORE_ID, tenantId: ACME_TENANT_ID, userId: GRACE_ID, seriesId: SERIES_CAROL_GRACE_ID, periodType: 'month' as const, periodStart: s3Period.start, periodEnd: s3Period.end, metricName: 'session_score', metricValue: '8.500', sampleCount: 1 },
+    { id: SNAPSHOT_GRACE_S2_WELLBEING_ID, tenantId: ACME_TENANT_ID, userId: GRACE_ID, seriesId: SERIES_CAROL_GRACE_ID, periodType: 'month' as const, periodStart: s3Period.start, periodEnd: s3Period.end, metricName: 'Wellbeing', metricValue: '3.000', sampleCount: 1 },
+    { id: SNAPSHOT_GRACE_S2_CHECKIN_ID, tenantId: ACME_TENANT_ID, userId: GRACE_ID, seriesId: SERIES_CAROL_GRACE_ID, periodType: 'month' as const, periodStart: s3Period.start, periodEnd: s3Period.end, metricName: 'Check-in', metricValue: '9.000', sampleCount: 1 },
   ];
 
   for (const snap of snapshots) {
@@ -1386,7 +1632,7 @@ async function seed() {
   await seedPrivateNotes();
 
   console.log('\nSeed complete!');
-  console.log(`  Acme Corp (${ACME_TENANT_ID}): 7 users, 2 teams, 2 templates, 3 series, 3 sessions`);
+  console.log(`  Acme Corp (${ACME_TENANT_ID}): 7 users, 2 teams, 2 templates, 4 series, 9 sessions`);
   console.log(`  Beta Inc  (${BETA_TENANT_ID}): 3 users, 0 teams, 1 template, 1 series, 0 sessions`);
 
   await pool.end();

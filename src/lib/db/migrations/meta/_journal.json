@@ -64,6 +64,27 @@
       "when": 1772700000000,
       "tag": "0008_sections_labels",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1772700100000,
+      "tag": "0009_full_text_search_indexes",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1772700200000,
+      "tag": "0010_ai_pipeline_schema",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1772700300000,
+      "tag": "0011_analytics_ingestion",
+      "breakpoints": true
     }
   ]
 }

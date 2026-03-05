@@ -32,7 +32,7 @@ export function CategoryBreakdown({ data }: CategoryBreakdownProps) {
   if (data.length === 0) {
     return (
       <div className="flex h-[200px] items-center justify-center text-sm text-muted-foreground">
-        No category data available for this period.
+        No completed sessions with scored answers in this period.
       </div>
     );
   }

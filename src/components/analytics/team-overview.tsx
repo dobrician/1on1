@@ -6,6 +6,8 @@ import type { TeamAverage } from "@/lib/analytics/queries";
 interface TeamOverviewProps {
   data: TeamAverage[];
   loading?: boolean;
+  anonymize?: boolean;
+  memberCount?: number;
 }
 
 function capitalizeCategory(cat: string): string {
@@ -18,7 +20,7 @@ function scoreColor(score: number): string {
   return "hsl(0, 72%, 51%)";
 }
 
-export function TeamOverview({ data, loading }: TeamOverviewProps) {
+export function TeamOverview({ data, loading, anonymize, memberCount }: TeamOverviewProps) {
   if (loading) {
     return (
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -36,9 +38,13 @@ export function TeamOverview({ data, loading }: TeamOverviewProps) {
   }
 
   if (data.length === 0) {
+    const message =
+      anonymize
+        ? "Anonymized averages require at least 2 contributors per category to protect privacy."
+        : "No completed sessions with scored answers in this period.";
     return (
-      <div className="flex h-[120px] items-center justify-center text-sm text-muted-foreground">
-        No category data available for this period.
+      <div className="flex h-[120px] items-center justify-center text-center text-sm text-muted-foreground">
+        {message}
       </div>
     );
   }

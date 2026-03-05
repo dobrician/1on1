@@ -126,7 +126,7 @@ export function TeamAnalyticsClient({
       {/* Team overview (aggregated scores) */}
       <div>
         <h2 className="mb-3 text-base font-medium">Category Averages</h2>
-        <TeamOverview data={teamAverages} loading={isLoading} />
+        <TeamOverview data={teamAverages} loading={isLoading} anonymize={anonymize} memberCount={data?.memberCount ?? memberCount} />
       </div>
 
       {/* Heatmap */}

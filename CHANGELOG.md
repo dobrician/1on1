@@ -7,6 +7,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## [Unreleased]
 
 ### Added
+- Skeleton loading states (`loading.tsx`) for all dashboard routes: overview, sessions, action items, history, analytics, people, teams, templates, settings
+- Global `animate-fade-in` CSS animation utility (subtle opacity + translateY) for page transitions
+- Descriptive empty state with icon and CTA for history page when no sessions exist
 - Two-state theme toggle (light/dark) replacing three-state dropdown, using `resolvedTheme` for system preference detection
 - Theme toggle added to wizard top bar for session accessibility
 - Org color theme infrastructure: 8 presets (neutral, zinc, slate, stone, blue, green, rose, orange)
@@ -18,6 +21,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `colorTheme` field in organization settings validation schema and API endpoint
 
 ### Changed
+- Dashboard layout responsive padding: `px-4 py-6 sm:px-6 lg:px-8` with fade-in animation on content wrapper
+- Consistent `font-semibold` typography on all page titles (settings page was `font-bold`)
+- Subtle hover shadow (`hover:shadow-md`) added to all interactive cards (series, analytics, team, quick stats, upcoming sessions)
+- History page filters responsive: grid layout on mobile, flex wrap on desktop with full-width inputs on small screens
+- Recent sessions hover effect upgraded to `transition-all duration-200` with shadow
 - All analytics chart components now use CSS variable-based monochrome palette instead of hardcoded HSL colors
 - `category-breakdown.tsx`: 5 hardcoded HSL colors replaced with `var(--chart-1)` through `var(--chart-5)`
 - `adherence-chart.tsx`: hardcoded green/amber/red replaced with `var(--color-success/warning/danger)`

@@ -45,7 +45,7 @@ export default async function OverviewPage() {
   ]);
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-5xl">
       {!user.emailVerified && <EmailVerificationBanner />}
 
       {/* Welcome header */}

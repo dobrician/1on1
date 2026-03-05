@@ -163,7 +163,7 @@ export default async function AnalyticsPage() {
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {teamsList.map((team) => (
               <Link key={team.id} href={`/analytics/team/${team.id}`}>
-                <Card className="transition-colors hover:bg-accent/30">
+                <Card className="transition-all duration-200 hover:bg-accent/30 hover:shadow-md">
                   <CardContent className="flex items-center gap-4 p-4">
                     <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted">
                       <Users className="h-5 w-5 text-muted-foreground" />
@@ -208,7 +208,7 @@ export default async function AnalyticsPage() {
                   key={report.userId}
                   href={`/analytics/individual/${report.userId}`}
                 >
-                  <Card className="transition-colors hover:bg-accent/30">
+                  <Card className="transition-all duration-200 hover:bg-accent/30 hover:shadow-md">
                     <CardContent className="flex items-center gap-4 p-4">
                       <Avatar className="h-10 w-10">
                         <AvatarImage

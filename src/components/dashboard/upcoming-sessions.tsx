@@ -94,7 +94,7 @@ function SessionCard({ session }: { session: UpcomingSession }) {
   const isInProgress = session.status === "in_progress";
 
   return (
-    <Card className="transition-colors hover:border-foreground/20">
+    <Card className="transition-all duration-200 hover:border-foreground/20 hover:shadow-md">
       <CardHeader className="flex flex-row items-center gap-3 pb-2">
         <Avatar className="size-9">
           <AvatarFallback className="text-xs">{initials}</AvatarFallback>

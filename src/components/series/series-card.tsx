@@ -87,7 +87,7 @@ export function SeriesCard({ series, currentUserId }: SeriesCardProps) {
     (series.report.lastName?.[0] ?? "");
 
   return (
-    <Card className="group relative transition-colors hover:border-foreground/20">
+    <Card className="group relative transition-all duration-200 hover:border-foreground/20 hover:shadow-md">
       <Link href={`/sessions/${series.id}`} className="absolute inset-0 z-0" />
       <CardHeader className="flex flex-row items-center gap-3 pb-2">
         <Avatar className="h-10 w-10">

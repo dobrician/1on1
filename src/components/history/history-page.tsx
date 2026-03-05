@@ -14,7 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ScoreSparkline } from "@/components/session/score-sparkline";
-import { Loader2, Search, X } from "lucide-react";
+import { ClipboardList, Loader2, Search, X } from "lucide-react";
 
 // --- Types ---
 
@@ -290,7 +290,7 @@ export function HistoryPage({
       </div>
 
       {/* Filter bar */}
-      <div className="flex flex-wrap items-end gap-3">
+      <div className="grid grid-cols-2 gap-3 sm:flex sm:flex-wrap sm:items-end">
         <div className="space-y-1">
           <label className="text-xs font-medium text-muted-foreground">
             Status
@@ -301,7 +301,7 @@ export function HistoryPage({
               applyFilters(val, fromDate, toDate, seriesFilter)
             }
           >
-            <SelectTrigger className="w-[140px]">
+            <SelectTrigger className="w-full sm:w-[140px]">
               <SelectValue placeholder="All statuses" />
             </SelectTrigger>
             <SelectContent>
@@ -318,7 +318,7 @@ export function HistoryPage({
           </label>
           <Input
             type="date"
-            className="w-[160px]"
+            className="w-full sm:w-[160px]"
             value={fromDate}
             onChange={(e) =>
               applyFilters(statusFilter, e.target.value, toDate, seriesFilter)
@@ -332,7 +332,7 @@ export function HistoryPage({
           </label>
           <Input
             type="date"
-            className="w-[160px]"
+            className="w-full sm:w-[160px]"
             value={toDate}
             onChange={(e) =>
               applyFilters(statusFilter, fromDate, e.target.value, seriesFilter)
@@ -350,7 +350,7 @@ export function HistoryPage({
               applyFilters(statusFilter, fromDate, toDate, val)
             }
           >
-            <SelectTrigger className="w-[200px]">
+            <SelectTrigger className="w-full sm:w-[200px]">
               <SelectValue placeholder="All series" />
             </SelectTrigger>
             <SelectContent>
@@ -440,14 +440,30 @@ export function HistoryPage({
       {!isShowingSearch && (
         <>
           {groupedSessions.length === 0 ? (
-            <div className="py-12 text-center">
-              <p className="text-lg font-medium text-muted-foreground">
-                No sessions found.
+            <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-16 text-center">
+              <ClipboardList className="mb-4 size-12 text-muted-foreground/30" />
+              <h3 className="text-lg font-medium">
+                {hasActiveFilters ? "No sessions match your filters" : "No sessions yet"}
+              </h3>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {hasActiveFilters
+                  ? "Try adjusting your filters or clearing them."
+                  : "Complete your first 1:1 session to see it here."}
               </p>
               {hasActiveFilters && (
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Try adjusting your filters.
-                </p>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="mt-4"
+                  onClick={clearFilters}
+                >
+                  Clear Filters
+                </Button>
+              )}
+              {!hasActiveFilters && (
+                <Button variant="outline" size="sm" className="mt-4" asChild>
+                  <Link href="/sessions">Go to Sessions</Link>
+                </Button>
               )}
             </div>
           ) : (

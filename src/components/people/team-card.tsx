@@ -29,7 +29,7 @@ export function TeamCard({ team }: TeamCardProps) {
 
   return (
     <Link href={`/teams/${team.id}`}>
-      <Card className="transition-colors hover:bg-accent/50 cursor-pointer h-full">
+      <Card className="transition-all duration-200 hover:bg-accent/50 hover:shadow-md cursor-pointer h-full">
         <CardHeader className="pb-3">
           <CardTitle className="text-base font-semibold leading-tight">
             {team.name}

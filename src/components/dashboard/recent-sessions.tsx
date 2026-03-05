@@ -43,7 +43,7 @@ export function RecentSessions({ sessions }: RecentSessionsProps) {
         <Link
           key={s.id}
           href={`/sessions/${s.id}/summary`}
-          className="flex items-center gap-3 rounded-md border px-4 py-3 transition-colors hover:bg-muted/50"
+          className="flex items-center gap-3 rounded-md border px-4 py-3 transition-all duration-200 hover:bg-muted/50 hover:shadow-sm"
         >
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">

@@ -87,41 +87,41 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| INFRA-01 | — | Pending |
-| INFRA-02 | — | Pending |
-| INFRA-03 | — | Pending |
-| INFRA-04 | — | Pending |
-| INFRA-05 | — | Pending |
-| UITR-01 | — | Pending |
-| UITR-02 | — | Pending |
-| UITR-03 | — | Pending |
-| UITR-04 | — | Pending |
-| UITR-05 | — | Pending |
-| UITR-06 | — | Pending |
-| UITR-07 | — | Pending |
-| UITR-08 | — | Pending |
-| UITR-09 | — | Pending |
-| UITR-10 | — | Pending |
-| FMT-01 | — | Pending |
-| FMT-02 | — | Pending |
-| FMT-03 | — | Pending |
-| FMT-04 | — | Pending |
-| MAIL-01 | — | Pending |
-| MAIL-02 | — | Pending |
-| VALD-01 | — | Pending |
-| VALD-02 | — | Pending |
-| ROLN-01 | — | Pending |
-| ROLN-02 | — | Pending |
-| ROLN-03 | — | Pending |
-| ROLN-04 | — | Pending |
-| QUAL-01 | — | Pending |
-| QUAL-02 | — | Pending |
+| INFRA-01 | Phase 11 | Pending |
+| INFRA-02 | Phase 11 | Pending |
+| INFRA-03 | Phase 11 | Pending |
+| INFRA-04 | Phase 11 | Pending |
+| INFRA-05 | Phase 11 | Pending |
+| UITR-01 | Phase 12 | Pending |
+| UITR-02 | Phase 12 | Pending |
+| UITR-03 | Phase 12 | Pending |
+| UITR-04 | Phase 12 | Pending |
+| UITR-05 | Phase 12 | Pending |
+| UITR-06 | Phase 12 | Pending |
+| UITR-07 | Phase 12 | Pending |
+| UITR-08 | Phase 12 | Pending |
+| UITR-09 | Phase 12 | Pending |
+| UITR-10 | Phase 12 | Pending |
+| FMT-01 | Phase 12 | Pending |
+| FMT-02 | Phase 12 | Pending |
+| FMT-03 | Phase 12 | Pending |
+| FMT-04 | Phase 12 | Pending |
+| VALD-01 | Phase 12 | Pending |
+| VALD-02 | Phase 12 | Pending |
+| MAIL-01 | Phase 13 | Pending |
+| MAIL-02 | Phase 13 | Pending |
+| ROLN-01 | Phase 14 | Pending |
+| ROLN-02 | Phase 14 | Pending |
+| ROLN-03 | Phase 14 | Pending |
+| ROLN-04 | Phase 14 | Pending |
+| QUAL-01 | Phase 14 | Pending |
+| QUAL-02 | Phase 14 | Pending |
 
 **Coverage:**
 - v1.1 requirements: 29 total
-- Mapped to phases: 0
-- Unmapped: 29 ⚠️
+- Mapped to phases: 29
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-05*
-*Last updated: 2026-03-05 after initial definition*
+*Last updated: 2026-03-05 after roadmap revision*

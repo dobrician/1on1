@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { useTranslations, useFormatter } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -17,6 +18,8 @@ import {
 import { loginAction, signInWithGoogle, signInWithMicrosoft } from "@/lib/auth/actions";
 
 export default function LoginPage() {
+  const t = useTranslations("auth");
+  const format = useFormatter();
   const searchParams = useSearchParams();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -24,13 +27,13 @@ export default function LoginPage() {
   const urlError = searchParams.get("error");
   const errorMessage =
     urlError === "CredentialsSignin"
-      ? "Invalid email or password"
+      ? t("login.errors.invalidCredentials")
       : urlError === "AccessDenied"
-        ? "No account found for this email. Please register your organization first."
+        ? t("login.errors.accessDenied")
         : urlError === "OAuthAccountNotLinked"
-          ? "This email is already associated with a different sign-in method."
+          ? t("login.errors.oauthLinked")
           : urlError
-            ? "An error occurred. Please try again."
+            ? t("login.errors.generic")
             : "";
 
   async function handleSubmit(formData: FormData) {
@@ -53,9 +56,9 @@ export default function LoginPage() {
   return (
     <Card>
       <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-bold">Sign in</CardTitle>
+        <CardTitle className="text-2xl font-bold">{t("login.title")}</CardTitle>
         <CardDescription>
-          Enter your email and password to access your account
+          {t("login.description")}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -67,12 +70,12 @@ export default function LoginPage() {
           )}
 
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">{t("login.email")}</Label>
             <Input
               id="email"
               name="email"
               type="email"
-              placeholder="you@company.com"
+              placeholder={t("login.emailPlaceholder")}
               required
               autoComplete="email"
               autoFocus
@@ -80,7 +83,7 @@ export default function LoginPage() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password">{t("login.password")}</Label>
             <Input
               id="password"
               name="password"
@@ -93,12 +96,12 @@ export default function LoginPage() {
               tabIndex={-1}
               className="inline-block text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
-              Forgot password?
+              {t("login.forgotPassword")}
             </Link>
           </div>
 
           <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? "Signing in..." : "Sign in"}
+            {loading ? t("login.submitting") : t("login.submit")}
           </Button>
         </form>
 
@@ -108,7 +111,7 @@ export default function LoginPage() {
           </div>
           <div className="relative flex justify-center text-xs uppercase">
             <span className="bg-card px-2 text-muted-foreground">
-              Or continue with
+              {t("login.orContinueWith")}
             </span>
           </div>
         </div>
@@ -138,7 +141,7 @@ export default function LoginPage() {
                   fill="#EA4335"
                 />
               </svg>
-              Google
+              {t("login.google")}
             </Button>
           </form>
           <form action={signInWithMicrosoft}>
@@ -153,22 +156,28 @@ export default function LoginPage() {
                 <rect x="1" y="11" width="9" height="9" fill="#00A4EF" />
                 <rect x="11" y="11" width="9" height="9" fill="#FFB900" />
               </svg>
-              Microsoft
+              {t("login.microsoft")}
             </Button>
           </form>
         </div>
       </CardContent>
       <CardFooter className="flex justify-center">
         <p className="text-sm text-muted-foreground">
-          Don&apos;t have an account?{" "}
+          {t("login.noAccount")}{" "}
           <Link
             href="/register"
             className="font-medium text-foreground hover:underline"
           >
-            Create an organization
+            {t("login.createOrg")}
           </Link>
         </p>
       </CardFooter>
+      {/* Formatting pipeline proof: locale-aware date rendering */}
+      <data
+        value={format.dateTime(new Date("2026-01-01"), { year: "numeric" })}
+        data-testid="i18n-format-proof"
+        hidden
+      />
     </Card>
   );
 }

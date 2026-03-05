@@ -46,3 +46,7 @@ export const updateUserRoleSchema = z.object({
 export const assignManagerSchema = z.object({
   managerId: z.string().uuid().nullable(),
 });
+
+export const updateLanguageSchema = z.object({
+  language: z.enum(["en", "ro"]),
+});

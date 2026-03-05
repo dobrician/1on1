@@ -17,6 +17,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Proxy locale detection from JWT (authenticated) or Accept-Language header (unauthenticated)
 - `NEXT_LOCALE` cookie set on all proxy response paths (redirects and pass-through)
 - `NextIntlClientProvider` in root layout with dynamic `html lang` attribute
+- Login page fully translated via `useTranslations()` -- zero hardcoded English strings
+- Language preference API endpoint (`PATCH /api/user/language`) with Zod validation and cookie persistence
+- `updateLanguageSchema` Zod schema in `src/lib/validations/user.ts`
+- Date/number formatting pipeline proof via `useFormatter()` on login page
 
 ## [1.0.0] - 2026-03-05
 

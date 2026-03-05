@@ -1,0 +1,127 @@
+# Requirements: 1on1
+
+**Defined:** 2026-03-05
+**Core Value:** The AI context layer that makes every meeting smarter than the last
+
+## v1.1 Requirements
+
+Requirements for internationalization milestone. Each maps to roadmap phases.
+
+### Infrastructure
+
+- [ ] **INFRA-01**: App uses next-intl for all UI string translations with Server and Client Component support
+- [ ] **INFRA-02**: Locale resolves from user DB preference (authenticated) or browser Accept-Language (unauthenticated) via middleware cookie
+- [ ] **INFRA-03**: User language preference persists in DB and propagates through JWT without extra DB calls
+- [ ] **INFRA-04**: Translation files use namespace-based JSON structure with TypeScript type safety
+- [ ] **INFRA-05**: UI language (per-user) and content language (per-company) are independent, never conflated
+
+### UI Translation
+
+- [ ] **UITR-01**: User can switch UI language between English and Romanian via language picker in user menu
+- [ ] **UITR-02**: All navigation, layout, and shared component strings are translated
+- [ ] **UITR-03**: All auth pages (login, register, invite, forgot-password, verification, reset) are translated
+- [ ] **UITR-04**: All dashboard components (stats, upcoming, overdue, recent) are translated
+- [ ] **UITR-05**: All session wizard components (steps, context panel, talking points, notes) are translated
+- [ ] **UITR-06**: All people/teams management pages are translated
+- [ ] **UITR-07**: All template builder pages are translated
+- [ ] **UITR-08**: All analytics pages (trends, category, team, velocity, export) are translated
+- [ ] **UITR-09**: All settings pages (company, profile, members, integrations) are translated
+- [ ] **UITR-10**: Command palette and search UI are translated
+
+### Formatting
+
+- [ ] **FMT-01**: All dates display in locale-appropriate format (DD.MM.YYYY for Romanian, MM/DD/YYYY for English)
+- [ ] **FMT-02**: All numbers use locale-appropriate decimal and thousands separators
+- [ ] **FMT-03**: All relative times ("3 days ago" / "acum 3 zile") respect user locale
+- [ ] **FMT-04**: Analytics chart labels, tooltips, and axes are formatted per user locale
+
+### Email
+
+- [ ] **MAIL-01**: All email templates render in the correct language (company content language for invites/summaries, user preference where applicable)
+- [ ] **MAIL-02**: Standalone email translator works outside Next.js request lifecycle for background jobs
+
+### Validation
+
+- [ ] **VALD-01**: Zod form validation error messages display in user's UI language
+- [ ] **VALD-02**: API error responses display in user's UI language
+
+### Romanian
+
+- [ ] **ROLN-01**: Complete Romanian translations for all ~650-800 keys with natural phrasing
+- [ ] **ROLN-02**: Romanian plural forms use correct ICU MessageFormat (one/few/other)
+- [ ] **ROLN-03**: Romanian text uses correct diacritics (comma-below U+0219/U+021B)
+- [ ] **ROLN-04**: UI layouts handle 15-30% longer Romanian text without overflow or truncation
+
+### Quality
+
+- [ ] **QUAL-01**: CI check enforces key parity between en.json and ro.json
+- [ ] **QUAL-02**: No hardcoded English strings remain in user-facing components
+
+## Future Requirements
+
+### Additional Languages
+
+- **LANG-01**: Support for additional languages beyond EN + RO
+- **LANG-02**: RTL layout support for Arabic/Hebrew languages
+- **LANG-03**: Translation management platform integration (Crowdin, Lokalise)
+
+### Advanced i18n
+
+- **ADV-01**: Multi-language questionnaire templates (same template in multiple languages)
+- **ADV-02**: Machine translation of user-generated content
+
+## Out of Scope
+
+| Feature | Reason |
+|---------|--------|
+| Multi-language questionnaire templates | Questionnaires defined in company language; no per-template translation needed |
+| RTL layout support | Neither English nor Romanian requires RTL |
+| Translation management platform | Overkill at 2 languages; JSON files in repo reviewed in PRs |
+| Additional languages beyond EN + RO | Revisit on user demand |
+| Machine translation of user content | Privacy and quality concerns |
+| URL-based locale routing | Locale driven by user/company settings, not URL prefixes |
+
+## Traceability
+
+Which phases cover which requirements. Updated during roadmap creation.
+
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| INFRA-01 | — | Pending |
+| INFRA-02 | — | Pending |
+| INFRA-03 | — | Pending |
+| INFRA-04 | — | Pending |
+| INFRA-05 | — | Pending |
+| UITR-01 | — | Pending |
+| UITR-02 | — | Pending |
+| UITR-03 | — | Pending |
+| UITR-04 | — | Pending |
+| UITR-05 | — | Pending |
+| UITR-06 | — | Pending |
+| UITR-07 | — | Pending |
+| UITR-08 | — | Pending |
+| UITR-09 | — | Pending |
+| UITR-10 | — | Pending |
+| FMT-01 | — | Pending |
+| FMT-02 | — | Pending |
+| FMT-03 | — | Pending |
+| FMT-04 | — | Pending |
+| MAIL-01 | — | Pending |
+| MAIL-02 | — | Pending |
+| VALD-01 | — | Pending |
+| VALD-02 | — | Pending |
+| ROLN-01 | — | Pending |
+| ROLN-02 | — | Pending |
+| ROLN-03 | — | Pending |
+| ROLN-04 | — | Pending |
+| QUAL-01 | — | Pending |
+| QUAL-02 | — | Pending |
+
+**Coverage:**
+- v1.1 requirements: 29 total
+- Mapped to phases: 0
+- Unmapped: 29 ⚠️
+
+---
+*Requirements defined: 2026-03-05*
+*Last updated: 2026-03-05 after initial definition*

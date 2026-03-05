@@ -14,6 +14,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useRouter } from "next/navigation";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export type SaveStatus = "saved" | "saving" | "error";
 
@@ -89,26 +90,29 @@ export function WizardTopBar({
         </p>
       </div>
 
-      {/* Right: Save status */}
-      <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-        {saveStatus === "saving" && (
-          <>
-            <Loader2 className="h-3 w-3 animate-spin" />
-            <span>Saving...</span>
-          </>
-        )}
-        {saveStatus === "saved" && (
-          <>
-            <Check className="h-3 w-3 text-green-500" />
-            <span>All changes saved</span>
-          </>
-        )}
-        {saveStatus === "error" && (
-          <>
-            <AlertCircle className="h-3 w-3 text-destructive" />
-            <span className="text-destructive">Error saving</span>
-          </>
-        )}
+      {/* Right: Save status + Theme toggle */}
+      <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+          {saveStatus === "saving" && (
+            <>
+              <Loader2 className="h-3 w-3 animate-spin" />
+              <span>Saving...</span>
+            </>
+          )}
+          {saveStatus === "saved" && (
+            <>
+              <Check className="h-3 w-3 text-green-600 dark:text-green-400" />
+              <span>All changes saved</span>
+            </>
+          )}
+          {saveStatus === "error" && (
+            <>
+              <AlertCircle className="h-3 w-3 text-destructive" />
+              <span className="text-destructive">Error saving</span>
+            </>
+          )}
+        </div>
+        <ThemeToggle />
       </div>
     </div>
   );

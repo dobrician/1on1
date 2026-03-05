@@ -7,6 +7,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## [Unreleased]
 
 ### Added
+- Two-state theme toggle (light/dark) replacing three-state dropdown, using `resolvedTheme` for system preference detection
+- Theme toggle added to wizard top bar for session accessibility
+- Org color theme infrastructure: 8 presets (neutral, zinc, slate, stone, blue, green, rose, orange)
+- `ThemeColorProvider` client component applying `data-color-theme` attribute to HTML element
+- Color theme picker (radio card grid with swatches) in company settings page
+- CSS variable overrides for each color theme preset in both light and dark modes
+- Semantic chart CSS variables (`--color-success`, `--color-warning`, `--color-danger`) for theme-aware status colors
+- Tiptap editor dark mode CSS overrides for ProseMirror
+- `colorTheme` field in organization settings validation schema and API endpoint
 - Horizontal top navigation bar (`TopNav`) replacing sidebar as primary navigation
 - Standalone `UserMenu` dropdown component with avatar, role badge, and sign out
 - Mobile responsive hamburger menu (Sheet slide-in) for small screens

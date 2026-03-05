@@ -72,12 +72,22 @@ export async function PUT(request: Request) {
       session.user.id,
       async (tx) => {
         // Build update payload: settings always updated, name only if provided
+        // Preserve existing settings and merge new values
+        const [existing] = await tx
+          .select({ settings: tenants.settings })
+          .from(tenants)
+          .where(eq(tenants.id, session.user.tenantId))
+          .limit(1);
+        const existingSettings = (existing?.settings ?? {}) as Record<string, unknown>;
+
         const updatePayload: Record<string, unknown> = {
           settings: {
+            ...existingSettings,
             timezone: data.timezone,
             defaultCadence: data.defaultCadence,
             defaultDurationMinutes: data.defaultDurationMinutes,
             preferredLanguage: data.preferredLanguage ?? "en",
+            colorTheme: data.colorTheme ?? existingSettings.colorTheme ?? "neutral",
           },
           updatedAt: new Date(),
         };

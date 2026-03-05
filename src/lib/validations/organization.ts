@@ -11,6 +11,17 @@ export const supportedLanguages = [
   "pt",
 ] as const;
 
+export const colorThemeValues = [
+  "neutral",
+  "zinc",
+  "slate",
+  "stone",
+  "blue",
+  "green",
+  "rose",
+  "orange",
+] as const;
+
 export const orgSettingsSchema = z.object({
   name: z
     .string()
@@ -24,6 +35,7 @@ export const orgSettingsSchema = z.object({
     .min(15, "Minimum 15 minutes")
     .max(120, "Maximum 120 minutes"),
   preferredLanguage: z.enum(supportedLanguages).optional(),
+  colorTheme: z.enum(colorThemeValues).optional(),
 });
 
 export type OrgSettings = z.infer<typeof orgSettingsSchema>;

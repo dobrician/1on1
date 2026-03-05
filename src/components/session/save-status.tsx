@@ -27,7 +27,7 @@ export function SaveStatus({ status }: SaveStatusProps) {
       )}
       {status === "saved" && (
         <>
-          <Check className="h-3 w-3 text-green-500" />
+          <Check className="h-3 w-3 text-green-600 dark:text-green-400" />
           <span>All changes saved</span>
         </>
       )}

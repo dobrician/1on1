@@ -38,6 +38,7 @@ export default async function CompanySettingsPage() {
     defaultCadence?: string;
     defaultDurationMinutes?: number;
     preferredLanguage?: string;
+    colorTheme?: string;
   };
 
   return (

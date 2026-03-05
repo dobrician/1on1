@@ -21,6 +21,7 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { THEME_PRESETS } from "@/lib/theme-presets";
 
 const TIMEZONES = [
   { value: "UTC", label: "UTC" },
@@ -72,6 +73,7 @@ interface CompanySettingsFormProps {
       defaultCadence?: string;
       defaultDurationMinutes?: number;
       preferredLanguage?: string;
+      colorTheme?: string;
     };
   };
 }
@@ -89,6 +91,9 @@ export function CompanySettingsForm({ initialData }: CompanySettingsFormProps) {
   );
   const [language, setLanguage] = useState(
     initialData.settings?.preferredLanguage || "en"
+  );
+  const [colorTheme, setColorTheme] = useState(
+    initialData.settings?.colorTheme || "neutral"
   );
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{
@@ -110,6 +115,7 @@ export function CompanySettingsForm({ initialData }: CompanySettingsFormProps) {
           defaultCadence: cadence,
           defaultDurationMinutes: parseInt(duration, 10),
           preferredLanguage: language,
+          colorTheme,
         }),
       });
 
@@ -291,6 +297,46 @@ export function CompanySettingsForm({ initialData }: CompanySettingsFormProps) {
               </SelectContent>
             </Select>
           </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">Color Theme</CardTitle>
+          <CardDescription>
+            Choose an accent color theme for your organization. All members will
+            see this theme applied across the dashboard and charts.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <RadioGroup
+            value={colorTheme}
+            onValueChange={setColorTheme}
+            className="grid grid-cols-2 gap-3 sm:grid-cols-4"
+          >
+            {THEME_PRESETS.map((preset) => (
+              <Label
+                key={preset.id}
+                htmlFor={`theme-${preset.id}`}
+                className={`flex cursor-pointer items-center gap-3 rounded-lg border px-3 py-3 text-sm transition-colors ${
+                  colorTheme === preset.id
+                    ? "border-primary bg-primary/5 font-medium"
+                    : "border-border hover:bg-accent"
+                }`}
+              >
+                <RadioGroupItem
+                  value={preset.id}
+                  id={`theme-${preset.id}`}
+                  className="sr-only"
+                />
+                <span
+                  className="h-5 w-5 shrink-0 rounded-full border"
+                  style={{ backgroundColor: preset.swatch }}
+                />
+                <span className="truncate">{preset.name}</span>
+              </Label>
+            ))}
+          </RadioGroup>
         </CardContent>
       </Card>
 

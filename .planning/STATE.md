@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in_progress
-stopped_at: Completed 09-01-PLAN.md
-last_updated: "2026-03-05T13:56:00.000Z"
-last_activity: 2026-03-05 -- Plan 09-01 completed (Email notification infrastructure)
+stopped_at: Completed 09-02-PLAN.md
+last_updated: "2026-03-05T14:05:00.000Z"
+last_activity: 2026-03-05 -- Plan 09-02 completed (Email notification wiring)
 progress:
   total_phases: 10
-  completed_phases: 8
+  completed_phases: 9
   total_plans: 35
-  completed_plans: 34
-  percent: 97
+  completed_plans: 35
+  percent: 100
 ---
 
 # Project State
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-03)
 
 **Core value:** The AI context layer that makes every meeting smarter than the last
-**Current focus:** Phase 9 in progress -- email notification infrastructure built
+**Current focus:** Phase 9 complete -- all email notifications wired into application lifecycle
 
 ## Current Position
 
 Phase: 9 of 10 (Email Notifications)
-Plan: 1 of 2 in current phase
-Status: Plan 09-01 complete -- email templates, notification service layer, cron endpoint
-Last activity: 2026-03-05 -- Plan 09-01 completed (Email notification infrastructure)
+Plan: 2 of 2 in current phase (COMPLETE)
+Status: Phase 9 complete -- summary emails, notification scheduling, org language setting
+Last activity: 2026-03-05 -- Plan 09-02 completed (Email notification wiring)
 
-Progress: [███████████████████░] 97%
+Progress: [████████████████████] 100%
 
 ## Performance Metrics
 
@@ -84,6 +84,7 @@ Progress: [███████████████████░] 97%
 | Phase 07 P04 | 33min | 2 tasks | 4 files |
 | Phase 07 P05 | 8min | 1 task | 13 files |
 | Phase 09 P01 | 6min | 2 tasks | 18 files |
+| Phase 09 P02 | 6min | 2 tasks | 12 files |
 
 ## Accumulated Context
 
@@ -223,6 +224,9 @@ Recent decisions affecting current work:
 - [09-01]: Removed "use server" from send.ts to allow import from API routes (callers have own server context)
 - [09-01]: Manual migration for reminderHoursBefore (drizzle-kit generate is interactive) -- consistent with phase 7 pattern
 - [09-01]: Skip past-scheduled notifications: if nextSessionAt < reminderHoursBefore, reminders are not created
+- [09-02]: AI schema fields mapped to email template props: followUpItems -> areasOfConcern, patterns -> riskIndicators
+- [09-02]: Language injection via withLanguageInstruction helper -- appends instruction to system prompt when non-English
+- [09-02]: Non-blocking notification scheduling everywhere -- .catch() pattern for fire-and-forget
 
 ### Pending Todos
 
@@ -237,6 +241,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-05T13:56:00.000Z
-Stopped at: Completed 09-01-PLAN.md
-Resume file: .planning/phases/09-email-notifications/09-02-PLAN.md
+Last session: 2026-03-05T14:05:00.000Z
+Stopped at: Completed 09-02-PLAN.md (Phase 9 complete)
+Resume file: Phase 10 (Polish & Deployment)

@@ -369,8 +369,9 @@ export async function getManagerNudges(
 ): Promise<NudgeData[]> {
   const reportUser = alias(users, "reportUser");
 
+  // One nudge per report: highest priority, most recent — ordered by soonest meeting
   const rows = await tx
-    .select({
+    .selectDistinctOn([meetingSeries.reportId], {
       id: aiNudges.id,
       content: aiNudges.content,
       reason: aiNudges.reason,
@@ -391,9 +392,18 @@ export async function getManagerNudges(
       )
     )
     .orderBy(
+      meetingSeries.reportId,
       sql`CASE ${aiNudges.priority} WHEN 'high' THEN 1 WHEN 'medium' THEN 2 WHEN 'low' THEN 3 ELSE 4 END`,
-      sql`${aiNudges.targetSessionAt} NULLS LAST`
+      sql`${aiNudges.createdAt} DESC`
     );
+
+  // Re-sort by soonest meeting first
+  rows.sort((a, b) => {
+    if (!a.targetSessionAt && !b.targetSessionAt) return 0;
+    if (!a.targetSessionAt) return 1;
+    if (!b.targetSessionAt) return -1;
+    return a.targetSessionAt.getTime() - b.targetSessionAt.getTime();
+  });
 
   return rows.map((r) => ({
     id: r.id,

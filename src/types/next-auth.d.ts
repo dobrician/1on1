@@ -6,6 +6,8 @@ declare module "next-auth" {
     tenantId: string;
     role: string;
     emailVerified: Date | null;
+    uiLanguage: string;
+    contentLanguage: string;
   }
   interface Session {
     user: User & {
@@ -13,6 +15,8 @@ declare module "next-auth" {
       tenantId: string;
       role: string;
       emailVerified: Date | null;
+      uiLanguage: string;
+      contentLanguage: string;
     };
   }
 }
@@ -23,5 +27,7 @@ declare module "next-auth/jwt" {
     role: string;
     userId: string;
     emailVerified: Date | null;
+    uiLanguage: string;
+    contentLanguage: string;
   }
 }

@@ -52,6 +52,12 @@ const config = {
         const valid = await bcrypt.compare(password, user.passwordHash);
         if (!valid) return null;
 
+        // Fetch tenant for content language
+        const tenant = await adminDb.query.tenants.findFirst({
+          where: (t, { eq }) => eq(t.id, user.tenantId),
+          columns: { contentLanguage: true },
+        });
+
         return {
           id: user.id,
           email: user.email,
@@ -59,6 +65,8 @@ const config = {
           tenantId: user.tenantId,
           role: user.role,
           emailVerified: user.emailVerified,
+          uiLanguage: user.language ?? "en",
+          contentLanguage: tenant?.contentLanguage ?? "en",
         };
       },
     }),
@@ -79,19 +87,45 @@ const config = {
           return false;
         }
 
+        // Set language claims for OAuth users
+        const tenant = await adminDb.query.tenants.findFirst({
+          where: (t, { eq }) => eq(t.id, existingUser.tenantId),
+          columns: { contentLanguage: true },
+        });
+        user.uiLanguage = existingUser.language ?? "en";
+        user.contentLanguage = tenant?.contentLanguage ?? "en";
+
         return true;
       }
       return true;
     },
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger }) {
       if (user) {
         token.tenantId = user.tenantId;
         token.role = user.role;
         token.userId = user.id!;
         token.emailVerified = user.emailVerified ?? null;
+        token.uiLanguage = user.uiLanguage ?? "en";
+        token.contentLanguage = user.contentLanguage ?? "en";
       }
 
-      // Re-check DB when email is still unverified — once verified, stays cached
+      // Support language switching without re-login
+      if (trigger === "update" && token.userId) {
+        const dbUser = await adminDb.query.users.findFirst({
+          where: (u, { eq }) => eq(u.id, token.userId),
+          columns: { language: true, tenantId: true },
+        });
+        if (dbUser) {
+          token.uiLanguage = dbUser.language ?? "en";
+          const tenant = await adminDb.query.tenants.findFirst({
+            where: (t, { eq }) => eq(t.id, dbUser.tenantId),
+            columns: { contentLanguage: true },
+          });
+          token.contentLanguage = tenant?.contentLanguage ?? "en";
+        }
+      }
+
+      // Re-check DB when email is still unverified -- once verified, stays cached
       if (!token.emailVerified && token.userId) {
         const dbUser = await adminDb.query.users.findFirst({
           where: (u, { eq }) => eq(u.id, token.userId),
@@ -109,6 +143,8 @@ const config = {
       session.user.tenantId = token.tenantId;
       session.user.role = token.role;
       session.user.emailVerified = token.emailVerified;
+      session.user.uiLanguage = token.uiLanguage;
+      session.user.contentLanguage = token.contentLanguage;
       return session;
     },
   },

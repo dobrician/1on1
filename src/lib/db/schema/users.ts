@@ -43,6 +43,7 @@ export const users = pgTable(
     updatedAt: timestamp("updated_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
+    language: varchar("language", { length: 10 }).notNull().default("en"),
   },
   (table) => [
     uniqueIndex("user_tenant_email_idx").on(table.tenantId, table.email),

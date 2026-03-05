@@ -15,6 +15,9 @@ export const tenants = pgTable("tenant", {
   orgType: orgTypeEnum("org_type").notNull().default("for_profit"),
   plan: planEnum("plan").notNull().default("free"),
   settings: jsonb("settings").notNull().default({}),
+  contentLanguage: varchar("content_language", { length: 10 })
+    .notNull()
+    .default("en"),
   logoUrl: varchar("logo_url", { length: 500 }),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()

@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useRef } from "react";
 
@@ -10,6 +11,7 @@ interface TextWidgetProps {
 }
 
 export function TextWidget({ value, onChange, disabled }: TextWidgetProps) {
+  const t = useTranslations("sessions.wizard");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   // Auto-resize textarea to content
@@ -26,7 +28,7 @@ export function TextWidget({ value, onChange, disabled }: TextWidgetProps) {
       ref={textareaRef}
       value={value ?? ""}
       onChange={(e) => onChange({ answerText: e.target.value })}
-      placeholder="Type your response..."
+      placeholder={t("typeResponse")}
       disabled={disabled}
       className="min-h-[100px] resize-none"
       rows={3}

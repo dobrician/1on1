@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 
 interface Rating110WidgetProps {
@@ -13,6 +14,8 @@ export function Rating110Widget({
   onChange,
   disabled,
 }: Rating110WidgetProps) {
+  const t = useTranslations("sessions.widgets");
+
   return (
     <div className="flex flex-wrap gap-2">
       {Array.from({ length: 10 }, (_, i) => i + 1).map((rating) => (
@@ -29,7 +32,7 @@ export function Rating110Widget({
               ? "border-primary bg-primary text-primary-foreground"
               : "border-border bg-background hover:bg-accent hover:text-accent-foreground"
           )}
-          aria-label={`${rating} out of 10`}
+          aria-label={t("ratingOutOf10", { rating })}
         >
           {rating}
         </button>

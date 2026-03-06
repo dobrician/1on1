@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { TextWidget } from "./widgets/text-widget";
 import { Rating15Widget } from "./widgets/rating-1-5-widget";
 import { Rating110Widget } from "./widgets/rating-1-10-widget";
@@ -30,6 +31,7 @@ export function QuestionWidget({
   onChange,
   disabled,
 }: QuestionWidgetProps) {
+  const t = useTranslations("sessions.wizard");
   const config = question.answerConfig as Record<string, unknown> | null;
 
   switch (question.answerType) {
@@ -93,7 +95,7 @@ export function QuestionWidget({
     default:
       return (
         <div className="rounded-lg border border-dashed p-4 text-sm text-muted-foreground">
-          Unsupported question type: {question.answerType}
+          {t("unsupportedType", { type: question.answerType })}
         </div>
       );
   }

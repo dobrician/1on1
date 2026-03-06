@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useRef } from "react";
+import { useTranslations } from "next-intl";
 import { Check, ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -24,6 +25,7 @@ export function WizardMobileCarousel({
   onStepChange,
   children,
 }: WizardMobileCarouselProps) {
+  const t = useTranslations("sessions.wizard");
   const touchStartX = useRef<number | null>(null);
   const touchStartY = useRef<number | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -77,7 +79,7 @@ export function WizardMobileCarousel({
             onClick={() => currentStep > 0 && onStepChange(currentStep - 1)}
             disabled={currentStep === 0}
             className="shrink-0 p-1.5 rounded-md text-muted-foreground disabled:opacity-30 hover:bg-muted transition-colors"
-            aria-label="Previous step"
+            aria-label={t("previousStep")}
           >
             <ChevronLeft className="size-4" />
           </button>
@@ -120,7 +122,7 @@ export function WizardMobileCarousel({
             onClick={() => currentStep < steps.length - 1 && onStepChange(currentStep + 1)}
             disabled={currentStep === steps.length - 1}
             className="shrink-0 p-1.5 rounded-md text-muted-foreground disabled:opacity-30 hover:bg-muted transition-colors"
-            aria-label="Next step"
+            aria-label={t("nextStep")}
           >
             <ChevronRight className="size-4" />
           </button>

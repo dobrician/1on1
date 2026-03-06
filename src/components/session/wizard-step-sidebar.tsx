@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -24,10 +25,12 @@ export function WizardStepSidebar({
   currentStep,
   onStepChange,
 }: WizardStepSidebarProps) {
+  const t = useTranslations("sessions.wizard");
+
   return (
     <nav
       className="hidden md:flex w-[200px] shrink-0 flex-col border-r bg-muted/30 overflow-y-auto"
-      aria-label="Wizard steps"
+      aria-label={t("wizardSteps")}
     >
       <div className="flex flex-col gap-0.5 p-3">
         {steps.map((step, index) => {
@@ -70,7 +73,7 @@ export function WizardStepSidebar({
                 <p className="truncate leading-tight">{step.name}</p>
                 {step.total > 0 && (
                   <p className="text-[10px] text-muted-foreground">
-                    {step.answered}/{step.total} answered
+                    {t("answered", { answered: step.answered, total: step.total })}
                   </p>
                 )}
               </div>

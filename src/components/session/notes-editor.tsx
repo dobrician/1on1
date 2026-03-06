@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
@@ -30,9 +31,11 @@ interface NotesEditorProps {
 function EditorToolbar({
   editor,
   disabled,
+  labels,
 }: {
   editor: ReturnType<typeof useEditor> | null;
   disabled?: boolean;
+  labels: { bold: string; italic: string; bulletList: string; orderedList: string; link: string; enterUrl: string };
 }) {
   if (!editor) return null;
 
@@ -41,25 +44,25 @@ function EditorToolbar({
       icon: Bold,
       action: () => editor.chain().focus().toggleBold().run(),
       active: editor.isActive("bold"),
-      label: "Bold",
+      label: labels.bold,
     },
     {
       icon: Italic,
       action: () => editor.chain().focus().toggleItalic().run(),
       active: editor.isActive("italic"),
-      label: "Italic",
+      label: labels.italic,
     },
     {
       icon: List,
       action: () => editor.chain().focus().toggleBulletList().run(),
       active: editor.isActive("bulletList"),
-      label: "Bullet List",
+      label: labels.bulletList,
     },
     {
       icon: ListOrdered,
       action: () => editor.chain().focus().toggleOrderedList().run(),
       active: editor.isActive("orderedList"),
-      label: "Ordered List",
+      label: labels.orderedList,
     },
     {
       icon: LinkIcon,
@@ -67,14 +70,14 @@ function EditorToolbar({
         if (editor.isActive("link")) {
           editor.chain().focus().unsetLink().run();
         } else {
-          const url = window.prompt("URL");
+          const url = window.prompt(labels.enterUrl);
           if (url) {
             editor.chain().focus().setLink({ href: url }).run();
           }
         }
       },
       active: editor.isActive("link"),
-      label: "Link",
+      label: labels.link,
     },
   ];
 
@@ -109,6 +112,7 @@ export function NotesEditor({
   readOnly,
   onSavingChange,
 }: NotesEditorProps) {
+  const t = useTranslations("sessions.wizard");
   const [activeTab, setActiveTab] = useState<string>("shared");
   const [sharedContent, setSharedContent] = useState(initialSharedContent);
   const [privateContent, setPrivateContent] = useState(initialPrivateContent);
@@ -235,21 +239,30 @@ export function NotesEditor({
       document.removeEventListener("visibilitychange", handleVisibility);
   }, [flushSaves]);
 
+  const toolbarLabels = {
+    bold: t("bold"),
+    italic: t("italic"),
+    bulletList: t("bulletList"),
+    orderedList: t("orderedList"),
+    link: t("link"),
+    enterUrl: t("enterUrl"),
+  };
+
   return (
     <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
       <TabsList className="w-full">
         <TabsTrigger value="shared" className="flex-1">
-          Shared Notes
+          {t("sharedNotes")}
         </TabsTrigger>
         <TabsTrigger value="private" className="flex-1">
           <Lock className="mr-1.5 size-3" />
-          Private Notes
+          {t("privateNotes")}
         </TabsTrigger>
       </TabsList>
 
       <TabsContent value="shared">
         <div className="rounded-md border">
-          <EditorToolbar editor={sharedEditor} disabled={readOnly} />
+          <EditorToolbar editor={sharedEditor} disabled={readOnly} labels={toolbarLabels} />
           <div className="prose prose-sm prose-neutral dark:prose-invert max-w-none p-3 min-h-[120px] [&_.tiptap]:outline-none [&_.tiptap]:min-h-[96px]">
             <EditorContent editor={sharedEditor} />
           </div>
@@ -260,10 +273,10 @@ export function NotesEditor({
         <div className="space-y-2">
           <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
             <Lock className="size-3" />
-            <span>Only you can see this</span>
+            <span>{t("onlyYouCanSee")}</span>
           </div>
           <div className="rounded-md border border-amber-200/50 bg-amber-50/30 dark:border-amber-900/30 dark:bg-amber-950/20">
-            <EditorToolbar editor={privateEditor} disabled={readOnly} />
+            <EditorToolbar editor={privateEditor} disabled={readOnly} labels={toolbarLabels} />
             <div className="prose prose-sm prose-neutral dark:prose-invert max-w-none p-3 min-h-[120px] [&_.tiptap]:outline-none [&_.tiptap]:min-h-[96px]">
               <EditorContent editor={privateEditor} />
             </div>

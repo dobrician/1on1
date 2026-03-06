@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Check, Loader2, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -12,6 +13,8 @@ interface SaveStatusProps {
  * Shows the current save state with icon and label.
  */
 export function SaveStatus({ status }: SaveStatusProps) {
+  const t = useTranslations("sessions.wizard");
+
   return (
     <div
       className={cn(
@@ -22,19 +25,19 @@ export function SaveStatus({ status }: SaveStatusProps) {
       {status === "saving" && (
         <>
           <Loader2 className="h-3 w-3 animate-spin" />
-          <span>Saving...</span>
+          <span>{t("saving")}</span>
         </>
       )}
       {status === "saved" && (
         <>
           <Check className="h-3 w-3 text-green-600 dark:text-green-400" />
-          <span>All changes saved</span>
+          <span>{t("saved")}</span>
         </>
       )}
       {status === "error" && (
         <>
           <AlertCircle className="h-3 w-3" />
-          <span>Error saving</span>
+          <span>{t("errorSaving")}</span>
         </>
       )}
     </div>

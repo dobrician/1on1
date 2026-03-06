@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -22,6 +23,7 @@ export function WizardNavigation({
   onPrev,
   onNext,
 }: WizardNavigationProps) {
+  const t = useTranslations("sessions.wizard");
   const isFirst = currentStep === 0;
   const isSummaryStep = currentStep === totalSteps - 1;
   const isLastCategoryStep = currentStep === totalSteps - 2;
@@ -66,7 +68,7 @@ export function WizardNavigation({
         className="gap-1"
       >
         <ChevronLeft className="h-4 w-4" />
-        Previous
+        {t("previous")}
       </Button>
 
       {/* Category tabs */}
@@ -99,7 +101,7 @@ export function WizardNavigation({
           onClick={onNext}
           className="gap-1"
         >
-          {isLastCategoryStep ? "Review" : "Next"}
+          {isLastCategoryStep ? t("review") : t("next")}
           <ChevronRight className="h-4 w-4" />
         </Button>
       )}

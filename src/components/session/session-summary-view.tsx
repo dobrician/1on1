@@ -18,7 +18,9 @@ import {
   CalendarDays,
   ArrowLeft,
   Lock,
+  Star,
 } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { AISummarySection } from "./ai-summary-section";
 import { AISuggestionsSection } from "./ai-suggestions-section";
 import type { AISummary } from "@/lib/ai/schemas/summary";
@@ -95,88 +97,86 @@ interface SessionSummaryViewProps {
 
 // --- Helpers ---
 
-function formatAnswerDisplay(
+const MOOD_ENTRIES = [
+  { emoji: "😞", key: "moodVeryBad" },
+  { emoji: "😟", key: "moodBad" },
+  { emoji: "😐", key: "moodNeutral" },
+  { emoji: "🙂", key: "moodGood" },
+  { emoji: "😄", key: "moodGreat" },
+] as const;
+
+function renderAnswerDisplay(
   answerType: string,
   answer: SummaryAnswer | undefined,
   t: ReturnType<typeof useTranslations<"sessions">>
-): string {
-  if (!answer || answer.skipped) return t("summary.skipped");
-  if (
-    !answer.answerText &&
-    answer.answerNumeric === null &&
-    !answer.answerJson
-  ) {
-    return t("summary.notAnswered");
-  }
+): React.ReactNode {
+  if (!answer || answer.skipped)
+    return <span className="italic">{t("summary.skipped")}</span>;
+  if (!answer.answerText && answer.answerNumeric === null && !answer.answerJson)
+    return <span className="italic">{t("summary.notAnswered")}</span>;
 
   switch (answerType) {
     case "text":
-      return answer.answerText || t("summary.notAnswered");
-    case "rating_1_5":
-      return answer.answerNumeric !== null
-        ? `${answer.answerNumeric} / 5`
-        : t("summary.notAnswered");
-    case "rating_1_10":
-      return answer.answerNumeric !== null
-        ? `${answer.answerNumeric} / 10`
-        : t("summary.notAnswered");
-    case "yes_no":
-      if (answer.answerNumeric === null) return t("summary.notAnswered");
-      return answer.answerNumeric === 1 ? t("summary.yes") : t("summary.no");
-    case "mood": {
-      const moods = [
-        t("summary.moodVeryBad"),
-        t("summary.moodBad"),
-        t("summary.moodNeutral"),
-        t("summary.moodGood"),
-        t("summary.moodGreat"),
-      ];
-      return answer.answerNumeric !== null
-        ? moods[(answer.answerNumeric ?? 1) - 1] ??
-            `${answer.answerNumeric} / 5`
-        : t("summary.notAnswered");
+      return answer.answerText || <span className="italic">{t("summary.notAnswered")}</span>;
+
+    case "rating_1_5": {
+      if (answer.answerNumeric === null)
+        return <span className="italic">{t("summary.notAnswered")}</span>;
+      const v = answer.answerNumeric;
+      return (
+        <span className="flex items-center gap-0.5">
+          {[1, 2, 3, 4, 5].map((i) => (
+            <Star
+              key={i}
+              className={cn("h-4 w-4", i <= v ? "fill-amber-400 text-amber-400" : "text-muted-foreground/25")}
+            />
+          ))}
+        </span>
+      );
     }
+
+    case "rating_1_10": {
+      if (answer.answerNumeric === null)
+        return <span className="italic">{t("summary.notAnswered")}</span>;
+      const v = answer.answerNumeric;
+      return (
+        <span className="flex items-center gap-0.5">
+          {Array.from({ length: 10 }, (_, i) => (
+            <span
+              key={i}
+              className={cn("h-2.5 w-3.5 rounded-sm", i < v ? "bg-primary" : "bg-muted-foreground/20")}
+            />
+          ))}
+          <span className="ml-1.5 text-xs text-muted-foreground">{v}/10</span>
+        </span>
+      );
+    }
+
+    case "yes_no":
+      if (answer.answerNumeric === null)
+        return <span className="italic">{t("summary.notAnswered")}</span>;
+      return answer.answerNumeric === 1 ? t("summary.yes") : t("summary.no");
+
+    case "mood": {
+      if (answer.answerNumeric === null)
+        return <span className="italic">{t("summary.notAnswered")}</span>;
+      const entry = MOOD_ENTRIES[(answer.answerNumeric ?? 1) - 1] ?? MOOD_ENTRIES[2];
+      return (
+        <span className="flex items-center gap-1.5">
+          <span className="text-xl" role="img" aria-hidden="true">{entry.emoji}</span>
+          <span>{t(`summary.${entry.key}`)}</span>
+        </span>
+      );
+    }
+
     case "multiple_choice":
       if (answer.answerJson && Array.isArray(answer.answerJson)) {
         return (answer.answerJson as string[]).join(", ");
       }
-      return answer.answerText || t("summary.notAnswered");
-    default:
-      return answer.answerText || t("summary.notAnswered");
-  }
-}
+      return answer.answerText || <span className="italic">{t("summary.notAnswered")}</span>;
 
-function getAnswerBadge(
-  answerType: string,
-  answer: SummaryAnswer | undefined,
-  t: ReturnType<typeof useTranslations<"sessions">>
-): { label: string; variant: "default" | "secondary" | "outline" } | null {
-  if (!answer || answer.skipped) return null;
-
-  switch (answerType) {
-    case "yes_no":
-      if (answer.answerNumeric === null) return null;
-      return answer.answerNumeric === 1
-        ? { label: t("summary.yes"), variant: "default" }
-        : { label: t("summary.no"), variant: "secondary" };
-    case "mood": {
-      const moodLabels = [
-        t("summary.moodVeryBad"),
-        t("summary.moodBad"),
-        t("summary.moodNeutral"),
-        t("summary.moodGood"),
-        t("summary.moodGreat"),
-      ];
-      const moodEmojis = ["😢", "😟", "😐", "😊", "😄"];
-      if (answer.answerNumeric === null) return null;
-      const idx = (answer.answerNumeric ?? 1) - 1;
-      return {
-        label: `${moodEmojis[idx]} ${moodLabels[idx]}`,
-        variant: answer.answerNumeric >= 4 ? "default" : answer.answerNumeric >= 3 ? "outline" : "secondary",
-      };
-    }
     default:
-      return null;
+      return answer.answerText || <span className="italic">{t("summary.notAnswered")}</span>;
   }
 }
 
@@ -358,7 +358,6 @@ export function SessionSummaryView({
                 <div className="space-y-3">
                   {category.questions.map((question) => {
                     const answer = category.answers[question.id];
-                    const badge = getAnswerBadge(question.answerType, answer, t);
 
                     return (
                       <div
@@ -368,31 +367,8 @@ export function SessionSummaryView({
                         <p className="text-sm font-medium">
                           {question.questionText}
                         </p>
-                        <div className="mt-1 flex items-center gap-2">
-                          {badge ? (
-                            <Badge variant={badge.variant} className="text-xs">
-                              {badge.label}
-                            </Badge>
-                          ) : (
-                            <p className="text-sm text-muted-foreground">
-                              {formatAnswerDisplay(
-                                question.answerType,
-                                answer,
-                                t
-                              )}
-                            </p>
-                          )}
-                          {question.answerType.startsWith("rating") &&
-                            answer?.answerNumeric !== null &&
-                            answer?.answerNumeric !== undefined && (
-                              <span className="text-sm text-muted-foreground">
-                                {formatAnswerDisplay(
-                                  question.answerType,
-                                  answer,
-                                  t
-                                )}
-                              </span>
-                            )}
+                        <div className="mt-1 text-sm text-muted-foreground">
+                          {renderAnswerDisplay(question.answerType, answer, t)}
                         </div>
                       </div>
                     );

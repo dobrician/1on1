@@ -11,6 +11,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `messages/en/emails.json` — English email translation keys for all 6 email types (invite, verification, passwordReset, sessionSummary, preMeeting, agendaPrep)
 - `messages/ro/emails.json` — Romanian email translation keys mirroring en structure
 
+### Changed
+- Email templates (invite, verification, password-reset) accept translated string props (`heading`, `body`, `buttonLabel`, `footer`) — hardcoded English strings removed from JSX
+- `EmailLayout` default `footerText` changed from hardcoded English to empty string — callers always pass translated footer
+
 ## [1.1.4] - 2026-03-06
 
 ### Added

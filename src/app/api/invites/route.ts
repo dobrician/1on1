@@ -123,7 +123,17 @@ export async function POST(request: Request) {
       // Send email
       const inviteUrl = `${baseUrl}/invite/${token}`;
       const html = await render(
-        InviteEmail({ inviteUrl, organizationName, inviterName, role })
+        InviteEmail({
+          inviteUrl,
+          organizationName,
+          inviterName,
+          role,
+          // TODO(13-03): replace with createEmailTranslator
+          heading: "You have been invited",
+          body: `${inviterName} has invited you to join ${organizationName} as a ${role}. Click the button below to set up your account and get started.`,
+          buttonLabel: "Accept Invitation",
+          footer: "This invitation expires in 7 days. If you did not expect this invitation, you can safely ignore this email.",
+        })
       );
 
       await getTransport().sendMail({

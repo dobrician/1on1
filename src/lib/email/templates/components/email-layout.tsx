@@ -23,7 +23,7 @@ interface EmailLayoutProps {
 
 export function EmailLayout({
   children,
-  footerText = "This email was sent by 1on1",
+  footerText = "",
 }: EmailLayoutProps) {
   return (
     <Html>

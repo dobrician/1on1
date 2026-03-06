@@ -46,7 +46,16 @@ export async function sendVerificationEmail(
 
   const appUrl = baseUrl || process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
   const verifyUrl = `${appUrl}/verify-email?token=${token}`;
-  const html = await render(VerificationEmail({ verifyUrl }));
+  const html = await render(
+    VerificationEmail({
+      verifyUrl,
+      // TODO(13-03): replace with createEmailTranslator
+      heading: "Verify your email",
+      body: "Thanks for signing up. Please verify your email address by clicking the button below.",
+      buttonLabel: "Verify Email Address",
+      footer: "If you did not create an account, you can safely ignore this email. This link expires in 24 hours.",
+    })
+  );
 
   await getTransport().sendMail({
     from: getEmailFrom(),
@@ -72,7 +81,16 @@ export async function sendPasswordResetEmail(
 
   const appUrl = baseUrl || process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
   const resetUrl = `${appUrl}/reset-password?token=${token}`;
-  const html = await render(PasswordResetEmail({ resetUrl }));
+  const html = await render(
+    PasswordResetEmail({
+      resetUrl,
+      // TODO(13-03): replace with createEmailTranslator
+      heading: "Reset your password",
+      body: "We received a request to reset your password. Click the button below to choose a new one.",
+      buttonLabel: "Reset Password",
+      footer: "This link expires in 1 hour. If you did not request a password reset, you can safely ignore this email.",
+    })
+  );
 
   await getTransport().sendMail({
     from: getEmailFrom(),

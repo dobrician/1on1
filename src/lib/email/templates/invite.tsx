@@ -1,34 +1,36 @@
 import { Text, Button } from "@react-email/components";
 import { EmailLayout } from "./components/email-layout";
-import { heading, paragraph, button } from "../styles";
+import {
+  heading as headingStyle,
+  paragraph as paragraphStyle,
+  button as buttonStyle,
+} from "../styles";
 
 interface InviteEmailProps {
   inviteUrl: string;
   organizationName: string;
   inviterName: string;
   role: string;
+  // Translated string props
+  heading: string;
+  body: string;
+  buttonLabel: string;
+  footer: string;
 }
 
 export function InviteEmail({
   inviteUrl,
-  organizationName,
-  inviterName,
-  role,
+  heading,
+  body,
+  buttonLabel,
+  footer,
 }: InviteEmailProps) {
   return (
-    <EmailLayout
-      footerText="This invitation expires in 7 days. If you did not expect this invitation, you can safely ignore this email."
-    >
-      <Text style={heading}>You have been invited</Text>
-      <Text style={paragraph}>
-        {inviterName} has invited you to join{" "}
-        <strong>{organizationName}</strong> as a {role}.
-      </Text>
-      <Text style={paragraph}>
-        Click the button below to set up your account and get started.
-      </Text>
-      <Button style={button} href={inviteUrl}>
-        Accept Invitation
+    <EmailLayout footerText={footer}>
+      <Text style={headingStyle}>{heading}</Text>
+      <Text style={paragraphStyle}>{body}</Text>
+      <Button style={buttonStyle} href={inviteUrl}>
+        {buttonLabel}
       </Button>
     </EmailLayout>
   );

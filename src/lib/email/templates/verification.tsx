@@ -1,23 +1,33 @@
 import { Text, Button } from "@react-email/components";
 import { EmailLayout } from "./components/email-layout";
-import { heading, paragraph, button } from "../styles";
+import {
+  heading as headingStyle,
+  paragraph as paragraphStyle,
+  button as buttonStyle,
+} from "../styles";
 
 interface VerificationEmailProps {
   verifyUrl: string;
+  // Translated string props
+  heading: string;
+  body: string;
+  buttonLabel: string;
+  footer: string;
 }
 
-export function VerificationEmail({ verifyUrl }: VerificationEmailProps) {
+export function VerificationEmail({
+  verifyUrl,
+  heading,
+  body,
+  buttonLabel,
+  footer,
+}: VerificationEmailProps) {
   return (
-    <EmailLayout
-      footerText="If you did not create an account, you can safely ignore this email. This link expires in 24 hours."
-    >
-      <Text style={heading}>Verify your email</Text>
-      <Text style={paragraph}>
-        Thanks for signing up. Please verify your email address by clicking the
-        button below.
-      </Text>
-      <Button style={button} href={verifyUrl}>
-        Verify Email Address
+    <EmailLayout footerText={footer}>
+      <Text style={headingStyle}>{heading}</Text>
+      <Text style={paragraphStyle}>{body}</Text>
+      <Button style={buttonStyle} href={verifyUrl}>
+        {buttonLabel}
       </Button>
     </EmailLayout>
   );

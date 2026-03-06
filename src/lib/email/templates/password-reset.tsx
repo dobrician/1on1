@@ -1,23 +1,33 @@
 import { Text, Button } from "@react-email/components";
 import { EmailLayout } from "./components/email-layout";
-import { heading, paragraph, button } from "../styles";
+import {
+  heading as headingStyle,
+  paragraph as paragraphStyle,
+  button as buttonStyle,
+} from "../styles";
 
 interface PasswordResetEmailProps {
   resetUrl: string;
+  // Translated string props
+  heading: string;
+  body: string;
+  buttonLabel: string;
+  footer: string;
 }
 
-export function PasswordResetEmail({ resetUrl }: PasswordResetEmailProps) {
+export function PasswordResetEmail({
+  resetUrl,
+  heading,
+  body,
+  buttonLabel,
+  footer,
+}: PasswordResetEmailProps) {
   return (
-    <EmailLayout
-      footerText="This link expires in 1 hour. If you did not request a password reset, you can safely ignore this email."
-    >
-      <Text style={heading}>Reset your password</Text>
-      <Text style={paragraph}>
-        We received a request to reset your password. Click the button below to
-        choose a new one.
-      </Text>
-      <Button style={button} href={resetUrl}>
-        Reset Password
+    <EmailLayout footerText={footer}>
+      <Text style={headingStyle}>{heading}</Text>
+      <Text style={paragraphStyle}>{body}</Text>
+      <Button style={buttonStyle} href={resetUrl}>
+        {buttonLabel}
       </Button>
     </EmailLayout>
   );

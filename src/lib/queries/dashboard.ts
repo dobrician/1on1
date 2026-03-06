@@ -110,7 +110,6 @@ export async function getUpcomingSessions(
   const now = new Date();
   const todayStart = startOfDay(now);
   const todayEnd = endOfDay(now);
-  const in7Days = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
 
   const reportUser = alias(users, "reportUser");
   const managerUser = alias(users, "managerUser");
@@ -121,44 +120,69 @@ export async function getUpcomingSessions(
       ? eq(meetingSeries.reportId, userId)
       : role === "admin"
         ? undefined
-        : eq(meetingSeries.managerId, userId); // manager
+        : eq(meetingSeries.managerId, userId);
 
-  const conditions = [
-    eq(sessions.tenantId, tenantId),
-    gte(sessions.scheduledAt, todayStart),
-    lte(sessions.scheduledAt, in7Days),
-    inArray(sessions.status, ["scheduled", "in_progress"]),
+  // Query active series with a nextSessionAt, ordered by soonest, limit 3
+  const seriesConditions = [
+    eq(meetingSeries.tenantId, tenantId),
+    eq(meetingSeries.status, "active"),
+    sql`${meetingSeries.nextSessionAt} IS NOT NULL`,
     ...(roleFilter ? [roleFilter] : []),
   ];
 
   const rows = await tx
     .select({
-      sessionId: sessions.id,
-      seriesId: sessions.seriesId,
-      scheduledAt: sessions.scheduledAt,
-      status: sessions.status,
-      templateName: questionnaireTemplates.name,
+      seriesId: meetingSeries.id,
+      nextSessionAt: meetingSeries.nextSessionAt,
+      templateId: meetingSeries.defaultTemplateId,
       reportFirstName: reportUser.firstName,
       reportLastName: reportUser.lastName,
       managerFirstName: managerUser.firstName,
       managerLastName: managerUser.lastName,
     })
-    .from(sessions)
-    .innerJoin(meetingSeries, eq(sessions.seriesId, meetingSeries.id))
+    .from(meetingSeries)
     .innerJoin(reportUser, eq(meetingSeries.reportId, reportUser.id))
     .innerJoin(managerUser, eq(meetingSeries.managerId, managerUser.id))
-    .leftJoin(
-      questionnaireTemplates,
-      eq(sessions.templateId, questionnaireTemplates.id)
-    )
-    .where(and(...conditions))
-    .orderBy(asc(sessions.scheduledAt));
+    .where(and(...seriesConditions))
+    .orderBy(asc(meetingSeries.nextSessionAt))
+    .limit(3);
 
   if (rows.length === 0) return [];
 
-  // Batch-fetch nudges for all relevant series (not N+1)
-  const seriesIds = [...new Set(rows.map((r) => r.seriesId))];
+  const seriesIds = rows.map((r) => r.seriesId);
 
+  // Fetch in-progress sessions for these series
+  const inProgressRows = await tx
+    .select({
+      id: sessions.id,
+      seriesId: sessions.seriesId,
+    })
+    .from(sessions)
+    .where(
+      and(
+        inArray(sessions.seriesId, seriesIds),
+        eq(sessions.status, "in_progress")
+      )
+    );
+
+  const inProgressBySeriesId = new Map(
+    inProgressRows.map((r) => [r.seriesId, r.id])
+  );
+
+  // Fetch template names
+  const templateIds = [
+    ...new Set(rows.map((r) => r.templateId).filter(Boolean)),
+  ] as string[];
+  let templateMap = new Map<string, string>();
+  if (templateIds.length > 0) {
+    const tplRows = await tx
+      .select({ id: questionnaireTemplates.id, name: questionnaireTemplates.name })
+      .from(questionnaireTemplates)
+      .where(inArray(questionnaireTemplates.id, templateIds));
+    templateMap = new Map(tplRows.map((t) => [t.id, t.name]));
+  }
+
+  // Batch-fetch nudges
   const nudgeRows = await tx
     .select({
       id: aiNudges.id,
@@ -184,7 +208,6 @@ export async function getUpcomingSessions(
       sql`CASE ${aiNudges.priority} WHEN 'high' THEN 1 WHEN 'medium' THEN 2 WHEN 'low' THEN 3 ELSE 4 END`
     );
 
-  // Group nudges by seriesId
   const nudgesBySeries = new Map<string, NudgeData[]>();
   for (const n of nudgeRows) {
     const list = nudgesBySeries.get(n.seriesId) ?? [];
@@ -201,24 +224,24 @@ export async function getUpcomingSessions(
   }
 
   return rows.map((r) => {
-    const scheduled = r.scheduledAt;
-    const isToday =
-      scheduled >= todayStart && scheduled <= todayEnd;
+    const scheduled = r.nextSessionAt!;
+    const isToday = scheduled >= todayStart && scheduled <= todayEnd;
     const displayName =
       role === "member"
         ? `${r.managerFirstName} ${r.managerLastName}`
         : `${r.reportFirstName} ${r.reportLastName}`;
+    const activeId = inProgressBySeriesId.get(r.seriesId);
 
     return {
-      sessionId: r.sessionId,
+      sessionId: r.seriesId,
       seriesId: r.seriesId,
       reportName: displayName,
       scheduledAt: scheduled.toISOString(),
-      status: r.status,
-      templateName: r.templateName,
+      status: activeId ? "in_progress" : "scheduled",
+      templateName: r.templateId ? (templateMap.get(r.templateId) ?? null) : null,
       nudges: nudgesBySeries.get(r.seriesId) ?? [],
       isToday,
-      ...(r.status === "in_progress" ? { activeSessionId: r.sessionId } : {}),
+      ...(activeId ? { activeSessionId: activeId } : {}),
     };
   });
 }

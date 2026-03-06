@@ -7,6 +7,7 @@ import { useSession } from "next-auth/react";
 import { LayoutDashboard, Users, Building2, ScrollText, FileText, CalendarDays, ListChecks, History, BarChart3, LogOut } from "lucide-react";
 import { logoutAction } from "@/lib/auth/actions";
 import { cn } from "@/lib/utils";
+import { Logo } from "@/components/logo";
 import { useTranslations } from "next-intl";
 
 interface NavItem {
@@ -121,8 +122,8 @@ export function Sidebar() {
   return (
     <aside className="flex w-[220px] shrink-0 flex-col border-r bg-muted/30">
       <div className="flex h-14 items-center border-b px-5">
-        <Link href="/overview" className="text-lg font-semibold tracking-tight">
-          1on1
+        <Link href="/overview">
+          <Logo className="h-7" />
         </Link>
       </div>
       <nav className="flex flex-1 flex-col gap-1 p-3">

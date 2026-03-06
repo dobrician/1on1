@@ -5,8 +5,8 @@ import { canManageSeries } from "@/lib/auth/rbac";
 import { logAuditEvent } from "@/lib/audit/log";
 import { createSeriesSchema } from "@/lib/validations/series";
 import { scheduleSeriesNotifications } from "@/lib/notifications/scheduler";
-import { meetingSeries, sessions, users } from "@/lib/db/schema";
-import { eq, and, sql } from "drizzle-orm";
+import { meetingSeries, sessions, users, aiNudges } from "@/lib/db/schema";
+import { eq, and, sql, desc } from "drizzle-orm";
 import { computeNextSessionDate } from "@/lib/utils/scheduling";
 
 export async function GET(request: Request) {
@@ -86,6 +86,26 @@ export async function GET(request: Request) {
           latestSessions.map((s) => [s.seriesId, s])
         );
 
+        // Fetch most recent non-dismissed nudge per series
+        const nudgeRows = await tx
+          .select({
+            seriesId: aiNudges.seriesId,
+            content: aiNudges.content,
+          })
+          .from(aiNudges)
+          .where(
+            and(
+              sql`${aiNudges.seriesId} IN ${seriesIds}`,
+              eq(aiNudges.isDismissed, false)
+            )
+          )
+          .orderBy(desc(aiNudges.createdAt));
+
+        const nudgeMap = new Map<string, string>();
+        for (const n of nudgeRows) {
+          if (!nudgeMap.has(n.seriesId)) nudgeMap.set(n.seriesId, n.content);
+        }
+
         return seriesList.map((s) => {
           const latest = latestSessionMap.get(s.id);
           return {
@@ -114,6 +134,7 @@ export async function GET(request: Request) {
                   sessionScore: latest.sessionScore,
                 }
               : null,
+            topNudge: nudgeMap.get(s.id) ?? null,
           };
         });
       }

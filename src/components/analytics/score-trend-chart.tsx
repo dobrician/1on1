@@ -92,9 +92,9 @@ export function ScoreTrendChart({ data, loading }: ScoreTrendChartProps) {
             <Line
               type="monotone"
               dataKey="score"
-              stroke="var(--primary)"
+              stroke="var(--chart-1)"
               strokeWidth={2}
-              dot={{ r: 4, fill: "var(--primary)" }}
+              dot={{ r: 4, fill: "var(--chart-1)" }}
               activeDot={{ r: 6 }}
               isAnimationActive={false}
             />

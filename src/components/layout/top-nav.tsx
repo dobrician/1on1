@@ -17,6 +17,7 @@ import {
   Menu,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Logo } from "@/components/logo";
 import { SearchTrigger } from "@/components/search/command-palette";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { UserMenu } from "@/components/layout/user-menu";
@@ -112,10 +113,9 @@ export function TopNav() {
           <div className="flex h-14 items-center border-b px-5">
             <Link
               href="/overview"
-              className="text-lg font-semibold tracking-tight"
               onClick={() => setMobileOpen(false)}
             >
-              1on1
+              <Logo className="h-7" />
             </Link>
           </div>
           <nav className="flex flex-col gap-1 p-3">
@@ -174,9 +174,9 @@ export function TopNav() {
       {/* Logo */}
       <Link
         href="/overview"
-        className="mr-6 hidden text-lg font-semibold tracking-tight md:block"
+        className="mr-6 hidden md:block"
       >
-        1on1
+        <Logo className="h-7" />
       </Link>
 
       {/* Desktop primary nav */}

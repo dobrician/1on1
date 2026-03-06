@@ -13,6 +13,8 @@ interface Series {
   cadence: string;
   status: string;
   nextSessionAt: string | null;
+  preferredDay: string | null;
+  preferredTime: string | null;
   report: {
     id: string;
     firstName: string;
@@ -25,6 +27,7 @@ interface Series {
     sessionNumber: number;
     sessionScore: string | null;
   } | null;
+  topNudge: string | null;
 }
 
 interface SeriesListProps {

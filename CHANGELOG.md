@@ -7,6 +7,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## [Unreleased]
 
 ### Added
+- SVG logo component (`Logo`, `LogoIcon`) with theme-reactive `--logo-color` CSS variable
+- Logo replaces plain "1on1" text in top nav, mobile sheet, sidebar, and auth layout
+- Favicon (ICO), apple-icon (PNG), and icon (SVG) generated from vectorized logo
+- `--logo-color` defaults to dark olive green, switches to lighter olive in dark mode, and matches `--primary` when a color theme is active
+- Edit series dialog on series detail page — change cadence, preferred day/time, duration, and next session date directly
+- `nextSessionAt` field added to series update API for direct date override
+- Dashboard upcoming sessions now reuses `SeriesCard` component (same cards as sessions page), limited to next 3 active series
+- Star rating display on series cards — amber filled stars for scored sessions, gray empty stars when no rating; numeric score appears on hover
+- AI nudge preview on series cards — 2-line clamped text with sparkle icon; grayed italic placeholder when no nudge exists
+- Human-readable schedule label in bottom-right of series cards (e.g. "Weekly on Mondays at 11:30" / "Săptămânal, lunea la 11:30")
+- Shared `getSeriesCardData()` query in `src/lib/queries/series.ts` used by sessions page, dashboard, and API route
+- `topNudge` field added to series API response and series card data
+- Translation keys for schedule labels, nudge placeholder, and schedule-context day names in EN/RO
+- Translation keys for edit series dialog in EN/RO
 - Translation keys for people management: `managerSelect`, `memberPicker`, `profileForm` namespaces in EN/RO
 - Translation keys for team creation dialog: `teams.create` namespace in EN/RO
 - Translation keys for template builder: `questionCard`, `answerConfig`, `conditionalLogic` namespaces in EN/RO
@@ -15,8 +29,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Session-started toast in series-card and upcoming-sessions now uses translated text instead of hardcoded English
 - summary-screen error toast now uses `showApiError()` for translated API errors instead of raw `error.message`
 - Score display in five session components (summary-screen, context-panel, recap-screen, floating-context-widgets, session-summary-view) now uses locale-aware `format.number()` instead of `.toFixed(1)`
+- Quick stats sparkline charts nearly invisible in dark mode — increased opacity from 8% to 25%
 
 ### Changed
+- Dashboard page width now matches all other pages (removed `max-w-5xl` constraint)
+- Series cards: preferred day/time and cadence merged into single human-readable schedule line in bottom-right
+- Series cards: start/resume button aligned flush with card edge via negative margins compensating ghost button padding
 - Session wizard context panel, recap screen, talking points, action items inline, nudge list, AI suggestions, and AI summary sections now use `useTranslations` for all visible strings
 - All session date formatting replaced with locale-aware `useFormatter().dateTime()` across wizard-top-bar, context-panel, floating-context-widgets, summary-screen, session-summary-view, question-history-dialog (no hardcoded `toLocaleDateString("en-US")` remains)
 - People management components (manager-select, member-picker, team-card, team-create-dialog, profile-edit-form) now use `useTranslations` for all visible strings

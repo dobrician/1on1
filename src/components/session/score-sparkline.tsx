@@ -16,7 +16,7 @@ export interface ScoreSparklineProps {
 
 export function ScoreSparkline({
   data,
-  color = "var(--primary)",
+  color = "var(--chart-1)",
   height = 40,
 }: ScoreSparklineProps) {
   const chartData = useMemo(

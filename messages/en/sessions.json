@@ -21,7 +21,18 @@
       "inProgress": "Session #{number} in progress",
       "statusActive": "Active",
       "statusPaused": "Paused",
-      "statusArchived": "Archived"
+      "statusArchived": "Archived",
+      "nudgePlaceholder": "AI insights will appear after your first session",
+      "noRating": "No rating yet",
+      "scheduleDayMon": "Monday",
+      "scheduleDayTue": "Tuesday",
+      "scheduleDayWed": "Wednesday",
+      "scheduleDayThu": "Thursday",
+      "scheduleDayFri": "Friday",
+      "schedule": "{cadence} on {day}s at {time}",
+      "scheduleDayOnly": "{cadence} on {day}s",
+      "scheduleTimeOnly": "{cadence} at {time}",
+      "scheduleNone": "{cadence}"
     },
     "detail": {
       "oneOnOneWith": "1:1 with {name}",
@@ -41,7 +52,12 @@
       "sessionHistory": "Session History",
       "seriesUpdated": "Series updated",
       "seriesArchived": "Series archived",
-      "sessionStarted": "Session #{number} started"
+      "sessionStarted": "Session #{number} started",
+      "editSeries": "Edit Series",
+      "editSeriesDesc": "Update meeting series settings.",
+      "nextSessionDate": "Next session date",
+      "save": "Save",
+      "saving": "Saving..."
     },
     "timeline": {
       "noSessions": "No sessions yet. Start your first session above.",

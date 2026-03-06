@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -9,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { SessionTimeline } from "./session-timeline";
+import { EditSeriesDialog } from "./edit-series-dialog";
 import {
   Play,
   Pause,
@@ -16,6 +18,7 @@ import {
   Archive,
   CalendarDays,
   Clock,
+  Pencil,
   Settings,
 } from "lucide-react";
 import { useTranslations, useFormatter } from "next-intl";
@@ -66,6 +69,7 @@ export function SeriesDetail({ series, currentUserId }: SeriesDetailProps) {
   const format = useFormatter();
   const { showApiError } = useApiErrorToast();
   const isManager = series.manager?.id === currentUserId;
+  const [editOpen, setEditOpen] = useState(false);
   const hasInProgress = series.sessions.some(
     (s) => s.status === "in_progress"
   );
@@ -238,6 +242,15 @@ export function SeriesDetail({ series, currentUserId }: SeriesDetailProps) {
           <Button
             variant="outline"
             size="sm"
+            onClick={() => setEditOpen(true)}
+          >
+            <Pencil className="mr-1.5 h-3.5 w-3.5" />
+            {t("detail.editSeries")}
+          </Button>
+
+          <Button
+            variant="outline"
+            size="sm"
             onClick={() => archiveSeries.mutate()}
             disabled={archiveSeries.isPending}
           >
@@ -245,6 +258,14 @@ export function SeriesDetail({ series, currentUserId }: SeriesDetailProps) {
             {t("detail.archive")}
           </Button>
         </div>
+      )}
+
+      {isManager && (
+        <EditSeriesDialog
+          open={editOpen}
+          onOpenChange={setEditOpen}
+          series={series}
+        />
       )}
 
       <Separator />

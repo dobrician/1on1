@@ -21,7 +21,18 @@
       "inProgress": "Sesiunea #{number} în desfășurare",
       "statusActive": "Activă",
       "statusPaused": "Pauză",
-      "statusArchived": "Arhivată"
+      "statusArchived": "Arhivată",
+      "nudgePlaceholder": "Sugestiile AI vor apărea după prima sesiune",
+      "noRating": "Fără evaluare",
+      "scheduleDayMon": "lunea",
+      "scheduleDayTue": "marțea",
+      "scheduleDayWed": "miercurea",
+      "scheduleDayThu": "joia",
+      "scheduleDayFri": "vinerea",
+      "schedule": "{cadence}, {day} la {time}",
+      "scheduleDayOnly": "{cadence}, {day}",
+      "scheduleTimeOnly": "{cadence} la {time}",
+      "scheduleNone": "{cadence}"
     },
     "detail": {
       "oneOnOneWith": "1:1 cu {name}",
@@ -41,7 +52,12 @@
       "sessionHistory": "Istoricul sesiunilor",
       "seriesUpdated": "Serie actualizată",
       "seriesArchived": "Serie arhivată",
-      "sessionStarted": "Sesiunea #{number} a început"
+      "sessionStarted": "Sesiunea #{number} a început",
+      "editSeries": "Editează seria",
+      "editSeriesDesc": "Actualizează setările seriei de întâlniri.",
+      "nextSessionDate": "Data următoarei sesiuni",
+      "save": "Salvează",
+      "saving": "Se salvează..."
     },
     "timeline": {
       "noSessions": "Nicio sesiune. Începe prima sesiune mai sus.",

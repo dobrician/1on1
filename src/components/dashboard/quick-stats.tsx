@@ -30,20 +30,20 @@ function BackgroundSparkline({ data }: { data: number[] }) {
   const padding = (maxValue - minValue) * 0.1 || 0.5;
 
   return (
-    <div className="absolute bottom-0 left-0 right-0 h-16 opacity-[0.08]">
+    <div className="absolute bottom-0 left-0 right-0 h-16 opacity-[0.08] dark:opacity-[0.25]">
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart data={chartData} margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
           <defs>
             <linearGradient id="sparkGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="var(--primary)" stopOpacity={1} />
-              <stop offset="100%" stopColor="var(--primary)" stopOpacity={0} />
+              <stop offset="0%" stopColor="var(--chart-1)" stopOpacity={1} />
+              <stop offset="100%" stopColor="var(--chart-1)" stopOpacity={0} />
             </linearGradient>
           </defs>
           <YAxis domain={[minValue - padding, maxValue + padding]} hide />
           <Area
             type="monotone"
             dataKey="value"
-            stroke="var(--primary)"
+            stroke="var(--chart-1)"
             strokeWidth={2}
             fill="url(#sparkGradient)"
             isAnimationActive={false}

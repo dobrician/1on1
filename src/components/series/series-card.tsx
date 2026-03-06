@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { CalendarDays, Play, RotateCcw } from "lucide-react";
+import { CalendarDays, Play, RotateCcw, Star, Sparkles } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useApiErrorToast } from "@/lib/i18n/api-error-toast";
@@ -19,6 +19,8 @@ interface SeriesCardProps {
     cadence: string;
     status: string;
     nextSessionAt: string | null;
+    preferredDay: string | null;
+    preferredTime: string | null;
     report: {
       id: string;
       firstName: string;
@@ -31,6 +33,7 @@ interface SeriesCardProps {
       sessionNumber: number;
       sessionScore: string | null;
     } | null;
+    topNudge: string | null;
   };
   currentUserId: string;
 }
@@ -61,6 +64,36 @@ function formatRelativeDate(
     month: "short",
     day: "numeric",
   });
+}
+
+const DAY_KEY_MAP: Record<string, string> = {
+  mon: "scheduleDayMon",
+  tue: "scheduleDayTue",
+  wed: "scheduleDayWed",
+  thu: "scheduleDayThu",
+  fri: "scheduleDayFri",
+};
+
+function formatSchedule(
+  cadence: string,
+  preferredDay: string | null,
+  preferredTime: string | null,
+  t: ReturnType<typeof useTranslations<"sessions">>
+): string {
+  const cadenceLabel =
+    cadence === "weekly" ? t("form.weekly")
+    : cadence === "biweekly" ? t("form.biweekly")
+    : cadence === "monthly" ? t("form.monthly")
+    : cadence;
+
+  const dayKey = preferredDay ? DAY_KEY_MAP[preferredDay] : null;
+  const day = dayKey ? t(`series.${dayKey}` as Parameters<typeof t>[0]) : null;
+  const time = preferredTime ? preferredTime.slice(0, 5) : null;
+
+  if (day && time) return t("series.schedule", { cadence: cadenceLabel, day, time });
+  if (day) return t("series.scheduleDayOnly", { cadence: cadenceLabel, day });
+  if (time) return t("series.scheduleTimeOnly", { cadence: cadenceLabel, time });
+  return t("series.scheduleNone", { cadence: cadenceLabel });
 }
 
 export function SeriesCard({ series, currentUserId }: SeriesCardProps) {
@@ -96,7 +129,7 @@ export function SeriesCard({ series, currentUserId }: SeriesCardProps) {
     (series.report.lastName?.[0] ?? "");
 
   return (
-    <Card className="group relative transition-all duration-200 hover:border-foreground/20 hover:shadow-md">
+    <Card className="group relative flex flex-col transition-all duration-200 hover:border-foreground/20 hover:shadow-md">
       <Link href={`/sessions/${series.id}`} className="absolute inset-0 z-0" />
       <CardHeader className="flex flex-row items-center gap-3 pb-2">
         <Avatar className="h-10 w-10">
@@ -107,12 +140,41 @@ export function SeriesCard({ series, currentUserId }: SeriesCardProps) {
           <CardTitle className="text-base truncate">
             {series.report.firstName} {series.report.lastName}
           </CardTitle>
-          <p className="text-sm text-muted-foreground">
-            {series.cadence === "weekly" ? t("form.weekly")
-              : series.cadence === "biweekly" ? t("form.biweekly")
-              : series.cadence === "monthly" ? t("form.monthly")
-              : series.cadence}
-          </p>
+          {(() => {
+            const score = series.latestSession?.sessionScore && series.latestSession.status === "completed"
+              ? parseFloat(series.latestSession.sessionScore)
+              : null;
+            const fullStars = score !== null ? Math.floor(score) : 0;
+            const hasHalf = score !== null && score - fullStars >= 0.5;
+            return (
+              <div className="flex items-center gap-0.5">
+                {Array.from({ length: 5 }, (_, i) => {
+                  if (score === null) {
+                    return <Star key={i} className="h-3 w-3 text-muted-foreground/20" />;
+                  }
+                  if (i < fullStars) {
+                    return <Star key={i} className="h-3 w-3 fill-amber-400 text-amber-400" />;
+                  }
+                  if (i === fullStars && hasHalf) {
+                    return (
+                      <span key={i} className="relative inline-flex h-3 w-3">
+                        <Star className="absolute h-3 w-3 text-muted-foreground/20" />
+                        <span className="absolute inset-0 overflow-hidden" style={{ width: "50%" }}>
+                          <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+                        </span>
+                      </span>
+                    );
+                  }
+                  return <Star key={i} className="h-3 w-3 text-muted-foreground/20" />;
+                })}
+                {score !== null && (
+                  <span className="ml-1 text-xs tabular-nums text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100">
+                    {format.number(score, { maximumFractionDigits: 1, minimumFractionDigits: 1 })}
+                  </span>
+                )}
+              </div>
+            );
+          })()}
         </div>
         <Badge variant={statusVariant[series.status] ?? "outline"}>
           {series.status === "active"
@@ -122,56 +184,65 @@ export function SeriesCard({ series, currentUserId }: SeriesCardProps) {
               : t("series.statusArchived")}
         </Badge>
       </CardHeader>
-      <CardContent className="space-y-2 pt-0">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-            <CalendarDays className="h-3.5 w-3.5" />
-            {series.nextSessionAt ? (
-              <span>{formatRelativeDate(series.nextSessionAt, t, format)}</span>
-            ) : (
-              <span>{t("series.notScheduled")}</span>
-            )}
-          </div>
-          {series.latestSession?.sessionScore && series.latestSession.status === "completed" && (
-            <span className="text-sm font-medium tabular-nums text-muted-foreground">
-              {format.number(parseFloat(series.latestSession.sessionScore), { maximumFractionDigits: 1, minimumFractionDigits: 1 })} / 5
-            </span>
-          )}
-        </div>
-        {isManager && series.status === "active" && (
-          <Button
-            variant={hasInProgress ? "default" : "outline"}
-            size="sm"
-            className="relative z-10"
-            onClick={(e) => {
-              e.preventDefault();
-              if (!hasInProgress) {
-                startSession.mutate();
-              } else if (series.latestSession?.id) {
-                // Navigate directly to the wizard to resume
-                router.push(`/wizard/${series.latestSession.id}`);
-              }
-            }}
-            disabled={startSession.isPending}
-          >
-            {hasInProgress ? (
-              <>
-                <RotateCcw className="mr-1.5 h-3.5 w-3.5" />
-                {t("series.resume")}
-              </>
-            ) : (
-              <>
-                <Play className="mr-1.5 h-3.5 w-3.5" />
-                {t("series.start")}
-              </>
-            )}
-          </Button>
+      <CardContent className="flex flex-1 flex-col gap-2 pt-0">
+        {series.topNudge ? (
+          <p className="text-xs text-muted-foreground line-clamp-2">
+            <Sparkles className="mr-1 inline h-3 w-3 text-amber-500/70" />
+            {series.topNudge}
+          </p>
+        ) : (
+          <p className="text-xs text-muted-foreground/40 line-clamp-2 italic">
+            {t("series.nudgePlaceholder")}
+          </p>
         )}
         {hasInProgress && series.latestSession && (
           <p className="text-xs text-muted-foreground">
             {t("series.inProgress", { number: series.latestSession.sessionNumber })}
           </p>
         )}
+        <div className="mt-auto flex items-end justify-between pt-2">
+          {isManager && series.status === "active" ? (
+            <Button
+              variant={hasInProgress ? "default" : "ghost"}
+              size="sm"
+              className="relative z-10 -ml-3 -mb-1.5"
+              onClick={(e) => {
+                e.preventDefault();
+                if (!hasInProgress) {
+                  startSession.mutate();
+                } else if (series.latestSession?.id) {
+                  router.push(`/wizard/${series.latestSession.id}`);
+                }
+              }}
+              disabled={startSession.isPending}
+            >
+              {hasInProgress ? (
+                <>
+                  <RotateCcw className="mr-1.5 h-3.5 w-3.5" />
+                  {t("series.resume")}
+                </>
+              ) : (
+                <>
+                  <Play className="mr-1.5 h-3.5 w-3.5" />
+                  {t("series.start")}
+                </>
+              )}
+            </Button>
+          ) : <div />}
+          <div className="flex flex-col items-end gap-0.5">
+            <div className="flex items-center gap-1.5 text-xs text-muted-foreground/70">
+              <CalendarDays className="h-3 w-3" />
+              {series.nextSessionAt ? (
+                <span>{formatRelativeDate(series.nextSessionAt, t, format)}</span>
+              ) : (
+                <span>{t("series.notScheduled")}</span>
+              )}
+            </div>
+            <span className="text-xs text-muted-foreground/50">
+              {formatSchedule(series.cadence, series.preferredDay, series.preferredTime, t)}
+            </span>
+          </div>
+        </div>
       </CardContent>
     </Card>
   );

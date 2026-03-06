@@ -5,17 +5,17 @@ import { adminDb } from "@/lib/db";
 import { withTenantContext } from "@/lib/db/tenant-context";
 import { tenants } from "@/lib/db/schema";
 import { EmailVerificationBanner } from "@/components/auth/email-verification-banner";
-import { UpcomingSessions } from "@/components/dashboard/upcoming-sessions";
 import { QuickStats } from "@/components/dashboard/quick-stats";
 import { OverdueItems } from "@/components/dashboard/overdue-items";
 import { RecentSessions } from "@/components/dashboard/recent-sessions";
+import { UpcomingSeriesCards } from "@/components/dashboard/upcoming-series-cards";
 import {
-  getUpcomingSessions,
   getOverdueActionItems,
   getQuickStats,
   getRecentSessions,
   getStatsTrends,
 } from "@/lib/queries/dashboard";
+import { getSeriesCardData } from "@/lib/queries/series";
 import { getTranslations } from "next-intl/server";
 
 export default async function OverviewPage() {
@@ -33,7 +33,12 @@ export default async function OverviewPage() {
     }),
     withTenantContext(user.tenantId, user.id, async (tx) => {
       const [upcoming, overdue, stats, recent, trends] = await Promise.all([
-        getUpcomingSessions(tx, user.id, user.role, user.tenantId),
+        getSeriesCardData(tx, user.tenantId, {
+          upcomingOnly: true,
+          limit: 3,
+          role: user.role,
+          userId: user.id,
+        }),
         getOverdueActionItems(tx, user.id, user.role),
         getQuickStats(tx, user.id, user.role),
         getRecentSessions(tx, user.id, user.role),
@@ -44,7 +49,7 @@ export default async function OverviewPage() {
   ]);
 
   return (
-    <div className="mx-auto max-w-5xl">
+    <div>
       {!user.emailVerified && <EmailVerificationBanner />}
 
       {/* Welcome header */}
@@ -66,7 +71,10 @@ export default async function OverviewPage() {
       {/* 2. Upcoming Sessions */}
       <section className="mb-8">
         <h2 className="mb-4 text-lg font-medium">{t("upcomingSessions")}</h2>
-        <UpcomingSessions sessions={dashboardData.upcoming} />
+        <UpcomingSeriesCards
+          series={dashboardData.upcoming}
+          currentUserId={user.id}
+        />
       </section>
 
       {/* 3. Overdue Items (only if any exist) */}

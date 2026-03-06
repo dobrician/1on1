@@ -222,8 +222,12 @@ export async function PATCH(
         if (data.reminderHoursBefore !== undefined)
           updateData.reminderHoursBefore = data.reminderHoursBefore;
 
-        // Recompute nextSessionAt if cadence changes
-        if (data.cadence || data.preferredDay !== undefined) {
+        // Direct nextSessionAt override takes priority
+        if (data.nextSessionAt !== undefined) {
+          updateData.nextSessionAt = data.nextSessionAt
+            ? new Date(data.nextSessionAt)
+            : null;
+        } else if (data.cadence || data.preferredDay !== undefined) {
           const cadence = data.cadence ?? series.cadence;
           const customDays =
             data.cadenceCustomDays !== undefined

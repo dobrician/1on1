@@ -2,7 +2,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function OverviewLoading() {
   return (
-    <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
+    <div>
       {/* Welcome header */}
       <div className="mb-8">
         <Skeleton className="h-8 w-64" />

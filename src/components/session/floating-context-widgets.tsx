@@ -384,6 +384,7 @@ function SummaryStatsWidget({
   sessionScores: number[];
 }) {
   const t = useTranslations("sessions");
+  const format = useFormatter();
   const stats = useMemo(() => {
     const totalSessions = previousSessions.length;
     const avgScore =
@@ -404,7 +405,7 @@ function SummaryStatsWidget({
         </div>
         <div className="rounded-md border p-2 text-center">
           <p className="text-lg font-semibold tabular-nums">
-            {stats.avgScore !== null ? stats.avgScore.toFixed(1) : "--"}
+            {stats.avgScore !== null ? format.number(stats.avgScore, { maximumFractionDigits: 1, minimumFractionDigits: 1 }) : "--"}
           </p>
           <p className="text-[10px] text-muted-foreground">{t("context.avgScore")}</p>
         </div>

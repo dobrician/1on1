@@ -298,7 +298,7 @@ export function SessionSummaryView({
             <p
               className={`text-4xl font-bold tabular-nums ${getScoreColor(sessionScore)}`}
             >
-              {sessionScore.toFixed(1)}
+              {format.number(sessionScore, { maximumFractionDigits: 1, minimumFractionDigits: 1 })}
             </p>
             <p className="mt-1 text-sm text-muted-foreground">{t("summary.outOf")}</p>
           </>

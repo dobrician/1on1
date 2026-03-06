@@ -84,7 +84,7 @@ export function RecapScreen({
                     <div className="flex items-center gap-2">
                       {lastSession.sessionScore != null && (
                         <Badge variant="secondary">
-                          {t("score", { score: lastSession.sessionScore.toFixed(1) })}
+                          {t("score", { score: format.number(lastSession.sessionScore, { maximumFractionDigits: 1, minimumFractionDigits: 1 }) })}
                         </Badge>
                       )}
                       <span className="flex items-center gap-1 text-xs text-muted-foreground">

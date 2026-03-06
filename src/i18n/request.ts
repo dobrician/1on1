@@ -28,6 +28,7 @@ export default getRequestConfig(async () => {
     ...(await import(`../../messages/${locale}/history.json`)).default,
     ...(await import(`../../messages/${locale}/search.json`)).default,
     ...(await import(`../../messages/${locale}/settings.json`)).default,
+    ...(await import(`../../messages/${locale}/validation.json`)).default,
   };
 
   return {

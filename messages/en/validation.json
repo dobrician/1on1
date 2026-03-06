@@ -1,0 +1,14 @@
+{
+  "validation": {
+    "required": "This field is required",
+    "invalidEmail": "Please enter a valid email address",
+    "minLength": "Must be at least {min} characters",
+    "maxLength": "Must be at most {max} characters",
+    "passwordUppercase": "Must contain at least one uppercase letter",
+    "passwordLowercase": "Must contain at least one lowercase letter",
+    "passwordNumber": "Must contain at least one number",
+    "passwordsMatch": "Passwords don't match",
+    "invalidUrl": "Must be a valid URL",
+    "invalidType": "Invalid value"
+  }
+}

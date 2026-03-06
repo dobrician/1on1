@@ -1,0 +1,14 @@
+{
+  "validation": {
+    "required": "Acest câmp este obligatoriu",
+    "invalidEmail": "Introduceți o adresă de email validă",
+    "minLength": "Trebuie să aibă cel puțin {min} caractere",
+    "maxLength": "Trebuie să aibă cel mult {max} caractere",
+    "passwordUppercase": "Trebuie să conțină cel puțin o literă mare",
+    "passwordLowercase": "Trebuie să conțină cel puțin o literă mică",
+    "passwordNumber": "Trebuie să conțină cel puțin o cifră",
+    "passwordsMatch": "Parolele nu se potrivesc",
+    "invalidUrl": "Trebuie să fie un URL valid",
+    "invalidType": "Valoare invalidă"
+  }
+}

@@ -12,6 +12,16 @@
     "search": "Caută...",
     "noResults": "Niciun rezultat găsit",
     "error": "Ceva nu a funcționat",
-    "retry": "\u00cencearcă din nou"
+    "retry": "\u00cencearcă din nou",
+    "errors": {
+      "unauthorized": "Autentificați-vă pentru a continua",
+      "forbidden": "Nu aveți permisiunea să faceți acest lucru",
+      "notFound": "Resursa solicitată nu a fost găsită",
+      "badRequest": "Cerere invalidă",
+      "rateLimited": "Prea multe cereri. \u00cencercați din nou mai târziu",
+      "serverError": "Ceva nu a funcționat. \u00cencercați din nou.",
+      "networkError": "Nu se poate conecta. Verificați conexiunea la internet.",
+      "failedTo": "{action} a eșuat. \u00cencercați din nou."
+    }
   }
 }

@@ -12,6 +12,16 @@
     "search": "Search...",
     "noResults": "No results found",
     "error": "Something went wrong",
-    "retry": "Try again"
+    "retry": "Try again",
+    "errors": {
+      "unauthorized": "Please sign in to continue",
+      "forbidden": "You don't have permission to do this",
+      "notFound": "The requested resource was not found",
+      "badRequest": "Invalid request",
+      "rateLimited": "Too many requests. Please try again later",
+      "serverError": "Something went wrong. Please try again.",
+      "networkError": "Unable to connect. Check your internet connection.",
+      "failedTo": "Failed to {action}. Please try again."
+    }
   }
 }

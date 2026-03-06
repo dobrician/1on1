@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import { useTranslations, useFormatter } from "next-intl";
+import { Star } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -11,6 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { ScoreSparkline } from "./score-sparkline";
+import { cn } from "@/lib/utils";
 
 export interface PreviousSession {
   id: string;
@@ -59,18 +61,51 @@ function formatAnswerValue(
       }
       return <span className="text-muted-foreground">{t("noAnswer")}</span>;
     }
-    case "rating_1_5":
-    case "rating_1_10":
+    case "rating_1_5": {
+      if (answerNumeric === null) {
+        return <span className="text-muted-foreground">{t("noAnswer")}</span>;
+      }
+      const v = Number(answerNumeric);
+      return (
+        <span className="flex items-center gap-0.5">
+          {[1, 2, 3, 4, 5].map((i) => (
+            <Star
+              key={i}
+              className={cn("h-4 w-4", i <= v ? "fill-amber-400 text-amber-400" : "text-muted-foreground/25")}
+            />
+          ))}
+        </span>
+      );
+    }
+    case "rating_1_10": {
+      if (answerNumeric === null) {
+        return <span className="text-muted-foreground">{t("noAnswer")}</span>;
+      }
+      const v = Number(answerNumeric);
+      return (
+        <span className="flex items-center gap-0.5">
+          {Array.from({ length: 10 }, (_, i) => (
+            <span
+              key={i}
+              className={cn("h-2.5 w-3.5 rounded-sm", i < v ? "bg-primary" : "bg-muted-foreground/20")}
+            />
+          ))}
+          <span className="ml-1.5 text-xs text-muted-foreground">{v}/10</span>
+        </span>
+      );
+    }
     case "mood": {
       if (answerNumeric === null) {
         return <span className="text-muted-foreground">{t("noAnswer")}</span>;
       }
-      const label =
-        answerType === "mood"
-          ? getMoodLabel(Number(answerNumeric), t)
-          : `${answerNumeric}/${answerType === "rating_1_10" ? "10" : "5"}`;
+      const MOOD_EMOJIS = ["😞", "😟", "😐", "🙂", "😄"];
+      const v = Number(answerNumeric);
+      const emoji = MOOD_EMOJIS[v - 1] ?? "😐";
       return (
-        <span className="font-medium tabular-nums">{label}</span>
+        <span className="flex items-center gap-1.5">
+          <span className="text-xl" role="img" aria-hidden="true">{emoji}</span>
+          <span>{getMoodLabel(v, t)}</span>
+        </span>
       );
     }
     case "multiple_choice": {

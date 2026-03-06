@@ -13,7 +13,9 @@ import {
   Loader2,
   User,
   CalendarDays,
+  Star,
 } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -57,41 +59,80 @@ const SCORABLE_TYPES = new Set([
   "mood",
 ]);
 
-function formatAnswerDisplay(
+const MOOD_ENTRIES = [
+  { emoji: "😞", key: "moodVeryBad" },
+  { emoji: "😟", key: "moodBad" },
+  { emoji: "😐", key: "moodNeutral" },
+  { emoji: "🙂", key: "moodGood" },
+  { emoji: "😄", key: "moodGreat" },
+] as const;
+
+function renderAnswerDisplay(
   answerType: string,
   value: AnswerValue | undefined,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any -- dynamic translation keys
   t: (key: any) => string
-): string {
-  if (!value) return t("notAnswered");
+): React.ReactNode {
+  if (!value) return <span className="italic">{t("notAnswered")}</span>;
 
   switch (answerType) {
     case "text":
-      return value.answerText || t("notAnswered");
-    case "rating_1_5":
-      return value.answerNumeric !== undefined
-        ? `${value.answerNumeric} / 5`
-        : t("notAnswered");
-    case "rating_1_10":
-      return value.answerNumeric !== undefined
-        ? `${value.answerNumeric} / 10`
-        : t("notAnswered");
-    case "yes_no":
-      if (value.answerNumeric === undefined) return t("notAnswered");
-      return value.answerNumeric === 1 ? t("yes") : t("no");
-    case "mood": {
-      const moodKeys = ["moodVeryBad", "moodBad", "moodNeutral", "moodGood", "moodGreat"] as const;
-      return value.answerNumeric !== undefined
-        ? t(moodKeys[(value.answerNumeric ?? 1) - 1] ?? "moodNeutral")
-        : t("notAnswered");
+      return value.answerText || <span className="italic">{t("notAnswered")}</span>;
+
+    case "rating_1_5": {
+      if (value.answerNumeric === undefined) return <span className="italic">{t("notAnswered")}</span>;
+      const v = value.answerNumeric;
+      return (
+        <span className="flex items-center gap-0.5">
+          {[1, 2, 3, 4, 5].map((i) => (
+            <Star
+              key={i}
+              className={cn("h-4 w-4", i <= v ? "fill-amber-400 text-amber-400" : "text-muted-foreground/25")}
+            />
+          ))}
+        </span>
+      );
     }
+
+    case "rating_1_10": {
+      if (value.answerNumeric === undefined) return <span className="italic">{t("notAnswered")}</span>;
+      const v = value.answerNumeric;
+      return (
+        <span className="flex items-center gap-0.5">
+          {Array.from({ length: 10 }, (_, i) => (
+            <span
+              key={i}
+              className={cn("h-2.5 w-3.5 rounded-sm", i < v ? "bg-primary" : "bg-muted-foreground/20")}
+            />
+          ))}
+          <span className="ml-1.5 text-xs text-muted-foreground">{v}/10</span>
+        </span>
+      );
+    }
+
+    case "yes_no":
+      if (value.answerNumeric === undefined) return <span className="italic">{t("notAnswered")}</span>;
+      return value.answerNumeric === 1 ? t("yes") : t("no");
+
+    case "mood": {
+      if (value.answerNumeric === undefined) return <span className="italic">{t("notAnswered")}</span>;
+      const entry = MOOD_ENTRIES[(value.answerNumeric ?? 1) - 1] ?? MOOD_ENTRIES[2];
+      return (
+        <span className="flex items-center gap-1.5">
+          <span className="text-xl" role="img" aria-hidden="true">{entry.emoji}</span>
+          <span>{t(entry.key)}</span>
+        </span>
+      );
+    }
+
     case "multiple_choice":
       if (value.answerJson && Array.isArray(value.answerJson)) {
         return (value.answerJson as string[]).join(", ");
       }
-      return value.answerText || t("notAnswered");
+      return value.answerText || <span className="italic">{t("notAnswered")}</span>;
+
     default:
-      return value.answerText || t("notAnswered");
+      return value.answerText || <span className="italic">{t("notAnswered")}</span>;
   }
 }
 
@@ -253,9 +294,9 @@ export function SummaryScreen({
                           </Badge>
                         )}
                       </div>
-                      <p className="mt-1 text-sm text-muted-foreground">
-                        {formatAnswerDisplay(question.answerType, answer, t)}
-                      </p>
+                      <div className="mt-1 text-sm text-muted-foreground">
+                        {renderAnswerDisplay(question.answerType, answer, t)}
+                      </div>
                     </div>
                   );
                 })}

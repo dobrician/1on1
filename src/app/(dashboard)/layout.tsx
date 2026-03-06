@@ -3,6 +3,7 @@ import { SessionProvider } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { QueryProvider } from "@/providers/query-provider";
 import { TopNav } from "@/components/layout/top-nav";
+import { ImpersonationBanner } from "@/components/admin/impersonation-banner";
 import { Toaster } from "@/components/ui/sonner";
 import { CommandPalette } from "@/components/search/command-palette";
 import { ThemeColorProvider } from "@/components/theme-color-provider";
@@ -46,6 +47,7 @@ export default async function DashboardLayout({
       <QueryProvider>
         <ThemeColorProvider colorTheme={colorTheme}>
           <div className="min-h-screen flex flex-col">
+            <ImpersonationBanner />
             <TopNav />
             <main className="flex-1 px-4 py-6 sm:px-6 lg:px-8">
               <div className="mx-auto max-w-7xl animate-fade-in">{children}</div>

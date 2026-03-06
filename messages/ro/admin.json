@@ -1,0 +1,8 @@
+{
+  "admin": {
+    "impersonation": {
+      "banner": "Impersonezi {name} (admin: {admin})",
+      "returnToAdmin": "Revenire la admin"
+    }
+  }
+}

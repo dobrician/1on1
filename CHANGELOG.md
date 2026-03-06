@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.1.4] - 2026-03-06
+
+### Added
+- Admin impersonation: admins can impersonate any active non-admin user in their tenant via the People table actions menu
+- Sticky amber banner displays "Impersonating [Name]" with a "Return to admin" button while in impersonation mode
+- Impersonation uses an HttpOnly cookie (`1on1_impersonate`) — the entire session is overlaid server-side in the Auth.js session callback
+- API routes `POST /api/admin/impersonate` (start) and `DELETE /api/admin/impersonate` (stop) with same-tenant, active-user, no-admin-to-admin guards
+
 ## [1.1.3] - 2026-03-06
 
 ### Changed

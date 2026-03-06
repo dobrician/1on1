@@ -12,6 +12,7 @@ import type en_history from "../messages/en/history.json";
 import type en_search from "../messages/en/search.json";
 import type en_settings from "../messages/en/settings.json";
 import type en_validation from "../messages/en/validation.json";
+import type en_admin from "../messages/en/admin.json";
 
 type Messages = typeof en_common &
   typeof en_auth &
@@ -26,7 +27,8 @@ type Messages = typeof en_common &
   typeof en_history &
   typeof en_search &
   typeof en_settings &
-  typeof en_validation;
+  typeof en_validation &
+  typeof en_admin;
 
 declare module "next-intl" {
   interface AppConfig {

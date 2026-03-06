@@ -17,6 +17,7 @@ declare module "next-auth" {
       emailVerified: Date | null;
       uiLanguage: string;
       contentLanguage: string;
+      impersonatedBy?: { id: string; name: string };
     };
   }
 }

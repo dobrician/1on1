@@ -138,13 +138,47 @@ const config = {
 
       return token;
     },
-    session({ session, token }) {
+    async session({ session, token }) {
       session.user.id = token.userId;
       session.user.tenantId = token.tenantId;
       session.user.role = token.role;
       session.user.emailVerified = token.emailVerified;
       session.user.uiLanguage = token.uiLanguage;
       session.user.contentLanguage = token.contentLanguage;
+
+      // Overlay session with impersonated user when admin has set the cookie
+      if (token.role === "admin") {
+        try {
+          const { cookies } = await import("next/headers");
+          const cookieStore = await cookies();
+          const impersonateCookie = cookieStore.get("1on1_impersonate");
+          if (impersonateCookie?.value) {
+            const targetUser = await adminDb.query.users.findFirst({
+              where: (u, { eq, and }) =>
+                and(
+                  eq(u.id, impersonateCookie.value),
+                  eq(u.tenantId, token.tenantId),
+                  eq(u.isActive, true)
+                ),
+            });
+            if (targetUser && targetUser.role !== "admin") {
+              session.user.impersonatedBy = {
+                id: token.userId,
+                name: (token.name as string) ?? "",
+              };
+              session.user.id = targetUser.id;
+              session.user.role = targetUser.role;
+              session.user.emailVerified = targetUser.emailVerified;
+              session.user.uiLanguage = targetUser.language ?? "en";
+              session.user.name = `${targetUser.firstName} ${targetUser.lastName}`;
+              session.user.email = targetUser.email ?? "";
+            }
+          }
+        } catch {
+          // cookies() unavailable in this context (e.g. static generation) — skip
+        }
+      }
+
       return session;
     },
   },

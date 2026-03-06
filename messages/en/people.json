@@ -68,7 +68,8 @@
       "reactivate": "Reactivate",
       "deactivated": "User deactivated",
       "reactivated": "User reactivated",
-      "inviteResent": "Invite resent"
+      "inviteResent": "Invite resent",
+      "impersonate": "Impersonate"
     },
     "managerSelect": {
       "none": "None",

@@ -68,7 +68,8 @@
       "reactivate": "Reactiveaza",
       "deactivated": "Utilizator dezactivat",
       "reactivated": "Utilizator reactivat",
-      "inviteResent": "Invitatie retrimisa"
+      "inviteResent": "Invitatie retrimisa",
+      "impersonate": "Impersoneaza"
     },
     "managerSelect": {
       "none": "Niciunul",

@@ -19,7 +19,7 @@ Requirements for internationalization milestone. Each maps to roadmap phases.
 
 - [ ] **UITR-01**: User can switch UI language between English and Romanian via language picker in user menu
 - [ ] **UITR-02**: All navigation, layout, and shared component strings are translated
-- [ ] **UITR-03**: All auth pages (login, register, invite, forgot-password, verification, reset) are translated
+- [x] **UITR-03**: All auth pages (login, register, invite, forgot-password, verification, reset) are translated
 - [ ] **UITR-04**: All dashboard components (stats, upcoming, overdue, recent) are translated
 - [ ] **UITR-05**: All session wizard components (steps, context panel, talking points, notes) are translated
 - [ ] **UITR-06**: All people/teams management pages are translated
@@ -42,8 +42,8 @@ Requirements for internationalization milestone. Each maps to roadmap phases.
 
 ### Validation
 
-- [ ] **VALD-01**: Zod form validation error messages display in user's UI language
-- [ ] **VALD-02**: API error responses display in user's UI language
+- [x] **VALD-01**: Zod form validation error messages display in user's UI language
+- [x] **VALD-02**: API error responses display in user's UI language
 
 ### Romanian
 
@@ -94,7 +94,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | INFRA-05 | Phase 11 | Complete |
 | UITR-01 | Phase 12 | Pending |
 | UITR-02 | Phase 12 | Pending |
-| UITR-03 | Phase 12 | Pending |
+| UITR-03 | Phase 12 | Complete |
 | UITR-04 | Phase 12 | Pending |
 | UITR-05 | Phase 12 | Pending |
 | UITR-06 | Phase 12 | Pending |
@@ -106,8 +106,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | FMT-02 | Phase 12 | Pending |
 | FMT-03 | Phase 12 | Pending |
 | FMT-04 | Phase 12 | Pending |
-| VALD-01 | Phase 12 | Pending |
-| VALD-02 | Phase 12 | Pending |
+| VALD-01 | Phase 12 | Complete |
+| VALD-02 | Phase 12 | Complete |
 | MAIL-01 | Phase 13 | Pending |
 | MAIL-02 | Phase 13 | Pending |
 | ROLN-01 | Phase 14 | Pending |

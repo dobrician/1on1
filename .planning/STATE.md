@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Internationalization
-status: completed
-stopped_at: Completed 11-02-PLAN.md
-last_updated: "2026-03-05T21:30:43.686Z"
-last_activity: 2026-03-05 -- Executed 11-02 login translation and language switcher
+status: in-progress
+stopped_at: Completed 12-01-PLAN.md
+last_updated: "2026-03-06T10:56:32Z"
+last_activity: 2026-03-06 -- Executed 12-01 validation & auth translation
 progress:
   total_phases: 4
   completed_phases: 1
-  total_plans: 2
-  completed_plans: 2
-  percent: 25
+  total_plans: 7
+  completed_plans: 3
+  percent: 43
 ---
 
 # Project State
@@ -21,29 +21,30 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-05)
 
 **Core value:** The AI context layer that makes every meeting smarter than the last
-**Current focus:** v1.1 Internationalization -- Phase 11 complete (2/2 plans), Phase 12 next
+**Current focus:** v1.1 Internationalization -- Phase 12 in progress (1/5 plans complete)
 
 ## Current Position
 
-Phase: 11 of 14 (i18n Foundation) -- COMPLETE
-Plan: 2 of 2 in current phase (all done)
-Status: Phase Complete
-Last activity: 2026-03-05 -- Executed 11-02 login translation and language switcher
+Phase: 12 of 14 (UI Translation) -- IN PROGRESS
+Plan: 1 of 5 in current phase (12-01 complete)
+Status: In Progress
+Last activity: 2026-03-06 -- Executed 12-01 validation & auth translation
 
-Progress: [##░░░░░░░░] 25%
+Progress: [####░░░░░░] 43%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 2 (v1.1)
-- Average duration: 4.5min
-- Total execution time: 9min
+- Total plans completed: 3 (v1.1)
+- Average duration: 6.7min
+- Total execution time: 20min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 11-i18n-foundation | 2/2 | 9min | 4.5min |
+| 12-ui-translation | 1/5 | 11min | 11min |
 
 *Updated after each plan completion*
 
@@ -63,6 +64,9 @@ Recent decisions affecting current work:
 - [11-02]: Hidden <data> element for formatting proof (no visual impact on login page)
 - [11-02]: Language names as proper nouns (English, Romana) not translated -- standard i18n convention
 - [11-02]: Full page reload after language switch (server-side message loading requires fresh request)
+- [12-01]: Zod v4 error map adapted -- single-arg signature, 'origin' not 'type', 'invalid_format' not 'invalid_string'
+- [12-01]: Zod schema .refine() messages remain English (schemas language-agnostic per design)
+- [12-01]: Server components use getTranslations, client components use useTranslations
 
 ### Blockers/Concerns
 
@@ -70,6 +74,6 @@ None active.
 
 ## Session Continuity
 
-Last session: 2026-03-05T21:26:13Z
-Stopped at: Completed 11-02-PLAN.md
-Resume file: .planning/phases/11-i18n-foundation/11-02-SUMMARY.md
+Last session: 2026-03-06T10:45:11Z
+Stopped at: Completed 12-01-PLAN.md
+Resume file: .planning/phases/12-ui-translation/12-01-SUMMARY.md

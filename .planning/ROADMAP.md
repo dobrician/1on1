@@ -61,14 +61,14 @@ Plans:
   2. All pages display translated strings with no hardcoded English visible: auth pages, dashboard, session wizard, people/teams, templates, analytics, settings, and command palette
   3. A Romanian-locale user sees dates as "05.03.2026", numbers as "1.234,56", and relative times as "acum 3 zile" -- an English-locale user sees US formats -- consistently across all pages including analytics chart axes, tooltips, and labels
   4. A Romanian-locale user submitting an invalid form sees validation errors in Romanian; API error responses (rate limits, permission denied, not found) display in the user's UI language in toast notifications
-**Plans**: TBD
+**Plans**: 5 plans
 
 Plans:
-- [ ] 12-01: TBD
-- [ ] 12-02: TBD
-- [ ] 12-03: TBD
-- [ ] 12-04: TBD
-- [ ] 12-05: TBD
+- [ ] 12-01-PLAN.md — Validation infrastructure (useZodI18nErrors hook, validation namespace, API error keys) and auth page translations
+- [ ] 12-02-PLAN.md — Dashboard, history, action items, and series date/number formatting replacement
+- [ ] 12-03-PLAN.md — Session wizard full translation (all ~20 components, widgets, context panel, dates)
+- [ ] 12-04-PLAN.md — People/teams management and template builder translation
+- [ ] 12-05-PLAN.md — Analytics charts locale-aware formatting, settings pages, and verification of nav/command palette
 
 ### Phase 13: Email Translation
 **Goal**: All email notifications render in the correct language for the recipient, using a standalone translator that works outside the Next.js request lifecycle

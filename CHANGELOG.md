@@ -14,6 +14,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Changed
 - `sendVerificationEmail` resolves `users.language`, calls `createEmailTranslator`, passes translated props and subject — no hardcoded English strings
 - `sendPasswordResetEmail` resolves `users.language`, calls `createEmailTranslator`, passes translated props and subject — no hardcoded English strings
+- `POST /api/invites` and `POST /api/invites/resend` resolve `tenants.contentLanguage`, call `createEmailTranslator`, pass translated props and subject to `InviteEmail`
+- `sendPostSessionSummaryEmails` resolves `tenants.contentLanguage`, builds per-recipient `labels` bags with translated strings for `SessionSummaryEmail`
+- `processPreMeeting` in sender.ts resolves `tenants.contentLanguage`, passes translated heading/greeting/body/button/footer/subject to `PreMeetingReminderEmail`
+- `processAgendaPrep` in sender.ts resolves `tenants.contentLanguage`, uses variant-specific translation keys for body and button label
 - `createEmailTranslator` messages typed as `Record<string, any>` to allow TypeScript to traverse nested message keys without resolving to `never`
 - Email templates (invite, verification, password-reset) accept translated string props (`heading`, `body`, `buttonLabel`, `footer`) — hardcoded English strings removed from JSX
 - `EmailLayout` default `footerText` changed from hardcoded English to empty string — callers always pass translated footer

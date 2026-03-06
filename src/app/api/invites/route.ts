@@ -11,6 +11,7 @@ import { inviteTokens } from "@/lib/db/schema";
 import { logAuditEvent } from "@/lib/audit/log";
 import { InviteEmail } from "@/lib/email/templates/invite";
 import { getTransport, getEmailFrom } from "@/lib/email/send";
+import { createEmailTranslator } from "@/lib/email/translator";
 
 function getBaseUrl(): string {
   if (process.env.NEXT_PUBLIC_APP_URL) return process.env.NEXT_PUBLIC_APP_URL;
@@ -45,12 +46,14 @@ export async function POST(request: Request) {
   const tenantId = session.user.tenantId;
   const inviterId = session.user.id;
 
-  // Get tenant name and inviter name for the email
+  // Get tenant name, content language, and inviter name for the email
   const tenant = await adminDb.query.tenants.findFirst({
     where: (t, { eq: e }) => e(t.id, tenantId),
-    columns: { name: true },
+    columns: { name: true, contentLanguage: true },
   });
   const organizationName = tenant?.name || "your organization";
+  const locale = tenant?.contentLanguage ?? "en";
+  const t = await createEmailTranslator(locale);
 
   const inviter = await adminDb.query.users.findFirst({
     where: (u, { eq: e }) => e(u.id, inviterId),
@@ -128,18 +131,17 @@ export async function POST(request: Request) {
           organizationName,
           inviterName,
           role,
-          // TODO(13-03): replace with createEmailTranslator
-          heading: "You have been invited",
-          body: `${inviterName} has invited you to join ${organizationName} as a ${role}. Click the button below to set up your account and get started.`,
-          buttonLabel: "Accept Invitation",
-          footer: "This invitation expires in 7 days. If you did not expect this invitation, you can safely ignore this email.",
+          heading: t("emails.invite.heading"),
+          body: t("emails.invite.body", { inviterName, organizationName, role }),
+          buttonLabel: t("emails.invite.button"),
+          footer: t("emails.invite.footer"),
         })
       );
 
       await getTransport().sendMail({
         from: getEmailFrom(),
         to: email,
-        subject: `Join ${organizationName} on 1on1`,
+        subject: t("emails.invite.subject", { organizationName }),
         html,
       });
 

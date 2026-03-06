@@ -3,10 +3,12 @@ import { render } from "@react-email/render";
 import { adminDb } from "@/lib/db";
 import { meetingSeries } from "@/lib/db/schema/series";
 import { users } from "@/lib/db/schema/users";
+import { tenants } from "@/lib/db/schema/tenants";
 import { aiNudges } from "@/lib/db/schema/nudges";
 import { getTransport, getEmailFrom } from "@/lib/email/send";
 import { PreMeetingReminderEmail } from "@/lib/email/templates/pre-meeting-reminder";
 import { AgendaPrepEmail } from "@/lib/email/templates/agenda-prep";
+import { createEmailTranslator } from "@/lib/email/translator";
 
 interface ClaimedNotification {
   id: string;
@@ -62,6 +64,15 @@ async function processPreMeeting(
     throw new Error(`Series ${notification.reference_id} not found`);
   }
 
+  // Resolve tenant content language for email translation
+  const [tenantRow] = await adminDb
+    .select({ contentLanguage: tenants.contentLanguage })
+    .from(tenants)
+    .where(eq(tenants.id, notification.tenant_id))
+    .limit(1);
+  const locale = tenantRow?.contentLanguage ?? "en";
+  const t = await createEmailTranslator(locale);
+
   const [recipient, manager, report] = await Promise.all([
     adminDb.query.users.findFirst({
       where: eq(users.id, notification.user_id),
@@ -110,19 +121,18 @@ async function processPreMeeting(
       meetingDate,
       meetingTime,
       seriesUrl,
-      // TODO(13-03): replace with createEmailTranslator
-      heading: "Upcoming 1:1 Meeting",
-      greeting: `Hi ${recipientName},`,
-      body: `You have a 1:1 meeting with ${otherPartyName} coming up on ${meetingDate} at ${meetingTime}.`,
-      buttonLabel: "Open Meeting Series",
-      footer: "",
+      heading: t("emails.preMeeting.heading"),
+      greeting: t("emails.preMeeting.greeting", { recipientName }),
+      body: t("emails.preMeeting.body", { otherPartyName, meetingDate, meetingTime }),
+      buttonLabel: t("emails.preMeeting.button"),
+      footer: t("emails.preMeeting.footer"),
     })
   );
 
   await getTransport().sendMail({
     from: getEmailFrom(),
     to: recipient.email,
-    subject: `Upcoming 1:1 with ${otherPartyName}`,
+    subject: t("emails.preMeeting.subject", { otherPartyName }),
     html,
   });
 }
@@ -140,6 +150,15 @@ async function processAgendaPrep(
   if (!series) {
     throw new Error(`Series ${notification.reference_id} not found`);
   }
+
+  // Resolve tenant content language for email translation
+  const [tenantRow] = await adminDb
+    .select({ contentLanguage: tenants.contentLanguage })
+    .from(tenants)
+    .where(eq(tenants.id, notification.tenant_id))
+    .limit(1);
+  const locale = tenantRow?.contentLanguage ?? "en";
+  const t = await createEmailTranslator(locale);
 
   const [recipient, manager, report] = await Promise.all([
     adminDb.query.users.findFirst({
@@ -195,11 +214,12 @@ async function processAgendaPrep(
   const baseUrl = getBaseUrl();
   const seriesUrl = `${baseUrl}/sessions/${series.id}`;
 
-  // TODO(13-03): replace with createEmailTranslator
   const body = isManager
-    ? `Your 1:1 with ${otherPartyName} is on ${meetingDate}. Here are some things to consider before your session.`
-    : `Your 1:1 with ${otherPartyName} is on ${meetingDate}. Take a moment to add your talking points before the meeting.`;
-  const buttonLabel = isManager ? "Open Meeting Series" : "Add Talking Points";
+    ? t("emails.agendaPrep.bodyManager", { otherPartyName, meetingDate })
+    : t("emails.agendaPrep.bodyReport", { otherPartyName, meetingDate });
+  const buttonLabel = isManager
+    ? t("emails.agendaPrep.buttonManager")
+    : t("emails.agendaPrep.buttonReport");
 
   const html = await render(
     AgendaPrepEmail({
@@ -209,19 +229,19 @@ async function processAgendaPrep(
       meetingDate,
       seriesUrl,
       nudges: nudges.length > 0 ? nudges : undefined,
-      heading: "Prepare for Your 1:1",
-      greeting: `Hi ${recipientName},`,
+      heading: t("emails.agendaPrep.heading"),
+      greeting: t("emails.agendaPrep.greeting", { recipientName }),
       body,
-      aiNudgesLabel: "AI Coaching Nudges",
+      aiNudgesLabel: t("emails.agendaPrep.aiNudges"),
       buttonLabel,
-      footer: "",
+      footer: t("emails.agendaPrep.footer"),
     })
   );
 
   await getTransport().sendMail({
     from: getEmailFrom(),
     to: recipient.email,
-    subject: `Prepare for your 1:1 with ${otherPartyName}`,
+    subject: t("emails.agendaPrep.subject", { otherPartyName }),
     html,
   });
 }

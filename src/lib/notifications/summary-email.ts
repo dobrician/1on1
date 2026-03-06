@@ -9,7 +9,9 @@ import {
   actionItems,
   users,
 } from "@/lib/db/schema";
+import { tenants } from "@/lib/db/schema/tenants";
 import { eq, and } from "drizzle-orm";
+import { createEmailTranslator } from "@/lib/email/translator";
 
 /**
  * Send post-session summary emails to both manager and report.
@@ -58,6 +60,15 @@ export async function sendPostSessionSummaryEmails(params: {
     );
     return;
   }
+
+  // Resolve tenant content language for email translation
+  const [tenantRow] = await adminDb
+    .select({ contentLanguage: tenants.contentLanguage })
+    .from(tenants)
+    .where(eq(tenants.id, tenantId))
+    .limit(1);
+  const locale = tenantRow?.contentLanguage ?? "en";
+  const t = await createEmailTranslator(locale);
 
   const [manager] = await adminDb
     .select({
@@ -108,13 +119,12 @@ export async function sendPostSessionSummaryEmails(params: {
 
   const actionItemsList = sessionActionItems.map((ai) => {
     const assigneeName = `${ai.assigneeFirstName} ${ai.assigneeLastName}`;
-    // TODO(13-03): build assignedToLabel/dueLabel via createEmailTranslator
     return {
       title: ai.title,
       assigneeName,
       dueDate: ai.dueDate,
-      assignedToLabel: `Assigned to: ${assigneeName}`,
-      dueLabel: ai.dueDate ? `Due: ${ai.dueDate}` : null,
+      assignedToLabel: t("emails.sessionSummary.assignedTo", { assigneeName }),
+      dueLabel: ai.dueDate ? t("emails.sessionSummary.due", { dueDate: ai.dueDate }) : null,
     };
   });
 
@@ -145,29 +155,32 @@ export async function sendPostSessionSummaryEmails(params: {
 
   const transport = getTransport();
   const from = getEmailFrom();
-  const subject = `1:1 Session #${session.sessionNumber} Summary`;
+  const subject = t("emails.sessionSummary.subject", { sessionNumber: session.sessionNumber });
 
-  // TODO(13-03): replace these hardcoded English labels with createEmailTranslator
+  const baseLabels = {
+    heading: t("emails.sessionSummary.heading", { sessionNumber: session.sessionNumber }),
+    score: sessionScore !== null ? t("emails.sessionSummary.score", { score: sessionScore.toFixed(1) }) : "",
+    keyTakeaways: t("emails.sessionSummary.keyTakeaways"),
+    areasOfConcern: t("emails.sessionSummary.areasOfConcern"),
+    aiPending: t("emails.sessionSummary.aiPending"),
+    actionItems: t("emails.sessionSummary.actionItems"),
+    assignedTo: t("emails.sessionSummary.assignedTo", { assigneeName: "" }),
+    due: t("emails.sessionSummary.due", { dueDate: "" }),
+    managerInsights: t("emails.sessionSummary.managerInsights"),
+    coachingSuggestions: t("emails.sessionSummary.coachingSuggestions"),
+    riskIndicators: t("emails.sessionSummary.riskIndicators"),
+    button: t("emails.sessionSummary.button"),
+    footer: t("emails.sessionSummary.footer"),
+  };
+
   const labels = {
-    heading: `Session #${session.sessionNumber} Summary`,
-    greeting: `Hi ${report.firstName}, here is the summary of your 1:1 with ${managerName}.`,
-    score: sessionScore !== null ? `Score: ${sessionScore.toFixed(1)} / 5.0` : "",
-    keyTakeaways: "Key Takeaways",
-    areasOfConcern: "Areas of Concern",
-    aiPending: "AI summary is being generated and will be available in the app shortly.",
-    actionItems: "Action Items",
-    assignedTo: "Assigned to",
-    due: "Due",
-    managerInsights: "Manager Insights",
-    coachingSuggestions: "Coaching Suggestions",
-    riskIndicators: "Risk Indicators",
-    button: "View Full Session",
-    footer: "",
+    ...baseLabels,
+    greeting: t("emails.sessionSummary.greeting", { recipientName: report.firstName, otherPartyName: managerName }),
   };
 
   const managerLabels = {
-    ...labels,
-    greeting: `Hi ${manager.firstName}, here is the summary of your 1:1 with ${reportName}.`,
+    ...baseLabels,
+    greeting: t("emails.sessionSummary.greeting", { recipientName: manager.firstName, otherPartyName: reportName }),
   };
 
   // Send report email (no addendum)

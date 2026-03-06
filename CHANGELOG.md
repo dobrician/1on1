@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Changed
+- All analytics chart components (score-trend, velocity, adherence, session-comparison, team-heatmap, category-breakdown, team-overview) use locale-aware `useFormatter()` for dates and numbers instead of hardcoded `toLocaleDateString("en-US")` and `.toFixed()`
+- Audit log page and client use `getTranslations`/`useFormatter` for fully translated settings UI
+- Analytics page uses `getFormatter` from next-intl/server for locale-aware number display
+
 ### Added
 - `useZodI18nErrors` hook for translated Zod validation error messages (EN + RO)
 - `useApiErrorToast` hook for translated API error toast messages (EN + RO)

@@ -1,10 +1,10 @@
 import { Text, Button } from "@react-email/components";
 import { EmailLayout } from "./components/email-layout";
 import {
-  heading,
-  paragraph,
+  heading as headingStyle,
+  paragraph as paragraphStyle,
   subheading,
-  button,
+  button as buttonStyle,
   card,
   listItem,
   metadataRow,
@@ -22,32 +22,35 @@ interface AgendaPrepEmailProps {
   meetingDate: string;
   seriesUrl: string;
   nudges?: Nudge[];
+  // Translated string props
+  heading: string;
+  greeting: string;
+  body: string;              // caller picks bodyReport or bodyManager and pre-interpolates
+  aiNudgesLabel: string;
+  buttonLabel: string;
+  footer: string;
 }
 
 export function AgendaPrepEmail({
   variant,
-  recipientName,
-  otherPartyName,
-  meetingDate,
   seriesUrl,
   nudges,
+  heading,
+  greeting,
+  body,
+  aiNudgesLabel,
+  buttonLabel,
+  footer,
 }: AgendaPrepEmailProps) {
   return (
-    <EmailLayout>
-      <Text style={heading}>Prepare for Your 1:1</Text>
-      <Text style={paragraph}>
-        Hi {recipientName},
-      </Text>
-      <Text style={paragraph}>
-        Your 1:1 with {otherPartyName} is on <strong>{meetingDate}</strong>.
-        {variant === "report"
-          ? " Take a moment to add your talking points before the meeting."
-          : " Here are some things to consider before your session."}
-      </Text>
+    <EmailLayout footerText={footer}>
+      <Text style={headingStyle}>{heading}</Text>
+      <Text style={paragraphStyle}>{greeting}</Text>
+      <Text style={paragraphStyle}>{body}</Text>
 
       {variant === "manager" && nudges && nudges.length > 0 && (
         <>
-          <Text style={subheading}>AI Coaching Nudges</Text>
+          <Text style={subheading}>{aiNudgesLabel}</Text>
           {nudges.map((nudge, i) => (
             <div key={i} style={card}>
               <Text style={{ ...listItem, marginBottom: "4px" }}>
@@ -59,8 +62,8 @@ export function AgendaPrepEmail({
         </>
       )}
 
-      <Button style={button} href={seriesUrl}>
-        {variant === "manager" ? "Open Meeting Series" : "Add Talking Points"}
+      <Button style={buttonStyle} href={seriesUrl}>
+        {buttonLabel}
       </Button>
     </EmailLayout>
   );

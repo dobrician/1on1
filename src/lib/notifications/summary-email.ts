@@ -106,11 +106,17 @@ export async function sendPostSessionSummaryEmails(params: {
       )
     );
 
-  const actionItemsList = sessionActionItems.map((ai) => ({
-    title: ai.title,
-    assigneeName: `${ai.assigneeFirstName} ${ai.assigneeLastName}`,
-    dueDate: ai.dueDate,
-  }));
+  const actionItemsList = sessionActionItems.map((ai) => {
+    const assigneeName = `${ai.assigneeFirstName} ${ai.assigneeLastName}`;
+    // TODO(13-03): build assignedToLabel/dueLabel via createEmailTranslator
+    return {
+      title: ai.title,
+      assigneeName,
+      dueDate: ai.dueDate,
+      assignedToLabel: `Assigned to: ${assigneeName}`,
+      dueLabel: ai.dueDate ? `Due: ${ai.dueDate}` : null,
+    };
+  });
 
   const viewSessionUrl = `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/sessions/${sessionId}/summary`;
   const sessionScore = session.sessionScore
@@ -141,6 +147,29 @@ export async function sendPostSessionSummaryEmails(params: {
   const from = getEmailFrom();
   const subject = `1:1 Session #${session.sessionNumber} Summary`;
 
+  // TODO(13-03): replace these hardcoded English labels with createEmailTranslator
+  const labels = {
+    heading: `Session #${session.sessionNumber} Summary`,
+    greeting: `Hi ${report.firstName}, here is the summary of your 1:1 with ${managerName}.`,
+    score: sessionScore !== null ? `Score: ${sessionScore.toFixed(1)} / 5.0` : "",
+    keyTakeaways: "Key Takeaways",
+    areasOfConcern: "Areas of Concern",
+    aiPending: "AI summary is being generated and will be available in the app shortly.",
+    actionItems: "Action Items",
+    assignedTo: "Assigned to",
+    due: "Due",
+    managerInsights: "Manager Insights",
+    coachingSuggestions: "Coaching Suggestions",
+    riskIndicators: "Risk Indicators",
+    button: "View Full Session",
+    footer: "",
+  };
+
+  const managerLabels = {
+    ...labels,
+    greeting: `Hi ${manager.firstName}, here is the summary of your 1:1 with ${reportName}.`,
+  };
+
   // Send report email (no addendum)
   try {
     const reportHtml = await render(
@@ -153,6 +182,7 @@ export async function sendPostSessionSummaryEmails(params: {
         aiSummary,
         actionItems: actionItemsList,
         viewSessionUrl,
+        labels,
       })
     );
 
@@ -200,6 +230,7 @@ export async function sendPostSessionSummaryEmails(params: {
         actionItems: actionItemsList,
         viewSessionUrl,
         aiAddendum,
+        labels: managerLabels,
       })
     );
 

@@ -1,10 +1,10 @@
 import { Text, Button } from "@react-email/components";
 import { EmailLayout } from "./components/email-layout";
 import {
-  heading,
+  heading as headingStyle,
   subheading,
-  paragraph,
-  button,
+  paragraph as paragraphStyle,
+  button as buttonStyle,
   badge,
   listItem,
   metadataRow,
@@ -22,12 +22,31 @@ interface ActionItem {
   title: string;
   assigneeName: string;
   dueDate: string | null;
+  assignedToLabel: string;   // pre-interpolated "Assigned to: Name"
+  dueLabel: string | null;   // pre-interpolated "Due: date" or null
 }
 
 interface AiAddendum {
   sentimentAnalysis: string;
   coachingSuggestions: string[];
   riskIndicators: string[];
+}
+
+interface SessionSummaryLabels {
+  heading: string;           // pre-interpolated by caller: "Session #N Summary"
+  greeting: string;          // pre-interpolated by caller: "Hi Name, here is the summary..."
+  score: string;             // pre-interpolated by caller: "Score: X / 5.0"
+  keyTakeaways: string;
+  areasOfConcern: string;
+  aiPending: string;
+  actionItems: string;
+  assignedTo: string;        // label prefix used by caller for assignedToLabel
+  due: string;               // label prefix used by caller for dueLabel
+  managerInsights: string;
+  coachingSuggestions: string;
+  riskIndicators: string;
+  button: string;
+  footer: string;
 }
 
 interface SessionSummaryEmailProps {
@@ -40,36 +59,33 @@ interface SessionSummaryEmailProps {
   actionItems: ActionItem[];
   viewSessionUrl: string;
   aiAddendum?: AiAddendum | null;
+  // Translated labels
+  labels: SessionSummaryLabels;
 }
 
 export function SessionSummaryEmail({
   variant,
-  recipientName,
-  otherPartyName,
-  sessionNumber,
   sessionScore,
   aiSummary,
   actionItems,
   viewSessionUrl,
   aiAddendum,
+  labels,
 }: SessionSummaryEmailProps) {
   return (
-    <EmailLayout>
-      <Text style={heading}>Session #{sessionNumber} Summary</Text>
-      <Text style={paragraph}>
-        Hi {recipientName}, here is the summary of your 1:1 with{" "}
-        {otherPartyName}.
-      </Text>
+    <EmailLayout footerText={labels.footer}>
+      <Text style={headingStyle}>{labels.heading}</Text>
+      <Text style={paragraphStyle}>{labels.greeting}</Text>
 
       {sessionScore !== null && (
         <Text style={{ ...badge, marginBottom: "24px" }}>
-          Score: {sessionScore.toFixed(1)} / 5.0
+          {labels.score}
         </Text>
       )}
 
       {aiSummary ? (
         <>
-          <Text style={subheading}>Key Takeaways</Text>
+          <Text style={subheading}>{labels.keyTakeaways}</Text>
           {aiSummary.keyTakeaways.map((takeaway, i) => (
             <Text key={i} style={listItem}>
               {takeaway}
@@ -78,7 +94,7 @@ export function SessionSummaryEmail({
 
           {aiSummary.areasOfConcern.length > 0 && (
             <>
-              <Text style={subheading}>Areas of Concern</Text>
+              <Text style={subheading}>{labels.areasOfConcern}</Text>
               {aiSummary.areasOfConcern.map((concern, i) => (
                 <Text key={i} style={listItem}>
                   {concern}
@@ -88,23 +104,22 @@ export function SessionSummaryEmail({
           )}
         </>
       ) : (
-        <Text style={{ ...paragraph, fontStyle: "italic" }}>
-          AI summary is being generated and will be available in the app
-          shortly.
+        <Text style={{ ...paragraphStyle, fontStyle: "italic" }}>
+          {labels.aiPending}
         </Text>
       )}
 
       {actionItems.length > 0 && (
         <>
-          <Text style={subheading}>Action Items</Text>
+          <Text style={subheading}>{labels.actionItems}</Text>
           {actionItems.map((item, i) => (
             <div key={i} style={card}>
               <Text style={{ ...listItem, marginBottom: "4px" }}>
                 {item.title}
               </Text>
               <Text style={metadataRow}>
-                Assigned to: {item.assigneeName}
-                {item.dueDate ? ` | Due: ${item.dueDate}` : ""}
+                {item.assignedToLabel}
+                {item.dueLabel ? ` | ${item.dueLabel}` : ""}
               </Text>
             </div>
           ))}
@@ -114,13 +129,13 @@ export function SessionSummaryEmail({
       {variant === "manager" && aiAddendum && (
         <>
           <div style={divider} />
-          <Text style={subheading}>Manager Insights</Text>
-          <Text style={paragraph}>{aiAddendum.sentimentAnalysis}</Text>
+          <Text style={subheading}>{labels.managerInsights}</Text>
+          <Text style={paragraphStyle}>{aiAddendum.sentimentAnalysis}</Text>
 
           {aiAddendum.coachingSuggestions.length > 0 && (
             <>
               <Text style={{ ...metadataRow, fontWeight: "600" as const }}>
-                Coaching Suggestions
+                {labels.coachingSuggestions}
               </Text>
               {aiAddendum.coachingSuggestions.map((suggestion, i) => (
                 <Text key={i} style={listItem}>
@@ -133,7 +148,7 @@ export function SessionSummaryEmail({
           {aiAddendum.riskIndicators.length > 0 && (
             <>
               <Text style={{ ...metadataRow, fontWeight: "600" as const }}>
-                Risk Indicators
+                {labels.riskIndicators}
               </Text>
               {aiAddendum.riskIndicators.map((risk, i) => (
                 <Text key={i} style={listItem}>
@@ -145,8 +160,8 @@ export function SessionSummaryEmail({
         </>
       )}
 
-      <Button style={button} href={viewSessionUrl}>
-        View Full Session
+      <Button style={buttonStyle} href={viewSessionUrl}>
+        {labels.button}
       </Button>
     </EmailLayout>
   );

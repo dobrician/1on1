@@ -1,6 +1,10 @@
 import { Text, Button } from "@react-email/components";
 import { EmailLayout } from "./components/email-layout";
-import { heading, paragraph, button } from "../styles";
+import {
+  heading as headingStyle,
+  paragraph as paragraphStyle,
+  button as buttonStyle,
+} from "../styles";
 
 interface PreMeetingReminderEmailProps {
   recipientName: string;
@@ -8,27 +12,29 @@ interface PreMeetingReminderEmailProps {
   meetingDate: string;
   meetingTime: string;
   seriesUrl: string;
+  // Translated string props
+  heading: string;
+  greeting: string;
+  body: string;              // pre-interpolated: "You have a 1:1 with {name} on {date} at {time}."
+  buttonLabel: string;
+  footer: string;
 }
 
 export function PreMeetingReminderEmail({
-  recipientName,
-  otherPartyName,
-  meetingDate,
-  meetingTime,
   seriesUrl,
+  heading,
+  greeting,
+  body,
+  buttonLabel,
+  footer,
 }: PreMeetingReminderEmailProps) {
   return (
-    <EmailLayout>
-      <Text style={heading}>Upcoming 1:1 Meeting</Text>
-      <Text style={paragraph}>
-        Hi {recipientName},
-      </Text>
-      <Text style={paragraph}>
-        You have a 1:1 meeting with {otherPartyName} coming up on{" "}
-        <strong>{meetingDate}</strong> at <strong>{meetingTime}</strong>.
-      </Text>
-      <Button style={button} href={seriesUrl}>
-        Open Meeting Series
+    <EmailLayout footerText={footer}>
+      <Text style={headingStyle}>{heading}</Text>
+      <Text style={paragraphStyle}>{greeting}</Text>
+      <Text style={paragraphStyle}>{body}</Text>
+      <Button style={buttonStyle} href={seriesUrl}>
+        {buttonLabel}
       </Button>
     </EmailLayout>
   );

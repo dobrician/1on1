@@ -110,6 +110,12 @@ async function processPreMeeting(
       meetingDate,
       meetingTime,
       seriesUrl,
+      // TODO(13-03): replace with createEmailTranslator
+      heading: "Upcoming 1:1 Meeting",
+      greeting: `Hi ${recipientName},`,
+      body: `You have a 1:1 meeting with ${otherPartyName} coming up on ${meetingDate} at ${meetingTime}.`,
+      buttonLabel: "Open Meeting Series",
+      footer: "",
     })
   );
 
@@ -189,6 +195,12 @@ async function processAgendaPrep(
   const baseUrl = getBaseUrl();
   const seriesUrl = `${baseUrl}/sessions/${series.id}`;
 
+  // TODO(13-03): replace with createEmailTranslator
+  const body = isManager
+    ? `Your 1:1 with ${otherPartyName} is on ${meetingDate}. Here are some things to consider before your session.`
+    : `Your 1:1 with ${otherPartyName} is on ${meetingDate}. Take a moment to add your talking points before the meeting.`;
+  const buttonLabel = isManager ? "Open Meeting Series" : "Add Talking Points";
+
   const html = await render(
     AgendaPrepEmail({
       variant,
@@ -197,6 +209,12 @@ async function processAgendaPrep(
       meetingDate,
       seriesUrl,
       nudges: nudges.length > 0 ? nudges : undefined,
+      heading: "Prepare for Your 1:1",
+      greeting: `Hi ${recipientName},`,
+      body,
+      aiNudgesLabel: "AI Coaching Nudges",
+      buttonLabel,
+      footer: "",
     })
   );
 

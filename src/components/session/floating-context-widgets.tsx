@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import {
   ChevronDown,
   ChevronRight,
@@ -71,43 +72,47 @@ function isItemOverdue(dueDate: string | null, status: string): boolean {
   return new Date(dueDate) < today;
 }
 
-function formatAge(createdAt: string): string | null {
+function formatAge(
+  createdAt: string,
+  t: ReturnType<typeof useTranslations<"sessions">>
+): string | null {
   const created = new Date(createdAt);
   const now = new Date();
   const diffMs = now.getTime() - created.getTime();
   const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
   if (diffDays < 1) return null;
-  if (diffDays === 1) return "1 day ago";
-  if (diffDays < 7) return `${diffDays} days ago`;
+  if (diffDays === 1) return t("context.dayAgo");
+  if (diffDays < 7) return t("context.daysAgo", { count: diffDays });
   const weeks = Math.floor(diffDays / 7);
-  if (weeks === 1) return "1 week ago";
-  if (diffDays < 30) return `${weeks} weeks ago`;
+  if (weeks === 1) return t("context.weekAgo");
+  if (diffDays < 30) return t("context.weeksAgo", { count: weeks });
   const months = Math.floor(diffDays / 30);
-  if (months === 1) return "1 month ago";
-  return `${months} months ago`;
+  if (months === 1) return t("context.monthAgo");
+  return t("context.monthsAgo", { count: months });
 }
 
 function formatAnswerPreview(
   answerType: string,
   answerText: string | null,
-  answerNumeric: string | null
+  answerNumeric: string | null,
+  t: ReturnType<typeof useTranslations<"sessions">>
 ): string {
   switch (answerType) {
     case "yes_no":
-      return answerText ?? "No answer";
+      return answerText ?? t("context.noAnswer");
     case "rating_1_5":
-      return answerNumeric !== null ? `${answerNumeric}/5` : "No answer";
+      return answerNumeric !== null ? `${answerNumeric}/5` : t("context.noAnswer");
     case "rating_1_10":
-      return answerNumeric !== null ? `${answerNumeric}/10` : "No answer";
+      return answerNumeric !== null ? `${answerNumeric}/10` : t("context.noAnswer");
     case "mood":
-      return answerNumeric !== null ? `Mood: ${answerNumeric}/5` : "No answer";
+      return answerNumeric !== null ? `Mood: ${answerNumeric}/5` : t("context.noAnswer");
     case "free_text":
-      if (!answerText) return "No answer";
+      if (!answerText) return t("context.noAnswer");
       return answerText.length > 80
         ? answerText.slice(0, 80) + "..."
         : answerText;
     default:
-      return answerText ?? "No answer";
+      return answerText ?? t("context.noAnswer");
   }
 }
 
@@ -164,13 +169,14 @@ function WidgetCard({
 // --- Widget Content Components ---
 
 function ScoreTrendWidget({ sessionScores }: { sessionScores: number[] }) {
+  const t = useTranslations("sessions");
   return (
-    <WidgetCard icon={TrendingUp} title="Score Trend" defaultOpen>
+    <WidgetCard icon={TrendingUp} title={t("context.scoreTrend")} defaultOpen>
       {sessionScores.length >= 2 ? (
         <ScoreSparkline data={sessionScores} height={48} />
       ) : (
         <p className="text-xs text-muted-foreground italic">
-          Need at least 2 sessions for a trend
+          {t("context.needTwoSessions")}
         </p>
       )}
     </WidgetCard>
@@ -184,6 +190,7 @@ function ActionItemsWidget({
   openActionItems: FloatingContextWidgetsProps["openActionItems"];
   currentCategory: string | null;
 }) {
+  const t = useTranslations("sessions");
   const filteredItems = useMemo(() => {
     if (!currentCategory) return openActionItems;
     return openActionItems.filter((item) => item.category === currentCategory);
@@ -203,25 +210,25 @@ function ActionItemsWidget({
   return (
     <WidgetCard
       icon={ListChecks}
-      title="Open Action Items"
+      title={t("context.openActionItems")}
       count={filteredItems.length}
       defaultOpen={filteredItems.length > 0}
     >
       {groupedActions.length === 0 ? (
         <p className="text-xs text-muted-foreground italic">
-          No open action items{currentCategory ? " for this section" : ""}
+          {currentCategory ? t("context.noActionItemsForSection") : t("context.noActionItems")}
         </p>
       ) : (
         <div className="space-y-3">
           {groupedActions.map(([sessionNum, items]) => (
             <div key={sessionNum}>
               <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide mb-1">
-                Session #{sessionNum}
+                {t("context.fromSession", { number: sessionNum })}
               </p>
               <ul className="space-y-1">
                 {items.map((item) => {
                   const overdue = isItemOverdue(item.dueDate, item.status);
-                  const age = item.createdAt ? formatAge(item.createdAt) : null;
+                  const age = item.createdAt ? formatAge(item.createdAt, t) : null;
                   return (
                     <li
                       key={item.id}
@@ -236,12 +243,12 @@ function ActionItemsWidget({
                           {item.assignee.firstName} {item.assignee.lastName}
                           {item.dueDate && (
                             <span className="ml-1">
-                              &middot; due {formatDate(item.dueDate)}
+                              &middot; {t("context.due", { date: formatDate(item.dueDate) })}
                             </span>
                           )}
                           {overdue && (
                             <span className="ml-1 text-destructive font-medium">
-                              &middot; Overdue
+                              &middot; {t("context.overdue")}
                             </span>
                           )}
                           {age && (
@@ -270,6 +277,7 @@ function PreviousNotesWidget({
   previousSessions: PreviousSession[];
   currentCategory: string | null;
 }) {
+  const t = useTranslations("sessions");
   const lastSession = previousSessions[0] ?? null;
 
   const previousNotes = useMemo(() => {
@@ -281,7 +289,7 @@ function PreviousNotesWidget({
   if (!currentCategory) return null;
 
   return (
-    <WidgetCard icon={FileText} title="Previous Notes" defaultOpen={!!previousNotes}>
+    <WidgetCard icon={FileText} title={t("context.previousNotes")} defaultOpen={!!previousNotes}>
       {previousNotes ? (
         <div>
           <div
@@ -290,14 +298,14 @@ function PreviousNotesWidget({
           />
           {lastSession && (
             <p className="mt-1 text-[10px] text-muted-foreground">
-              From session #{lastSession.sessionNumber} &middot;{" "}
+              {t("context.fromSession", { number: lastSession.sessionNumber })} &middot;{" "}
               {formatDate(lastSession.completedAt)}
             </p>
           )}
         </div>
       ) : (
         <p className="text-xs text-muted-foreground italic">
-          No previous notes for this section
+          {t("context.noPreviousNotes")}
         </p>
       )}
     </WidgetCard>
@@ -313,6 +321,7 @@ function PreviousAnswersWidget({
   currentCategory: string | null;
   onQuestionHistoryOpen: (questionId: string) => void;
 }) {
+  const t = useTranslations("sessions");
   const lastSession = previousSessions[0] ?? null;
 
   const previousAnswers = useMemo(() => {
@@ -326,12 +335,12 @@ function PreviousAnswersWidget({
   return (
     <WidgetCard
       icon={History}
-      title="Previous Answers"
+      title={t("context.previousAnswers")}
       count={previousAnswers.length}
     >
       {previousAnswers.length === 0 ? (
         <p className="text-xs text-muted-foreground italic">
-          No previous answers for this section
+          {t("context.noPreviousAnswers")}
         </p>
       ) : (
         <ul className="space-y-2">
@@ -349,7 +358,7 @@ function PreviousAnswersWidget({
                   size="icon"
                   className="size-6 shrink-0"
                   onClick={() => onQuestionHistoryOpen(answer.questionId)}
-                  title="View history"
+                  title={t("context.viewHistory")}
                 >
                   <History className="size-3" />
                 </Button>
@@ -358,7 +367,8 @@ function PreviousAnswersWidget({
                 {formatAnswerPreview(
                   answer.answerType,
                   answer.answerText,
-                  answer.answerNumeric
+                  answer.answerNumeric,
+                  t
                 )}
               </p>
             </li>
@@ -376,6 +386,7 @@ function SummaryStatsWidget({
   previousSessions: PreviousSession[];
   sessionScores: number[];
 }) {
+  const t = useTranslations("sessions");
   const stats = useMemo(() => {
     const totalSessions = previousSessions.length;
     const avgScore =
@@ -386,19 +397,19 @@ function SummaryStatsWidget({
   }, [previousSessions, sessionScores]);
 
   return (
-    <WidgetCard icon={Clock} title="Summary">
+    <WidgetCard icon={Clock} title={t("context.summaryTitle")}>
       <div className="grid grid-cols-2 gap-3">
         <div className="rounded-md border p-2 text-center">
           <p className="text-lg font-semibold tabular-nums">
             {stats.totalSessions}
           </p>
-          <p className="text-[10px] text-muted-foreground">Past Sessions</p>
+          <p className="text-[10px] text-muted-foreground">{t("context.pastSessions")}</p>
         </div>
         <div className="rounded-md border p-2 text-center">
           <p className="text-lg font-semibold tabular-nums">
             {stats.avgScore !== null ? stats.avgScore.toFixed(1) : "--"}
           </p>
-          <p className="text-[10px] text-muted-foreground">Avg Score</p>
+          <p className="text-[10px] text-muted-foreground">{t("context.avgScore")}</p>
         </div>
       </div>
     </WidgetCard>
@@ -408,6 +419,7 @@ function SummaryStatsWidget({
 // --- Main Component ---
 
 function WidgetContent(props: FloatingContextWidgetsProps) {
+  const t = useTranslations("sessions");
   const {
     currentStep,
     currentCategory,
@@ -428,9 +440,9 @@ function WidgetContent(props: FloatingContextWidgetsProps) {
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center">
         <History className="size-8 text-muted-foreground/40 mb-2" />
-        <p className="text-sm text-muted-foreground">No session history yet</p>
+        <p className="text-sm text-muted-foreground">{t("context.noHistory")}</p>
         <p className="text-xs text-muted-foreground mt-1">
-          Context from previous sessions will appear here
+          {t("context.noHistoryDesc")}
         </p>
       </div>
     );
@@ -438,19 +450,21 @@ function WidgetContent(props: FloatingContextWidgetsProps) {
 
   return (
     <div className="space-y-3">
-      {/* AI Nudges -- manager only */}
-      {isManager && seriesId && sessionId && (
-        <NudgeList seriesId={seriesId} sessionId={sessionId} />
-      )}
-
-      {/* Score Trend */}
-      <ScoreTrendWidget sessionScores={sessionScores} />
-
       {/* Action Items */}
       <ActionItemsWidget
         openActionItems={openActionItems}
         currentCategory={isRecap ? null : currentCategory}
       />
+
+      {/* AI Nudges -- manager only */}
+      {isManager && seriesId && sessionId && (
+        <NudgeList seriesId={seriesId} sessionId={sessionId} />
+      )}
+
+      {/* Score Trend (only when enough data) */}
+      {sessionScores.length >= 2 && (
+        <ScoreTrendWidget sessionScores={sessionScores} />
+      )}
 
       {/* Category-specific widgets */}
       {!isRecap && (
@@ -477,14 +491,19 @@ function WidgetContent(props: FloatingContextWidgetsProps) {
 }
 
 export function FloatingContextWidgets(props: FloatingContextWidgetsProps) {
+  const t = useTranslations("sessions");
   const { currentCategory } = props;
+
+  const contextTitle = currentCategory
+    ? t("context.contextCategory", { category: currentCategory })
+    : t("context.sessionContext");
 
   return (
     <>
       {/* Desktop (lg+): rendered inline as a column by the parent */}
       <div className="hidden lg:block">
         <h2 className="text-sm font-semibold mb-3">
-          {currentCategory ? `Context: ${currentCategory}` : "Session Context"}
+          {contextTitle}
         </h2>
         <WidgetContent {...props} />
       </div>
@@ -504,9 +523,7 @@ export function FloatingContextWidgets(props: FloatingContextWidgetsProps) {
           </SheetTrigger>
           <SheetContent side="right" className="w-[340px] overflow-y-auto">
             <SheetHeader>
-              <SheetTitle>
-                {currentCategory ? `Context: ${currentCategory}` : "Session Context"}
-              </SheetTitle>
+              <SheetTitle>{contextTitle}</SheetTitle>
             </SheetHeader>
             <div className="mt-4">
               <WidgetContent {...props} />
@@ -530,9 +547,7 @@ export function FloatingContextWidgets(props: FloatingContextWidgetsProps) {
           </SheetTrigger>
           <SheetContent side="bottom" className="max-h-[70vh] overflow-y-auto rounded-t-xl">
             <SheetHeader>
-              <SheetTitle>
-                {currentCategory ? `Context: ${currentCategory}` : "Session Context"}
-              </SheetTitle>
+              <SheetTitle>{contextTitle}</SheetTitle>
             </SheetHeader>
             <div className="mt-4 pb-6">
               <WidgetContent {...props} />

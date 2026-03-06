@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 
 interface YesNoWidgetProps {
@@ -9,6 +10,8 @@ interface YesNoWidgetProps {
 }
 
 export function YesNoWidget({ value, onChange, disabled }: YesNoWidgetProps) {
+  const t = useTranslations("sessions.widgets");
+
   return (
     <div className="flex gap-3">
       <button
@@ -24,7 +27,7 @@ export function YesNoWidget({ value, onChange, disabled }: YesNoWidgetProps) {
             : "border-border bg-background hover:bg-accent"
         )}
       >
-        Yes
+        {t("yes")}
       </button>
       <button
         type="button"
@@ -39,7 +42,7 @@ export function YesNoWidget({ value, onChange, disabled }: YesNoWidgetProps) {
             : "border-border bg-background hover:bg-accent"
         )}
       >
-        No
+        {t("no")}
       </button>
     </div>
   );

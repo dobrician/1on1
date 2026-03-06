@@ -7,6 +7,7 @@ import { useSession } from "next-auth/react";
 import { LayoutDashboard, Users, Building2, ScrollText, FileText, CalendarDays, ListChecks, History, BarChart3, LogOut } from "lucide-react";
 import { logoutAction } from "@/lib/auth/actions";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 interface NavItem {
   label: string;
@@ -16,67 +17,75 @@ interface NavItem {
   adminOnly?: boolean;
 }
 
-const mainNavItems: NavItem[] = [
-  {
-    label: "Overview",
-    href: "/overview",
-    icon: LayoutDashboard,
-  },
-  {
-    label: "Sessions",
-    href: "/sessions",
-    icon: CalendarDays,
-    matchAlso: ["/sessions"],
-  },
-  {
-    label: "Action Items",
-    href: "/action-items",
-    icon: ListChecks,
-  },
-  {
-    label: "History",
-    href: "/history",
-    icon: History,
-  },
-  {
-    label: "Analytics",
-    href: "/analytics",
-    icon: BarChart3,
-    matchAlso: ["/analytics"],
-  },
-];
+function getMainNavItems(t: ReturnType<typeof useTranslations<"navigation">>): NavItem[] {
+  return [
+    {
+      label: t("overview"),
+      href: "/overview",
+      icon: LayoutDashboard,
+    },
+    {
+      label: t("sessions"),
+      href: "/sessions",
+      icon: CalendarDays,
+      matchAlso: ["/sessions"],
+    },
+    {
+      label: t("actionItems"),
+      href: "/action-items",
+      icon: ListChecks,
+    },
+    {
+      label: t("history"),
+      href: "/history",
+      icon: History,
+    },
+    {
+      label: t("analytics"),
+      href: "/analytics",
+      icon: BarChart3,
+      matchAlso: ["/analytics"],
+    },
+  ];
+}
 
-const settingsNavItems: NavItem[] = [
-  {
-    label: "People",
-    href: "/people",
-    icon: Users,
-    matchAlso: ["/teams"],
-  },
-  {
-    label: "Templates",
-    href: "/templates",
-    icon: FileText,
-  },
-  {
-    label: "Company",
-    href: "/settings/company",
-    icon: Building2,
-    adminOnly: true,
-  },
-  {
-    label: "Audit Log",
-    href: "/settings/audit-log",
-    icon: ScrollText,
-    adminOnly: true,
-  },
-];
+function getSettingsNavItems(t: ReturnType<typeof useTranslations<"navigation">>): NavItem[] {
+  return [
+    {
+      label: t("people"),
+      href: "/people",
+      icon: Users,
+      matchAlso: ["/teams"],
+    },
+    {
+      label: t("templates"),
+      href: "/templates",
+      icon: FileText,
+    },
+    {
+      label: t("company"),
+      href: "/settings/company",
+      icon: Building2,
+      adminOnly: true,
+    },
+    {
+      label: t("auditLog"),
+      href: "/settings/audit-log",
+      icon: ScrollText,
+      adminOnly: true,
+    },
+  ];
+}
 
 export function Sidebar() {
   const pathname = usePathname();
   const { data: session } = useSession();
   const userRole = session?.user?.role ?? "member";
   const isAdmin = userRole === "admin";
+  const t = useTranslations("navigation");
+
+  const mainNavItems = getMainNavItems(t);
+  const settingsNavItems = getSettingsNavItems(t);
 
   function isActive(item: NavItem) {
     if (pathname.startsWith(item.href)) return true;
@@ -123,7 +132,7 @@ export function Sidebar() {
           <>
             <div className="mt-4 mb-1 px-3">
               <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground/70">
-                Settings
+                {t("settings")}
               </span>
             </div>
             {visibleSettingsItems.map(renderNavItem)}
@@ -141,7 +150,7 @@ export function Sidebar() {
             className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent/50 hover:text-accent-foreground"
           >
             <LogOut className="h-4 w-4" />
-            Sign out
+            {t("signOut")}
           </button>
         </form>
       </div>

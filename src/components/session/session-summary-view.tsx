@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -96,51 +97,59 @@ interface SessionSummaryViewProps {
 
 function formatAnswerDisplay(
   answerType: string,
-  answer: SummaryAnswer | undefined
+  answer: SummaryAnswer | undefined,
+  t: ReturnType<typeof useTranslations<"sessions">>
 ): string {
-  if (!answer || answer.skipped) return "Skipped";
+  if (!answer || answer.skipped) return t("summary.skipped");
   if (
     !answer.answerText &&
     answer.answerNumeric === null &&
     !answer.answerJson
   ) {
-    return "Not answered";
+    return t("summary.notAnswered");
   }
 
   switch (answerType) {
     case "text":
-      return answer.answerText || "Not answered";
+      return answer.answerText || t("summary.notAnswered");
     case "rating_1_5":
       return answer.answerNumeric !== null
         ? `${answer.answerNumeric} / 5`
-        : "Not answered";
+        : t("summary.notAnswered");
     case "rating_1_10":
       return answer.answerNumeric !== null
         ? `${answer.answerNumeric} / 10`
-        : "Not answered";
+        : t("summary.notAnswered");
     case "yes_no":
-      if (answer.answerNumeric === null) return "Not answered";
-      return answer.answerNumeric === 1 ? "Yes" : "No";
+      if (answer.answerNumeric === null) return t("summary.notAnswered");
+      return answer.answerNumeric === 1 ? t("summary.yes") : t("summary.no");
     case "mood": {
-      const moods = ["Very Bad", "Bad", "Neutral", "Good", "Great"];
+      const moods = [
+        t("summary.moodVeryBad"),
+        t("summary.moodBad"),
+        t("summary.moodNeutral"),
+        t("summary.moodGood"),
+        t("summary.moodGreat"),
+      ];
       return answer.answerNumeric !== null
         ? moods[(answer.answerNumeric ?? 1) - 1] ??
             `${answer.answerNumeric} / 5`
-        : "Not answered";
+        : t("summary.notAnswered");
     }
     case "multiple_choice":
       if (answer.answerJson && Array.isArray(answer.answerJson)) {
         return (answer.answerJson as string[]).join(", ");
       }
-      return answer.answerText || "Not answered";
+      return answer.answerText || t("summary.notAnswered");
     default:
-      return answer.answerText || "Not answered";
+      return answer.answerText || t("summary.notAnswered");
   }
 }
 
 function getAnswerBadge(
   answerType: string,
-  answer: SummaryAnswer | undefined
+  answer: SummaryAnswer | undefined,
+  t: ReturnType<typeof useTranslations<"sessions">>
 ): { label: string; variant: "default" | "secondary" | "outline" } | null {
   if (!answer || answer.skipped) return null;
 
@@ -148,10 +157,16 @@ function getAnswerBadge(
     case "yes_no":
       if (answer.answerNumeric === null) return null;
       return answer.answerNumeric === 1
-        ? { label: "Yes", variant: "default" }
-        : { label: "No", variant: "secondary" };
+        ? { label: t("summary.yes"), variant: "default" }
+        : { label: t("summary.no"), variant: "secondary" };
     case "mood": {
-      const moodLabels = ["Very Bad", "Bad", "Neutral", "Good", "Great"];
+      const moodLabels = [
+        t("summary.moodVeryBad"),
+        t("summary.moodBad"),
+        t("summary.moodNeutral"),
+        t("summary.moodGood"),
+        t("summary.moodGreat"),
+      ];
       const moodEmojis = ["😢", "😟", "😐", "😊", "😄"];
       if (answer.answerNumeric === null) return null;
       const idx = (answer.answerNumeric ?? 1) - 1;
@@ -215,6 +230,7 @@ export function SessionSummaryView({
   managerName,
   reportName,
 }: SessionSummaryViewProps) {
+  const t = useTranslations("sessions");
   const [openCategories, setOpenCategories] = useState<Record<string, boolean>>(
     () => {
       const initial: Record<string, boolean> = {};
@@ -238,10 +254,10 @@ export function SessionSummaryView({
           className="mb-4 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
           <ArrowLeft className="h-3.5 w-3.5" />
-          Back to series
+          {t("summary.backToSeries")}
         </Link>
         <h1 className="text-2xl font-semibold">
-          Session #{sessionNumber}
+          {t("summary.sessionNumber", { number: sessionNumber })}
         </h1>
         <div className="mt-1 flex items-center gap-3 text-sm text-muted-foreground">
           <span>
@@ -252,7 +268,7 @@ export function SessionSummaryView({
               year: "numeric",
             })}
           </span>
-          {durationMinutes && <span>{durationMinutes} min</span>}
+          {durationMinutes && <span>{t("summary.duration", { count: durationMinutes })}</span>}
           <Badge
             variant={
               status === "completed"
@@ -283,15 +299,15 @@ export function SessionSummaryView({
             >
               {sessionScore.toFixed(1)}
             </p>
-            <p className="mt-1 text-sm text-muted-foreground">out of 5.0</p>
+            <p className="mt-1 text-sm text-muted-foreground">{t("summary.outOf")}</p>
           </>
         ) : (
           <>
             <p className="text-lg font-medium text-muted-foreground">
-              No score
+              {t("summary.noScore")}
             </p>
             <p className="mt-1 text-sm text-muted-foreground">
-              No numeric answers to compute a score
+              {t("summary.noScoreDesc")}
             </p>
           </>
         )}
@@ -341,7 +357,7 @@ export function SessionSummaryView({
                 <div className="space-y-3">
                   {category.questions.map((question) => {
                     const answer = category.answers[question.id];
-                    const badge = getAnswerBadge(question.answerType, answer);
+                    const badge = getAnswerBadge(question.answerType, answer, t);
 
                     return (
                       <div
@@ -360,7 +376,8 @@ export function SessionSummaryView({
                             <p className="text-sm text-muted-foreground">
                               {formatAnswerDisplay(
                                 question.answerType,
-                                answer
+                                answer,
+                                t
                               )}
                             </p>
                           )}
@@ -370,7 +387,8 @@ export function SessionSummaryView({
                               <span className="text-sm text-muted-foreground">
                                 {formatAnswerDisplay(
                                   question.answerType,
-                                  answer
+                                  answer,
+                                  t
                                 )}
                               </span>
                             )}
@@ -383,7 +401,7 @@ export function SessionSummaryView({
                 {/* Shared notes */}
                 <div className="mt-4">
                   <p className="mb-1 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                    Notes
+                    {t("summary.notes")}
                   </p>
                   {category.sharedNotes &&
                   category.sharedNotes !== "<p></p>" ? (
@@ -395,7 +413,7 @@ export function SessionSummaryView({
                     />
                   ) : (
                     <p className="text-sm text-muted-foreground italic">
-                      No notes
+                      {t("summary.noNotes")}
                     </p>
                   )}
                 </div>
@@ -404,7 +422,7 @@ export function SessionSummaryView({
                 {category.talkingPoints.length > 0 && (
                   <div className="mt-4">
                     <p className="mb-1 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                      Talking Points
+                      {t("summary.talkingPoints")}
                     </p>
                     <div className="space-y-1">
                       {category.talkingPoints.map((tp) => (
@@ -438,7 +456,7 @@ export function SessionSummaryView({
                 {category.actionItems.length > 0 && (
                   <div className="mt-4">
                     <p className="mb-1 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                      Action Items
+                      {t("summary.actionItemsLabel")}
                     </p>
                     <div className="space-y-1">
                       {category.actionItems.map((ai) => (
@@ -485,7 +503,7 @@ export function SessionSummaryView({
                   <div className="mt-4">
                     <p className="mb-1 text-xs font-medium uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
                       <Lock className="h-3 w-3" />
-                      Private Notes
+                      {t("summary.privateNotes")}
                     </p>
                     {category.privateNotes.map((note) => (
                       <div
@@ -495,7 +513,7 @@ export function SessionSummaryView({
                         <div className="flex items-center gap-2 mb-1">
                           <Badge variant="outline" className="text-xs gap-1">
                             <Lock className="h-2.5 w-2.5" />
-                            Private
+                            {t("summary.private")}
                           </Badge>
                         </div>
                         <div
@@ -519,7 +537,7 @@ export function SessionSummaryView({
           className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
           <ArrowLeft className="h-3.5 w-3.5" />
-          Back to series
+          {t("summary.backToSeries")}
         </Link>
       </div>
     </div>

@@ -2,15 +2,17 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
-
-const tabs = [
-  { label: "People", href: "/people" },
-  { label: "Teams", href: "/teams" },
-];
 
 export function PeopleTabs({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const t = useTranslations("people");
+
+  const tabs = [
+    { label: t("tabs.people"), href: "/people" },
+    { label: t("tabs.teams"), href: "/teams" },
+  ];
 
   return (
     <div className="space-y-6">

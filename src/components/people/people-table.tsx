@@ -12,6 +12,7 @@ import {
   type ColumnFiltersState,
 } from "@tanstack/react-table";
 import { useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import {
@@ -46,6 +47,7 @@ export function PeopleTable({
   currentUserId,
   availableTeams,
 }: PeopleTableProps) {
+  const t = useTranslations("people");
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
@@ -75,8 +77,8 @@ export function PeopleTable({
   );
 
   const columns = useMemo(
-    () => createColumns({ currentUserRole, currentUserId, allUsers }),
-    [currentUserRole, currentUserId, allUsers]
+    () => createColumns({ currentUserRole, currentUserId, allUsers, t }),
+    [currentUserRole, currentUserId, allUsers, t]
   );
 
   const table = useReactTable({
@@ -120,7 +122,7 @@ export function PeopleTable({
         <div className="relative flex-1 min-w-[200px] max-w-sm">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
-            placeholder="Search by name, email, or job title..."
+            placeholder={t("table.searchPlaceholder")}
             value={globalFilter}
             onChange={(e) => setGlobalFilter(e.target.value)}
             className="pl-9"
@@ -136,13 +138,13 @@ export function PeopleTable({
           }
         >
           <SelectTrigger className="w-[130px]">
-            <SelectValue placeholder="Role" />
+            <SelectValue placeholder={t("table.role")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Roles</SelectItem>
-            <SelectItem value="admin">Admin</SelectItem>
-            <SelectItem value="manager">Manager</SelectItem>
-            <SelectItem value="member">Member</SelectItem>
+            <SelectItem value="all">{t("table.allRoles")}</SelectItem>
+            <SelectItem value="admin">{t("table.admin")}</SelectItem>
+            <SelectItem value="manager">{t("table.manager")}</SelectItem>
+            <SelectItem value="member">{t("table.member")}</SelectItem>
           </SelectContent>
         </Select>
 
@@ -158,10 +160,10 @@ export function PeopleTable({
             }
           >
             <SelectTrigger className="w-[150px]">
-              <SelectValue placeholder="Team" />
+              <SelectValue placeholder={t("table.teams")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Teams</SelectItem>
+              <SelectItem value="all">{t("table.allTeams")}</SelectItem>
               {availableTeams.map((team) => (
                 <SelectItem key={team.id} value={team.id}>
                   {team.name}
@@ -182,13 +184,13 @@ export function PeopleTable({
           }
         >
           <SelectTrigger className="w-[140px]">
-            <SelectValue placeholder="Status" />
+            <SelectValue placeholder={t("table.status")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Status</SelectItem>
-            <SelectItem value="active">Active</SelectItem>
-            <SelectItem value="pending">Pending</SelectItem>
-            <SelectItem value="deactivated">Deactivated</SelectItem>
+            <SelectItem value="all">{t("table.allStatus")}</SelectItem>
+            <SelectItem value="active">{t("table.active")}</SelectItem>
+            <SelectItem value="pending">{t("table.pending")}</SelectItem>
+            <SelectItem value="deactivated">{t("table.deactivated")}</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -236,7 +238,7 @@ export function PeopleTable({
                   colSpan={columns.length}
                   className="h-24 text-center text-muted-foreground"
                 >
-                  No users found.
+                  {t("table.noUsers")}
                 </TableCell>
               </TableRow>
             )}
@@ -248,17 +250,14 @@ export function PeopleTable({
       {table.getPageCount() > 1 && (
         <div className="flex items-center justify-between">
           <p className="text-sm text-muted-foreground">
-            Showing{" "}
-            {table.getState().pagination.pageIndex *
-              table.getState().pagination.pageSize +
-              1}
-            -
-            {Math.min(
-              (table.getState().pagination.pageIndex + 1) *
-                table.getState().pagination.pageSize,
-              table.getFilteredRowModel().rows.length
-            )}{" "}
-            of {table.getFilteredRowModel().rows.length} users
+            {t("table.showing", {
+              from: table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1,
+              to: Math.min(
+                (table.getState().pagination.pageIndex + 1) * table.getState().pagination.pageSize,
+                table.getFilteredRowModel().rows.length
+              ),
+              total: table.getFilteredRowModel().rows.length,
+            })}
           </p>
           <div className="flex items-center gap-2">
             <Button
@@ -267,7 +266,7 @@ export function PeopleTable({
               onClick={() => table.previousPage()}
               disabled={!table.getCanPreviousPage()}
             >
-              Previous
+              {t("table.previous")}
             </Button>
             <Button
               variant="outline"
@@ -275,7 +274,7 @@ export function PeopleTable({
               onClick={() => table.nextPage()}
               disabled={!table.getCanNextPage()}
             >
-              Next
+              {t("table.next")}
             </Button>
           </div>
         </div>

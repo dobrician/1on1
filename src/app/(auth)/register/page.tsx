@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,6 +18,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { registerAction } from "@/lib/auth/actions";
 
 export default function RegisterPage() {
+  const t = useTranslations("auth");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [orgType, setOrgType] = useState("for_profit");
@@ -44,10 +46,10 @@ export default function RegisterPage() {
     <Card>
       <CardHeader className="space-y-1">
         <CardTitle className="text-2xl font-bold">
-          Create your organization
+          {t("register.title")}
         </CardTitle>
         <CardDescription>
-          Set up your company account and start running better 1:1s
+          {t("register.description")}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -59,18 +61,18 @@ export default function RegisterPage() {
           )}
 
           <div className="space-y-2">
-            <Label htmlFor="companyName">Company name</Label>
+            <Label htmlFor="companyName">{t("register.companyName")}</Label>
             <Input
               id="companyName"
               name="companyName"
-              placeholder="Acme Inc"
+              placeholder={t("register.companyPlaceholder")}
               required
               autoFocus
             />
           </div>
 
           <div className="space-y-3">
-            <Label>Organization type</Label>
+            <Label>{t("register.orgType")}</Label>
             <RadioGroup
               value={orgType}
               onValueChange={setOrgType}
@@ -86,8 +88,8 @@ export default function RegisterPage() {
               >
                 <RadioGroupItem value="for_profit" id="org-for-profit" />
                 <div>
-                  <span className="text-sm font-medium">For-profit</span>
-                  <p className="text-xs text-muted-foreground">Company</p>
+                  <span className="text-sm font-medium">{t("register.forProfit")}</span>
+                  <p className="text-xs text-muted-foreground">{t("register.forProfitDesc")}</p>
                 </div>
               </Label>
               <Label
@@ -100,8 +102,8 @@ export default function RegisterPage() {
               >
                 <RadioGroupItem value="non_profit" id="org-non-profit" />
                 <div>
-                  <span className="text-sm font-medium">Non-profit</span>
-                  <p className="text-xs text-muted-foreground">Organization</p>
+                  <span className="text-sm font-medium">{t("register.nonProfit")}</span>
+                  <p className="text-xs text-muted-foreground">{t("register.nonProfitDesc")}</p>
                 </div>
               </Label>
             </RadioGroup>
@@ -109,39 +111,39 @@ export default function RegisterPage() {
 
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-2">
-              <Label htmlFor="firstName">First name</Label>
+              <Label htmlFor="firstName">{t("register.firstName")}</Label>
               <Input
                 id="firstName"
                 name="firstName"
-                placeholder="Jane"
+                placeholder={t("register.firstNamePlaceholder")}
                 required
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="lastName">Last name</Label>
+              <Label htmlFor="lastName">{t("register.lastName")}</Label>
               <Input
                 id="lastName"
                 name="lastName"
-                placeholder="Smith"
+                placeholder={t("register.lastNamePlaceholder")}
                 required
               />
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="email">Work email</Label>
+            <Label htmlFor="email">{t("register.workEmail")}</Label>
             <Input
               id="email"
               name="email"
               type="email"
-              placeholder="jane@acme.com"
+              placeholder={t("register.workEmailPlaceholder")}
               required
               autoComplete="email"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password">{t("register.password")}</Label>
             <Input
               id="password"
               name="password"
@@ -150,23 +152,23 @@ export default function RegisterPage() {
               autoComplete="new-password"
             />
             <p className="text-xs text-muted-foreground">
-              At least 8 characters with uppercase, lowercase, and a number
+              {t("register.passwordHelp")}
             </p>
           </div>
 
           <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? "Creating account..." : "Create account"}
+            {loading ? t("register.submitting") : t("register.submit")}
           </Button>
         </form>
       </CardContent>
       <CardFooter className="flex justify-center">
         <p className="text-sm text-muted-foreground">
-          Already have an account?{" "}
+          {t("register.hasAccount")}{" "}
           <Link
             href="/login"
             className="font-medium text-foreground hover:underline"
           >
-            Sign in
+            {t("register.signIn")}
           </Link>
         </p>
       </CardFooter>

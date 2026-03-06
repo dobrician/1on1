@@ -1,0 +1,49 @@
+{
+  "dashboard": {
+    "welcome": "Welcome, {name}",
+    "welcomeFallback": "Your organization",
+    "aiNudges": "AI Coaching Nudges",
+    "upcomingSessions": "Upcoming Sessions",
+    "recentSessions": "Recent Sessions",
+    "quickStats": {
+      "directReports": "Direct Reports",
+      "sessionsThisMonth": "Sessions This Month",
+      "averageScore": "Average Score",
+      "na": "N/A"
+    },
+    "recent": {
+      "noSessions": "No completed sessions yet",
+      "noSessionsDesc": "Complete your first session to see recent activity"
+    },
+    "upcoming": {
+      "today": "Today",
+      "showLess": "Show less",
+      "moreNudge": "+{count} more nudge",
+      "moreNudges": "+{count} more nudges",
+      "resumeSession": "Resume Session",
+      "startSession": "Start Session",
+      "noSessions": "No upcoming sessions this week",
+      "noSessionsDesc": "Set up a meeting series to get started",
+      "newSeries": "New Meeting Series"
+    },
+    "overdue": {
+      "title": "Overdue Action Items",
+      "item": "{count} item",
+      "items": "{count} items",
+      "daysOverdue": "{count}d overdue"
+    },
+    "nudgesModal": {
+      "title": "Coaching Nudges for {name}",
+      "empty": "No coaching nudges for this session",
+      "dismiss": "Dismiss"
+    },
+    "nudge": {
+      "pastDue": "past due",
+      "today": "today",
+      "tomorrow": "tomorrow",
+      "inDays": "in {count} days",
+      "priority": "{priority} priority",
+      "dismiss": "Dismiss nudge"
+    }
+  }
+}

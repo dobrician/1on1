@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 
 interface MoodWidgetProps {
@@ -9,13 +10,13 @@ interface MoodWidgetProps {
   answerConfig?: { labels?: string[] };
 }
 
-const MOOD_EMOJIS = [
-  { emoji: "\uD83D\uDE1E", default: "Very Unhappy" },
-  { emoji: "\uD83D\uDE41", default: "Unhappy" },
-  { emoji: "\uD83D\uDE10", default: "Neutral" },
-  { emoji: "\uD83D\uDE42", default: "Happy" },
-  { emoji: "\uD83D\uDE04", default: "Very Happy" },
-];
+const MOOD_KEYS = [
+  { emoji: "\uD83D\uDE1E", key: "moodVeryUnhappy" },
+  { emoji: "\uD83D\uDE41", key: "moodUnhappy" },
+  { emoji: "\uD83D\uDE10", key: "moodNeutral" },
+  { emoji: "\uD83D\uDE42", key: "moodHappy" },
+  { emoji: "\uD83D\uDE04", key: "moodVeryHappy" },
+] as const;
 
 export function MoodWidget({
   value,
@@ -23,14 +24,15 @@ export function MoodWidget({
   disabled,
   answerConfig,
 }: MoodWidgetProps) {
+  const t = useTranslations("sessions.widgets");
   const labels = answerConfig?.labels;
 
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center gap-3">
-        {MOOD_EMOJIS.map((mood, index) => {
+        {MOOD_KEYS.map((mood, index) => {
           const rating = index + 1;
-          const label = labels?.[index] ?? mood.default;
+          const label = labels?.[index] ?? t(mood.key);
 
           return (
             <button
@@ -57,7 +59,7 @@ export function MoodWidget({
       </div>
       {value != null && (
         <p className="text-sm text-muted-foreground">
-          {labels?.[value - 1] ?? MOOD_EMOJIS[value - 1]?.default}
+          {labels?.[value - 1] ?? t(MOOD_KEYS[value - 1]?.key ?? "moodNeutral")}
         </p>
       )}
     </div>

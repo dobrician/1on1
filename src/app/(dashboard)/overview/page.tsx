@@ -14,10 +14,9 @@ import {
   getOverdueActionItems,
   getQuickStats,
   getRecentSessions,
-  getManagerNudges,
+  getStatsTrends,
 } from "@/lib/queries/dashboard";
-import { NudgeCardsGrid } from "@/components/dashboard/nudge-cards-grid";
-import { Sparkles } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 
 export default async function OverviewPage() {
   const session = await auth();
@@ -25,22 +24,22 @@ export default async function OverviewPage() {
 
   const { user } = session;
 
+  const t = await getTranslations("dashboard");
+
   const [tenant, dashboardData] = await Promise.all([
     adminDb.query.tenants.findFirst({
       where: eq(tenants.id, user.tenantId),
       columns: { name: true },
     }),
     withTenantContext(user.tenantId, user.id, async (tx) => {
-      const [upcoming, overdue, stats, recent, nudges] = await Promise.all([
+      const [upcoming, overdue, stats, recent, trends] = await Promise.all([
         getUpcomingSessions(tx, user.id, user.role, user.tenantId),
         getOverdueActionItems(tx, user.id, user.role),
         getQuickStats(tx, user.id, user.role),
         getRecentSessions(tx, user.id, user.role),
-        user.role !== "member"
-          ? getManagerNudges(tx, user.id, user.tenantId)
-          : Promise.resolve([]),
+        getStatsTrends(tx, user.id, user.role),
       ]);
-      return { upcoming, overdue, stats, recent, nudges };
+      return { upcoming, overdue, stats, recent, trends };
     }),
   ]);
 
@@ -51,34 +50,23 @@ export default async function OverviewPage() {
       {/* Welcome header */}
       <div className="mb-8">
         <h1 className="text-2xl font-semibold tracking-tight">
-          Welcome{user.name ? `, ${user.name}` : ""}
+          {user.name ? t("welcome", { name: user.name }) : t("welcomeFallback")}
         </h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          {tenant?.name ?? "Your organization"} &middot;{" "}
+          {tenant?.name ?? t("welcomeFallback")} &middot;{" "}
           <span className="capitalize">{user.role}</span>
         </p>
       </div>
 
-      {/* AI Coaching Nudges (managers/admins only) */}
-      {user.role !== "member" && dashboardData.nudges.length > 0 && (
-        <section className="mb-8">
-          <h2 className="mb-4 text-lg font-medium flex items-center gap-2">
-            <Sparkles className="size-4 text-amber-600" />
-            AI Coaching Nudges
-          </h2>
-          <NudgeCardsGrid initialNudges={dashboardData.nudges} />
-        </section>
-      )}
-
-      {/* 1. Upcoming Sessions (primary section) */}
+      {/* 1. Quick Stats */}
       <section className="mb-8">
-        <h2 className="mb-4 text-lg font-medium">Upcoming Sessions</h2>
-        <UpcomingSessions sessions={dashboardData.upcoming} />
+        <QuickStats stats={dashboardData.stats} trends={dashboardData.trends} />
       </section>
 
-      {/* 2. Quick Stats */}
+      {/* 2. Upcoming Sessions */}
       <section className="mb-8">
-        <QuickStats stats={dashboardData.stats} />
+        <h2 className="mb-4 text-lg font-medium">{t("upcomingSessions")}</h2>
+        <UpcomingSessions sessions={dashboardData.upcoming} />
       </section>
 
       {/* 3. Overdue Items (only if any exist) */}
@@ -90,7 +78,7 @@ export default async function OverviewPage() {
 
       {/* 4. Recent Sessions */}
       <section className="mb-8">
-        <h2 className="mb-4 text-lg font-medium">Recent Sessions</h2>
+        <h2 className="mb-4 text-lg font-medium">{t("recentSessions")}</h2>
         <RecentSessions sessions={dashboardData.recent} />
       </section>
     </div>

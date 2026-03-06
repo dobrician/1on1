@@ -1,0 +1,90 @@
+{
+  "settings": {
+    "title": "Setări organizație",
+    "description": "Gestionează detaliile organizației și setările implicite pentru întâlniri",
+    "orgDetails": {
+      "title": "Detalii organizație",
+      "description": "Informații de bază despre organizația ta",
+      "name": "Numele organizației",
+      "type": "Tipul organizației",
+      "slug": "Slug",
+      "timezone": "Fus orar",
+      "timezonePlaceholder": "Selectează fusul orar",
+      "nonprofit": "Non-profit",
+      "forprofit": "For-profit",
+      "slugNote": "Generat automat din numele organizației",
+      "typeNote": "Setat la înregistrare și nu poate fi schimbat"
+    },
+    "meetingDefaults": {
+      "title": "Setări implicite întâlniri",
+      "description": "Setări implicite pentru seriile de întâlniri noi din organizație",
+      "cadence": "Cadența implicită a întâlnirilor",
+      "duration": "Durata implicită a întâlnirilor",
+      "durationPlaceholder": "Selectează durata",
+      "weekly": "Săptămânal",
+      "biweekly": "La două săptămâni",
+      "monthly": "Lunar",
+      "custom": "Personalizat",
+      "minutes": "{count} minute"
+    },
+    "language": {
+      "title": "Limba organizației",
+      "description": "Conținutul generat de AI (rezumate, sugestii) va folosi această limbă",
+      "label": "Limba preferată",
+      "placeholder": "Selectează limba",
+      "english": "Engleză",
+      "romanian": "Română",
+      "german": "Germană",
+      "french": "Franceză",
+      "spanish": "Spaniolă",
+      "portuguese": "Portugheză"
+    },
+    "theme": {
+      "title": "Tema de culori",
+      "description": "Alege o temă de culori pentru organizație. Toți membrii vor vedea această temă aplicată în panou și grafice."
+    },
+    "saved": "Setările au fost salvate.",
+    "saving": "Se salvează...",
+    "saveChanges": "Salvează modificările",
+    "auditLog": {
+      "title": "Jurnal de audit",
+      "description": "Vizualizează toate acțiunile administrative din organizație",
+      "searchPlaceholder": "Caută acțiuni...",
+      "allActions": "Toate acțiunile",
+      "to": "până la",
+      "loading": "Se încarcă jurnalul de audit...",
+      "empty": "Nu există înregistrări în jurnalul de audit",
+      "timestamp": "Data/Ora",
+      "actor": "Utilizator",
+      "action": "Acțiune",
+      "target": "Țintă",
+      "details": "Detalii",
+      "showing": "Se afișează {from}-{to} din {total} înregistrări",
+      "previous": "Anterior",
+      "pageOf": "Pagina {page} din {total}",
+      "next": "Următor",
+      "actions": {
+        "inviteSent": "Invitație trimisă",
+        "inviteAccepted": "Invitație acceptată",
+        "inviteResent": "Invitație retrimisă",
+        "roleChanged": "Rol schimbat",
+        "managerAssigned": "Manager atribuit",
+        "userDeactivated": "Utilizator dezactivat",
+        "userReactivated": "Utilizator reactivat",
+        "profileUpdated": "Profil actualizat",
+        "teamCreated": "Echipă creată",
+        "teamUpdated": "Echipă actualizată",
+        "teamDeleted": "Echipă ștearsă",
+        "memberAdded": "Membru adăugat în echipă",
+        "memberRemoved": "Membru eliminat din echipă",
+        "leadChanged": "Lider de echipă schimbat",
+        "orgSettingsChanged": "Setări organizație schimbate"
+      },
+      "metadata": {
+        "roleChange": "Schimbare rol",
+        "managerChange": "Schimbare manager",
+        "leadChange": "Schimbare lider"
+      }
+    }
+  }
+}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import { useTranslations } from "next-intl";
 import {
   Dialog,
   DialogContent,
@@ -38,7 +39,7 @@ export interface QuestionHistoryDialogProps {
 }
 
 function formatDate(dateStr: string): string {
-  return new Date(dateStr).toLocaleDateString("en-US", {
+  return new Date(dateStr).toLocaleDateString(undefined, {
     month: "short",
     day: "numeric",
     year: "numeric",
@@ -49,28 +50,30 @@ function formatAnswerValue(
   answerType: string,
   answerText: string | null,
   answerNumeric: string | null,
-  answerJson: unknown
+  answerJson: unknown,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- dynamic translation keys
+  t: (key: any) => string
 ): React.ReactNode {
   switch (answerType) {
     case "yes_no": {
       const value = answerText?.toLowerCase();
       if (value === "yes") {
-        return <Badge className="bg-green-100 text-green-800 hover:bg-green-100">Yes</Badge>;
+        return <Badge className="bg-green-100 text-green-800 hover:bg-green-100">{t("yes")}</Badge>;
       }
       if (value === "no") {
-        return <Badge className="bg-red-100 text-red-800 hover:bg-red-100">No</Badge>;
+        return <Badge className="bg-red-100 text-red-800 hover:bg-red-100">{t("no")}</Badge>;
       }
-      return <span className="text-muted-foreground">No answer</span>;
+      return <span className="text-muted-foreground">{t("noAnswer")}</span>;
     }
     case "rating_1_5":
     case "rating_1_10":
     case "mood": {
       if (answerNumeric === null) {
-        return <span className="text-muted-foreground">No answer</span>;
+        return <span className="text-muted-foreground">{t("noAnswer")}</span>;
       }
       const label =
         answerType === "mood"
-          ? getMoodLabel(Number(answerNumeric))
+          ? getMoodLabel(Number(answerNumeric), t)
           : `${answerNumeric}/${answerType === "rating_1_10" ? "10" : "5"}`;
       return (
         <span className="font-medium tabular-nums">{label}</span>
@@ -92,12 +95,12 @@ function formatAnswerValue(
       if (answerText) {
         return <Badge variant="secondary">{answerText}</Badge>;
       }
-      return <span className="text-muted-foreground">No answer</span>;
+      return <span className="text-muted-foreground">{t("noAnswer")}</span>;
     }
     case "free_text":
     default: {
       if (!answerText) {
-        return <span className="text-muted-foreground">No answer</span>;
+        return <span className="text-muted-foreground">{t("noAnswer")}</span>;
       }
       const isLong = answerText.length > 150;
       if (isLong) {
@@ -115,15 +118,16 @@ function formatAnswerValue(
   }
 }
 
-function getMoodLabel(value: number): string {
-  const labels: Record<number, string> = {
-    1: "Very Low",
-    2: "Low",
-    3: "Neutral",
-    4: "Good",
-    5: "Great",
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- dynamic translation keys
+function getMoodLabel(value: number, t: (key: any) => string): string {
+  const keys: Record<number, string> = {
+    1: "moodVeryLow",
+    2: "moodLow",
+    3: "moodNeutral",
+    4: "moodGood",
+    5: "moodGreat",
   };
-  return labels[value] ?? String(value);
+  return keys[value] ? t(keys[value]) : String(value);
 }
 
 export function QuestionHistoryDialog({
@@ -134,6 +138,8 @@ export function QuestionHistoryDialog({
   answerType,
   previousSessions,
 }: QuestionHistoryDialogProps) {
+  const t = useTranslations("sessions.history");
+
   const historyEntries = useMemo(() => {
     return previousSessions
       .map((session) => {
@@ -177,20 +183,20 @@ export function QuestionHistoryDialog({
         <DialogHeader>
           <DialogTitle className="text-base leading-snug">{questionText}</DialogTitle>
           <DialogDescription>
-            Answer history across previous sessions
+            {t("answerHistory")}
           </DialogDescription>
         </DialogHeader>
 
         {historyEntries.length === 0 ? (
           <div className="py-8 text-center text-sm text-muted-foreground">
-            This question has not been answered in any previous session.
+            {t("noHistory")}
           </div>
         ) : (
           <div className="space-y-4">
             {numericValues.length >= 2 && (
               <div className="rounded-md border p-3">
                 <p className="mb-2 text-xs font-medium text-muted-foreground uppercase tracking-wide">
-                  Trend
+                  {t("trend")}
                 </p>
                 <ScoreSparkline data={numericValues} height={48} />
               </div>
@@ -215,7 +221,8 @@ export function QuestionHistoryDialog({
                       entry.answerType,
                       entry.answerText,
                       entry.answerNumeric,
-                      entry.answerJson
+                      entry.answerJson,
+                      t
                     )}
                   </div>
                 </div>

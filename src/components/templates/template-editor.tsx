@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import Link from "next/link";
 import {
@@ -183,6 +184,7 @@ interface TemplateEditorProps {
 }
 
 export function TemplateEditor({ template, userRole }: TemplateEditorProps) {
+  const t = useTranslations("templates");
   const router = useRouter();
   const queryClient = useQueryClient();
   const isCreateMode = !template;
@@ -280,7 +282,7 @@ export function TemplateEditor({ template, userRole }: TemplateEditorProps) {
         });
       }
       queryClient.invalidateQueries({ queryKey: ["templates"] });
-      toast.success("Template created");
+      toast.success(t("editor.saved"));
       router.push(`/templates/${newTemplate.id}`);
     },
     onError: (error) => {
@@ -304,7 +306,7 @@ export function TemplateEditor({ template, userRole }: TemplateEditorProps) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["templates"] });
-      toast.success("Template saved");
+      toast.success(t("editor.saved"));
     },
     onError: (error) => {
       toast.error(error instanceof Error ? error.message : "Failed to save template");
@@ -323,7 +325,7 @@ export function TemplateEditor({ template, userRole }: TemplateEditorProps) {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["templates"] });
-      toast.success(data.isPublished ? "Template published" : "Template unpublished");
+      toast.success(data.isPublished ? t("editor.publishedToast") : t("editor.unpublishedToast"));
       router.refresh();
     },
     onError: (error) => {
@@ -343,7 +345,7 @@ export function TemplateEditor({ template, userRole }: TemplateEditorProps) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["templates"] });
-      toast.success("Template set as default");
+      toast.success(t("editor.defaultToast"));
       router.refresh();
     },
     onError: (error) => {
@@ -363,7 +365,7 @@ export function TemplateEditor({ template, userRole }: TemplateEditorProps) {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["templates"] });
-      toast.success("Template duplicated");
+      toast.success(t("editor.duplicatedToast"));
       router.push(`/templates/${data.id}`);
     },
     onError: (error) => {
@@ -383,7 +385,7 @@ export function TemplateEditor({ template, userRole }: TemplateEditorProps) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["templates"] });
-      toast.success("Template archived");
+      toast.success(t("editor.archivedToast"));
       router.push("/templates");
     },
     onError: (error) => {
@@ -550,7 +552,7 @@ export function TemplateEditor({ template, userRole }: TemplateEditorProps) {
         <Button variant="ghost" size="sm" asChild className="-ml-2">
           <Link href="/templates">
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Templates
+            {t("editor.backToTemplates")}
           </Link>
         </Button>
 
@@ -565,12 +567,12 @@ export function TemplateEditor({ template, userRole }: TemplateEditorProps) {
               {template.isPublished ? (
                 <>
                   <GlobeLock className="mr-2 h-4 w-4" />
-                  Unpublish
+                  {t("editor.unpublish")}
                 </>
               ) : (
                 <>
                   <Globe className="mr-2 h-4 w-4" />
-                  Publish
+                  {t("editor.publish")}
                 </>
               )}
             </Button>
@@ -583,7 +585,7 @@ export function TemplateEditor({ template, userRole }: TemplateEditorProps) {
                 disabled={setDefaultMutation.isPending}
               >
                 <Star className="mr-2 h-4 w-4" />
-                Set as Default
+                {t("editor.setDefault")}
               </Button>
             )}
 
@@ -594,32 +596,30 @@ export function TemplateEditor({ template, userRole }: TemplateEditorProps) {
               disabled={duplicateMutation.isPending}
             >
               <Copy className="mr-2 h-4 w-4" />
-              Duplicate
+              {t("editor.duplicate")}
             </Button>
 
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <Button variant="outline" size="sm">
                   <Archive className="mr-2 h-4 w-4" />
-                  Archive
+                  {t("editor.archive")}
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>Archive Template</AlertDialogTitle>
+                  <AlertDialogTitle>{t("editor.archiveTitle")}</AlertDialogTitle>
                   <AlertDialogDescription>
-                    Are you sure you want to archive &quot;{template.name}
-                    &quot;? It will be hidden from the active list but
-                    historical session data will be preserved.
+                    {t("editor.archiveDesc", { name: template.name })}
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogCancel>{t("editor.archiveCancel")}</AlertDialogCancel>
                   <AlertDialogAction
                     onClick={() => archiveMutation.mutate()}
                     disabled={archiveMutation.isPending}
                   >
-                    {archiveMutation.isPending ? "Archiving..." : "Archive"}
+                    {archiveMutation.isPending ? t("editor.archiving") : t("editor.archiveConfirm")}
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
@@ -631,13 +631,13 @@ export function TemplateEditor({ template, userRole }: TemplateEditorProps) {
       {/* Title */}
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">
-          {isCreateMode ? "New Template" : template.name}
+          {isCreateMode ? t("editor.newTemplate") : template.name}
         </h1>
         {!isCreateMode && (
           <p className="text-sm text-muted-foreground">
-            Version {template.version}
-            {template.isDefault && " - Default"}
-            {template.isPublished ? " - Published" : " - Draft"}
+            {t("editor.version", { number: template.version })}
+            {template.isDefault && ` - ${t("default")}`}
+            {template.isPublished ? ` - ${t("published")}` : ` - ${t("draft")}`}
           </p>
         )}
       </div>
@@ -648,10 +648,10 @@ export function TemplateEditor({ template, userRole }: TemplateEditorProps) {
       <form onSubmit={handleSubmit(onSave)} className="space-y-6">
         <div className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="name">Template Name</Label>
+            <Label htmlFor="name">{t("editor.nameLabel")}</Label>
             <Input
               id="name"
-              placeholder="e.g. Weekly Check-in"
+              placeholder={t("editor.namePlaceholder")}
               disabled={isReadOnly}
               {...register("name")}
             />
@@ -661,10 +661,10 @@ export function TemplateEditor({ template, userRole }: TemplateEditorProps) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="description">Description</Label>
+            <Label htmlFor="description">{t("editor.descLabel")}</Label>
             <Textarea
               id="description"
-              placeholder="Describe what this template is for..."
+              placeholder={t("editor.descPlaceholder")}
               rows={3}
               disabled={isReadOnly}
               {...register("description")}
@@ -676,7 +676,7 @@ export function TemplateEditor({ template, userRole }: TemplateEditorProps) {
 
           {/* Labels */}
           <div className="space-y-2">
-            <Label>Labels</Label>
+            <Label>{t("editor.labelsLabel")}</Label>
             <div className="flex flex-wrap gap-2">
               {(availableLabels ?? []).map((label) => (
                 <Badge
@@ -697,7 +697,7 @@ export function TemplateEditor({ template, userRole }: TemplateEditorProps) {
               ))}
               {(availableLabels ?? []).length === 0 && (
                 <p className="text-xs text-muted-foreground">
-                  No labels yet. Labels can be created via the API.
+                  {t("editor.noLabels")}
                 </p>
               )}
             </div>
@@ -710,16 +710,15 @@ export function TemplateEditor({ template, userRole }: TemplateEditorProps) {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-lg font-semibold">Sections</h2>
+              <h2 className="text-lg font-semibold">{t("editor.sections")}</h2>
               <p className="text-sm text-muted-foreground">
-                {sections.length} section{sections.length !== 1 ? "s" : ""},{" "}
-                {allQuestions.length} question{allQuestions.length !== 1 ? "s" : ""}
+                {t("editor.sectionsSummary", { sections: sections.length, questions: allQuestions.length })}
               </p>
             </div>
             {canEdit && (
               <Button type="button" variant="outline" size="sm" onClick={handleAddSection}>
                 <Plus className="mr-2 h-4 w-4" />
-                Add Section
+                {t("editor.addSection")}
               </Button>
             )}
           </div>
@@ -727,7 +726,7 @@ export function TemplateEditor({ template, userRole }: TemplateEditorProps) {
           {sections.length === 0 ? (
             <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-10">
               <p className="text-sm text-muted-foreground">
-                No sections yet. Add a section to organize your questions.
+                {t("editor.noSections")}
               </p>
               {canEdit && (
                 <Button
@@ -738,7 +737,7 @@ export function TemplateEditor({ template, userRole }: TemplateEditorProps) {
                   onClick={handleAddSection}
                 >
                   <Plus className="mr-2 h-4 w-4" />
-                  Add Section
+                  {t("editor.addSection")}
                 </Button>
               )}
             </div>
@@ -832,16 +831,15 @@ export function TemplateEditor({ template, userRole }: TemplateEditorProps) {
                               </AlertDialogTrigger>
                               <AlertDialogContent>
                                 <AlertDialogHeader>
-                                  <AlertDialogTitle>Remove Section</AlertDialogTitle>
+                                  <AlertDialogTitle>{t("editor.removeSectionTitle")}</AlertDialogTitle>
                                   <AlertDialogDescription>
-                                    Remove &quot;{section.name}&quot; and all its questions?
-                                    This takes effect when you save.
+                                    {t("editor.removeSectionDesc", { name: section.name })}
                                   </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
-                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                  <AlertDialogCancel>{t("editor.removeSectionCancel")}</AlertDialogCancel>
                                   <AlertDialogAction onClick={() => handleRemoveSection(sectionIndex)}>
-                                    Remove
+                                    {t("editor.removeSectionConfirm")}
                                   </AlertDialogAction>
                                 </AlertDialogFooter>
                               </AlertDialogContent>
@@ -855,7 +853,7 @@ export function TemplateEditor({ template, userRole }: TemplateEditorProps) {
                         <div className="border-t px-4 py-3 space-y-3">
                           {section.questions.length === 0 ? (
                             <p className="text-sm text-muted-foreground text-center py-4">
-                              No questions in this section.
+                              {t("editor.noQuestions")}
                             </p>
                           ) : (
                             <DndContext
@@ -898,7 +896,7 @@ export function TemplateEditor({ template, userRole }: TemplateEditorProps) {
                               onClick={() => handleAddQuestion(sectionIndex)}
                             >
                               <Plus className="mr-2 h-4 w-4" />
-                              Add Question
+                              {t("editor.addQuestion")}
                             </Button>
                           )}
                         </div>
@@ -919,10 +917,10 @@ export function TemplateEditor({ template, userRole }: TemplateEditorProps) {
               <Button type="submit" disabled={isSaving}>
                 <Save className="mr-2 h-4 w-4" />
                 {isSaving
-                  ? "Saving..."
+                  ? t("editor.saving")
                   : isCreateMode
-                    ? "Create Template"
-                    : "Save Draft"}
+                    ? t("editor.createTemplate")
+                    : t("editor.saveDraft")}
               </Button>
             </div>
           </>
@@ -934,10 +932,10 @@ export function TemplateEditor({ template, userRole }: TemplateEditorProps) {
         <DialogContent className="sm:max-w-[550px] max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
-              {editingQuestion ? "Edit Question" : "Add Question"}
+              {editingQuestion ? t("editor.editQuestion") : t("editor.addQuestionTitle")}
             </DialogTitle>
             <DialogDescription>
-              Configure the question details and answer type.
+              {t("editor.questionDesc")}
             </DialogDescription>
           </DialogHeader>
           <QuestionForm

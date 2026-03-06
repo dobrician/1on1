@@ -1,0 +1,21 @@
+{
+  "navigation": {
+    "overview": "Overview",
+    "sessions": "Sessions",
+    "actionItems": "Action Items",
+    "history": "History",
+    "analytics": "Analytics",
+    "people": "People",
+    "templates": "Templates",
+    "settings": "Settings",
+    "company": "Company",
+    "auditLog": "Audit Log",
+    "teams": "Teams",
+    "signOut": "Sign out",
+    "toggleNavigation": "Toggle navigation",
+    "navigation": "Navigation",
+    "language": "Language",
+    "searchPlaceholder": "Search...",
+    "theme": "Theme"
+  }
+}

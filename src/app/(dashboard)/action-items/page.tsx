@@ -11,10 +11,12 @@ import {
 import { eq, or, and, asc, sql } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 import { ActionItemsPage } from "@/components/action-items/action-items-page";
+import { getTranslations } from "next-intl/server";
 
 export default async function ActionItemsRoute() {
   const session = await auth();
   if (!session?.user) redirect("/login");
+  const t = await getTranslations("actionItems");
 
   const data = await withTenantContext(
     session.user.tenantId,
@@ -96,9 +98,9 @@ export default async function ActionItemsRoute() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Action Items</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">{t("title")}</h1>
         <p className="text-muted-foreground">
-          Track and manage action items across all your 1:1 sessions.
+          {t("description")}
         </p>
       </div>
 

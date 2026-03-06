@@ -4,6 +4,7 @@ import { withTenantContext } from "@/lib/db/tenant-context";
 import { tenants } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { CompanySettingsForm } from "./company-settings-form";
+import { getTranslations } from "next-intl/server";
 
 export default async function CompanySettingsPage() {
   const session = await auth();
@@ -11,6 +12,7 @@ export default async function CompanySettingsPage() {
   if (!session?.user) {
     redirect("/login");
   }
+  const t = await getTranslations("settings");
 
   if (session.user.role !== "admin") {
     redirect("/overview");
@@ -45,10 +47,10 @@ export default async function CompanySettingsPage() {
     <div className="mx-auto max-w-2xl">
       <div className="mb-8">
         <h1 className="text-2xl font-semibold tracking-tight">
-          Organization Settings
+          {t("title")}
         </h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Manage your organization details and meeting defaults
+          {t("description")}
         </p>
       </div>
 

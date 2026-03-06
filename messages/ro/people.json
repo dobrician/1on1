@@ -1,0 +1,69 @@
+{
+  "people": {
+    "title": "Persoane",
+    "description": "Gestionează membrii organizației tale",
+    "tabs": {
+      "people": "Persoane",
+      "teams": "Echipe"
+    },
+    "table": {
+      "name": "Nume",
+      "email": "Email",
+      "role": "Rol",
+      "teams": "Echipe",
+      "manager": "Manager",
+      "status": "Status",
+      "searchPlaceholder": "Caută după nume, email sau titlu...",
+      "allRoles": "Toate rolurile",
+      "admin": "Admin",
+      "manager": "Manager",
+      "member": "Membru",
+      "allTeams": "Toate echipele",
+      "allStatus": "Toate statusurile",
+      "active": "Activ",
+      "pending": "În așteptare",
+      "deactivated": "Dezactivat",
+      "noUsers": "Niciun utilizator găsit.",
+      "showing": "Se afișează {from}-{to} din {total} utilizatori",
+      "previous": "Anterior",
+      "next": "Următor"
+    },
+    "invite": {
+      "button": "Invită",
+      "title": "Invită persoane",
+      "description": "Trimite invitații prin email pentru a se alătura organizației.",
+      "emailLabel": "Adrese de email",
+      "emailPlaceholder": "Introduceți adrese de email, câte una pe rând sau separate prin virgulă",
+      "emailDesc": "Poți invita până la 50 de persoane simultan.",
+      "roleLabel": "Rol",
+      "rolePlaceholder": "Selectează un rol",
+      "roleDesc": "Toți invitații vor primi acest rol.",
+      "cancel": "Anulează",
+      "sending": "Se trimite...",
+      "send": "Trimite invitațiile",
+      "success": "{count} invitație/invitații trimise cu succes",
+      "skipped": "Unele emailuri au fost omise",
+      "error": "Ceva nu a funcționat. Încearcă din nou.",
+      "failed": "Trimiterea invitațiilor a eșuat"
+    },
+    "profile": {
+      "jobTitle": "Funcție",
+      "manager": "Manager",
+      "teams": "Echipe",
+      "none": "Niciunul",
+      "viewProfile": "Vezi profilul complet"
+    },
+    "role": {
+      "updated": "Rol actualizat"
+    },
+    "actions": {
+      "viewProfile": "Vezi profil",
+      "resendInvite": "Retrimite invitația",
+      "deactivate": "Dezactivează",
+      "reactivate": "Reactivează",
+      "deactivated": "Utilizator dezactivat",
+      "reactivated": "Utilizator reactivat",
+      "inviteResent": "Invitație retrimisă"
+    }
+  }
+}

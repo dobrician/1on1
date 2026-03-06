@@ -4,6 +4,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Sparkles, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 export interface NudgeData {
   id: string;
@@ -20,19 +21,28 @@ interface NudgeCardProps {
   onDismissed?: (nudgeId: string) => void;
 }
 
-function formatRelativeTime(dateStr: string): string {
+function formatRelativeTime(
+  dateStr: string,
+  t: ReturnType<typeof useTranslations<"dashboard.nudge">>
+): string {
   const target = new Date(dateStr);
   const now = new Date();
   const diffMs = target.getTime() - now.getTime();
   const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
 
-  if (diffDays < 0) return "past due";
-  if (diffDays === 0) return "today";
-  if (diffDays === 1) return "tomorrow";
-  return `in ${diffDays} days`;
+  if (diffDays < 0) return t("pastDue");
+  if (diffDays === 0) return t("today");
+  if (diffDays === 1) return t("tomorrow");
+  return t("inDays", { count: diffDays });
 }
 
-function PriorityDot({ priority }: { priority: string }) {
+function PriorityDot({
+  priority,
+  label,
+}: {
+  priority: string;
+  label: string;
+}) {
   return (
     <span
       className={cn(
@@ -41,13 +51,14 @@ function PriorityDot({ priority }: { priority: string }) {
         priority === "medium" && "bg-amber-500",
         priority === "low" && "bg-neutral-400"
       )}
-      title={`${priority} priority`}
+      title={label}
     />
   );
 }
 
 export function NudgeCard({ nudge, onDismissed }: NudgeCardProps) {
   const queryClient = useQueryClient();
+  const t = useTranslations("dashboard.nudge");
 
   const dismissMutation = useMutation({
     mutationFn: async () => {
@@ -74,11 +85,14 @@ export function NudgeCard({ nudge, onDismissed }: NudgeCardProps) {
         </div>
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2 mb-1">
-            <PriorityDot priority={nudge.priority} />
+            <PriorityDot
+              priority={nudge.priority}
+              label={t("priority", { priority: nudge.priority })}
+            />
             <span className="text-xs text-muted-foreground">
               {nudge.reportName}
               {nudge.targetSessionAt && (
-                <> &middot; {formatRelativeTime(nudge.targetSessionAt)}</>
+                <> &middot; {formatRelativeTime(nudge.targetSessionAt, t)}</>
               )}
             </span>
           </div>
@@ -97,7 +111,7 @@ export function NudgeCard({ nudge, onDismissed }: NudgeCardProps) {
           className="size-7 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
           onClick={() => dismissMutation.mutate()}
           disabled={dismissMutation.isPending}
-          title="Dismiss nudge"
+          title={t("dismiss")}
         >
           <X className="size-3.5" />
         </Button>

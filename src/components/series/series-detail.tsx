@@ -17,6 +17,7 @@ import {
   Clock,
   Settings,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface SeriesDetailData {
   id: string;
@@ -57,23 +58,15 @@ interface SeriesDetailProps {
   currentUserId: string;
 }
 
-const dayLabels: Record<string, string> = {
-  mon: "Monday",
-  tue: "Tuesday",
-  wed: "Wednesday",
-  thu: "Thursday",
-  fri: "Friday",
-};
-
 export function SeriesDetail({ series, currentUserId }: SeriesDetailProps) {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const t = useTranslations("sessions");
   const isManager = series.manager?.id === currentUserId;
   const hasInProgress = series.sessions.some(
     (s) => s.status === "in_progress"
   );
 
-  // Find the in-progress session id for Resume navigation
   const inProgressSession = series.sessions.find(
     (s) => s.status === "in_progress"
   );
@@ -90,7 +83,7 @@ export function SeriesDetail({ series, currentUserId }: SeriesDetailProps) {
       return res.json();
     },
     onSuccess: (data) => {
-      toast.success(`Session #${data.sessionNumber} started`);
+      toast.success(t("detail.sessionStarted", { number: data.sessionNumber }));
       router.push(`/wizard/${data.id}`);
     },
     onError: (error: Error) => {
@@ -112,7 +105,7 @@ export function SeriesDetail({ series, currentUserId }: SeriesDetailProps) {
       return res.json();
     },
     onSuccess: () => {
-      toast.success("Series updated");
+      toast.success(t("detail.seriesUpdated"));
       queryClient.invalidateQueries({ queryKey: ["series"] });
       router.refresh();
     },
@@ -133,7 +126,7 @@ export function SeriesDetail({ series, currentUserId }: SeriesDetailProps) {
       return res.json();
     },
     onSuccess: () => {
-      toast.success("Series archived");
+      toast.success(t("detail.seriesArchived"));
       router.push("/sessions");
       router.refresh();
     },
@@ -145,6 +138,26 @@ export function SeriesDetail({ series, currentUserId }: SeriesDetailProps) {
   const report = series.report;
   const reportInitials =
     (report?.firstName?.[0] ?? "") + (report?.lastName?.[0] ?? "");
+
+  const managerName = series.manager
+    ? `${series.manager.firstName} ${series.manager.lastName}`
+    : "";
+
+  const statusBadgeVariant =
+    series.status === "active"
+      ? "secondary"
+      : "outline";
+
+  const statusLabel =
+    series.status === "active"
+      ? t("series.statusActive")
+      : series.status === "paused"
+        ? t("series.statusPaused")
+        : t("series.statusArchived");
+
+  const preferredDayLabel = series.preferredDay
+    ? t(`form.${series.preferredDay === "mon" ? "monday" : series.preferredDay === "tue" ? "tuesday" : series.preferredDay === "wed" ? "wednesday" : series.preferredDay === "thu" ? "thursday" : "friday"}`)
+    : t("detail.noPreference");
 
   return (
     <div className="space-y-6">
@@ -160,22 +173,14 @@ export function SeriesDetail({ series, currentUserId }: SeriesDetailProps) {
               {report?.firstName} {report?.lastName}
             </h1>
             <p className="text-muted-foreground">
-              1:1 with {series.manager?.firstName} {series.manager?.lastName}
+              {t("detail.oneOnOneWith", { name: managerName })}
             </p>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
-          <Badge
-            variant={
-              series.status === "active"
-                ? "default"
-                : series.status === "paused"
-                  ? "secondary"
-                  : "outline"
-            }
-          >
-            {series.status}
+          <Badge variant={statusBadgeVariant as "secondary" | "outline"}>
+            {statusLabel}
           </Badge>
         </div>
       </div>
@@ -185,15 +190,15 @@ export function SeriesDetail({ series, currentUserId }: SeriesDetailProps) {
         <div className="flex items-center gap-2">
           {!hasInProgress ? (
             <Button
+              variant="outline"
               onClick={() => startSession.mutate()}
               disabled={startSession.isPending}
             >
               <Play className="mr-1.5 h-4 w-4" />
-              Start Session
+              {t("detail.startSession")}
             </Button>
           ) : (
             <Button
-              variant="outline"
               onClick={() => {
                 if (inProgressSession) {
                   router.push(`/wizard/${inProgressSession.id}`);
@@ -201,7 +206,7 @@ export function SeriesDetail({ series, currentUserId }: SeriesDetailProps) {
               }}
             >
               <RotateCcw className="mr-1.5 h-4 w-4" />
-              Resume Session
+              {t("detail.resumeSession")}
             </Button>
           )}
 
@@ -213,7 +218,7 @@ export function SeriesDetail({ series, currentUserId }: SeriesDetailProps) {
               disabled={updateStatus.isPending}
             >
               <Pause className="mr-1.5 h-3.5 w-3.5" />
-              Pause
+              {t("detail.pause")}
             </Button>
           ) : series.status === "paused" ? (
             <Button
@@ -223,7 +228,7 @@ export function SeriesDetail({ series, currentUserId }: SeriesDetailProps) {
               disabled={updateStatus.isPending}
             >
               <Play className="mr-1.5 h-3.5 w-3.5" />
-              Resume
+              {t("detail.resumeSeries")}
             </Button>
           ) : null}
 
@@ -234,7 +239,7 @@ export function SeriesDetail({ series, currentUserId }: SeriesDetailProps) {
             disabled={archiveSeries.isPending}
           >
             <Archive className="mr-1.5 h-3.5 w-3.5" />
-            Archive
+            {t("detail.archive")}
           </Button>
         </div>
       )}
@@ -245,41 +250,42 @@ export function SeriesDetail({ series, currentUserId }: SeriesDetailProps) {
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
         <div className="space-y-1">
           <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-            Cadence
+            {t("detail.cadence")}
           </p>
           <p className="text-sm capitalize">
             {series.cadence === "custom"
-              ? `Every ${series.cadenceCustomDays} days`
+              ? t("detail.everyDays", { count: series.cadenceCustomDays ?? 0 })
+              : series.cadence === "weekly" ? t("form.weekly")
+              : series.cadence === "biweekly" ? t("form.biweekly")
+              : series.cadence === "monthly" ? t("form.monthly")
               : series.cadence}
           </p>
         </div>
         <div className="space-y-1">
           <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-            Preferred day
+            {t("detail.preferredDay")}
           </p>
           <p className="text-sm flex items-center gap-1">
             <CalendarDays className="h-3.5 w-3.5 text-muted-foreground" />
-            {series.preferredDay
-              ? dayLabels[series.preferredDay] ?? series.preferredDay
-              : "No preference"}
+            {preferredDayLabel}
           </p>
         </div>
         <div className="space-y-1">
           <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-            Preferred time
+            {t("detail.preferredTime")}
           </p>
           <p className="text-sm flex items-center gap-1">
             <Clock className="h-3.5 w-3.5 text-muted-foreground" />
-            {series.preferredTime ?? "No preference"}
+            {series.preferredTime ?? t("detail.noPreference")}
           </p>
         </div>
         <div className="space-y-1">
           <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-            Duration
+            {t("detail.duration")}
           </p>
           <p className="text-sm flex items-center gap-1">
             <Settings className="h-3.5 w-3.5 text-muted-foreground" />
-            {series.defaultDurationMinutes} min
+            {t("detail.durationMinutes", { count: series.defaultDurationMinutes })}
           </p>
         </div>
       </div>
@@ -287,8 +293,8 @@ export function SeriesDetail({ series, currentUserId }: SeriesDetailProps) {
       {series.nextSessionAt && (
         <div className="rounded-md bg-muted/50 px-4 py-3">
           <p className="text-sm">
-            <span className="font-medium">Next session:</span>{" "}
-            {new Date(series.nextSessionAt).toLocaleDateString("en-US", {
+            <span className="font-medium">{t("detail.nextSession")}</span>{" "}
+            {new Date(series.nextSessionAt).toLocaleDateString(undefined, {
               weekday: "long",
               month: "long",
               day: "numeric",
@@ -302,7 +308,7 @@ export function SeriesDetail({ series, currentUserId }: SeriesDetailProps) {
 
       {/* Session history */}
       <div>
-        <h2 className="mb-3 text-lg font-medium">Session History</h2>
+        <h2 className="mb-3 text-lg font-medium">{t("detail.sessionHistory")}</h2>
         <SessionTimeline sessions={series.sessions} />
       </div>
     </div>

@@ -1,0 +1,45 @@
+{
+  "analytics": {
+    "title": "Analize",
+    "description": "Vizualizează tendințele de performanță și informațiile despre rapoartele tale.",
+    "teamsSection": "Echipe",
+    "individualsSection": "Individuali",
+    "memberCount": "{count, plural, one {# membru} other {# membri}}",
+    "sessionCount": "{count, plural, one {# sesiune} other {# sesiuni}}",
+    "empty": "Nu există date de sesiuni. Finalizează sesiuni pentru a vedea analize.",
+    "period": {
+      "label": "Perioadă",
+      "from": "De la",
+      "to": "Până la",
+      "last30": "Ultimele 30 de zile",
+      "last3months": "Ultimele 3 luni",
+      "last6months": "Ultimele 6 luni",
+      "lastYear": "Ultimul an",
+      "custom": "Interval personalizat"
+    },
+    "chart": {
+      "scoreTrend": "Tendință scor",
+      "categoryBreakdown": "Detaliere pe categorii",
+      "actionItemVelocity": "Viteză acțiuni",
+      "meetingAdherence": "Aderență întâlniri",
+      "sessionComparison": "Comparație sesiuni",
+      "anonymizedNote": "Mediile anonimizate necesită cel puțin 2 contributori pe categorie pentru protecția confidențialității.",
+      "noData": "Nu există sesiuni finalizate cu răspunsuri punctate în această perioadă.",
+      "limitedData": "Date limitate ({count} contributor(i))",
+      "contributors": "{count} contributori",
+      "avg": "Medie: {value}",
+      "samples": "{count} eșantion(oane)",
+      "limited": "(date limitate)"
+    },
+    "export": {
+      "csv": "Exportă CSV",
+      "all": "Exportă toate datele",
+      "downloaded": "Export descărcat",
+      "failed": "Exportul a eșuat",
+      "scoreTrend": "Exportă tendința scorului",
+      "categories": "Exportă categorii",
+      "velocity": "Exportă viteza",
+      "adherence": "Exportă aderența"
+    }
+  }
+}

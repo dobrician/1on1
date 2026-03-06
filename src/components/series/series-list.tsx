@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { SeriesCard } from "./series-card";
 import { Button } from "@/components/ui/button";
 import { Plus, CalendarDays } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface Series {
   id: string;
@@ -32,6 +33,7 @@ interface SeriesListProps {
 }
 
 export function SeriesList({ initialSeries, currentUserId }: SeriesListProps) {
+  const t = useTranslations("sessions");
   const { data: series } = useQuery<Series[]>({
     queryKey: ["series"],
     queryFn: async () => {
@@ -46,14 +48,14 @@ export function SeriesList({ initialSeries, currentUserId }: SeriesListProps) {
     return (
       <div className="flex flex-col items-center justify-center rounded-lg border border-dashed p-12 text-center">
         <CalendarDays className="mb-4 h-12 w-12 text-muted-foreground/50" />
-        <h3 className="mb-1 text-lg font-medium">No meeting series yet</h3>
+        <h3 className="mb-1 text-lg font-medium">{t("series.empty")}</h3>
         <p className="mb-4 text-sm text-muted-foreground">
-          Create your first 1:1 series to start scheduling sessions.
+          {t("series.emptyDesc")}
         </p>
         <Button asChild>
           <Link href="/sessions/new">
             <Plus className="mr-2 h-4 w-4" />
-            Create Series
+            {t("series.create")}
           </Link>
         </Button>
       </div>

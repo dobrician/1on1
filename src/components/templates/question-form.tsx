@@ -1,6 +1,7 @@
 "use client";
 
 import { useForm } from "react-hook-form";
+import { useTranslations } from "next-intl";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import {
@@ -27,13 +28,13 @@ type QuestionFormValues = z.infer<typeof questionSchema>;
 
 const SCORABLE_TYPES = new Set(["rating_1_5", "rating_1_10", "yes_no", "mood"]);
 
-const answerTypeLabels: Record<string, string> = {
-  text: "Text",
-  rating_1_5: "Rating (1-5)",
-  rating_1_10: "Rating (1-10)",
-  yes_no: "Yes/No",
-  multiple_choice: "Multiple Choice",
-  mood: "Mood",
+const answerTypeKeys: Record<string, string> = {
+  text: "answerTypeText",
+  rating_1_5: "answerTypeRating5",
+  rating_1_10: "answerTypeRating10",
+  yes_no: "answerTypeYesNo",
+  multiple_choice: "answerTypeMultipleChoice",
+  mood: "answerTypeMood",
 };
 
 interface QuestionFormProps {
@@ -51,6 +52,7 @@ export function QuestionForm({
   onSave,
   onCancel,
 }: QuestionFormProps) {
+  const t = useTranslations("templates.editor");
   const {
     register,
     handleSubmit,
@@ -125,10 +127,10 @@ export function QuestionForm({
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       {/* Question text */}
       <div className="space-y-2">
-        <Label htmlFor="questionText">Question Text</Label>
+        <Label htmlFor="questionText">{t("questionTextLabel")}</Label>
         <Textarea
           id="questionText"
-          placeholder="What would you like to ask?"
+          placeholder={t("questionTextPlaceholder")}
           rows={2}
           {...register("questionText")}
         />
@@ -142,12 +144,12 @@ export function QuestionForm({
       {/* Help text */}
       <div className="space-y-2">
         <Label htmlFor="helpText">
-          Help Text{" "}
-          <span className="text-muted-foreground font-normal">(optional)</span>
+          {t("helpTextLabel")}{" "}
+          <span className="text-muted-foreground font-normal">({t("optional")})</span>
         </Label>
         <Textarea
           id="helpText"
-          placeholder="Additional context or instructions for this question"
+          placeholder={t("helpTextPlaceholder")}
           rows={2}
           {...register("helpText")}
         />
@@ -158,7 +160,7 @@ export function QuestionForm({
 
       {/* Answer type */}
       <div className="space-y-2">
-        <Label>Answer Type</Label>
+        <Label>{t("answerTypeLabel")}</Label>
         <Select
           value={selectedAnswerType}
           onValueChange={(value) => {
@@ -171,12 +173,12 @@ export function QuestionForm({
           }}
         >
           <SelectTrigger>
-            <SelectValue placeholder="Select answer type" />
+            <SelectValue placeholder={t("answerTypePlaceholder")} />
           </SelectTrigger>
           <SelectContent>
             {answerTypes.map((type) => (
               <SelectItem key={type} value={type}>
-                {answerTypeLabels[type] ?? type}
+                {answerTypeKeys[type] ? t(answerTypeKeys[type] as Parameters<typeof t>[0]) : type}
               </SelectItem>
             ))}
           </SelectContent>
@@ -199,10 +201,10 @@ export function QuestionForm({
       <div className="flex items-center justify-between rounded-lg border p-3">
         <div>
           <Label htmlFor="isRequired" className="cursor-pointer">
-            Required
+            {t("requiredLabel")}
           </Label>
           <p className="text-xs text-muted-foreground">
-            Participants must answer this question
+            {t("requiredDesc")}
           </p>
         </div>
         <Switch
@@ -215,7 +217,7 @@ export function QuestionForm({
       {/* Score weight (only for scorable answer types) */}
       {isScorable && (
         <div className="space-y-2">
-          <Label htmlFor="scoreWeight">Score Weight</Label>
+          <Label htmlFor="scoreWeight">{t("scoreWeightLabel")}</Label>
           <Input
             id="scoreWeight"
             type="number"
@@ -228,7 +230,7 @@ export function QuestionForm({
             }
           />
           <p className="text-xs text-muted-foreground">
-            0 = excluded from scoring, 1 = normal, 2 = double impact
+            {t("scoreWeightDesc")}
           </p>
         </div>
       )}
@@ -257,10 +259,10 @@ export function QuestionForm({
       {/* Actions */}
       <div className="flex justify-end gap-2 pt-2">
         <Button type="button" variant="outline" onClick={onCancel}>
-          Cancel
+          {t("cancel")}
         </Button>
         <Button type="submit">
-          {question ? "Update Question" : "Add Question"}
+          {question ? t("updateQuestion") : t("addQuestionBtn")}
         </Button>
       </div>
     </form>

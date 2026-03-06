@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback, useMemo, useRef } from "react";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
@@ -91,6 +92,7 @@ export function HistoryPage({
   initialNextCursor,
   seriesOptions,
 }: HistoryPageProps) {
+  const t = useTranslations("history");
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -274,7 +276,7 @@ export function HistoryPage({
         <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
         <Input
           type="text"
-          placeholder="Search notes, answers, talking points..."
+          placeholder={t("searchPlaceholder")}
           className="pl-9 pr-9"
           value={searchQuery}
           onChange={(e) => handleSearchChange(e.target.value)}
@@ -293,7 +295,7 @@ export function HistoryPage({
       <div className="grid grid-cols-2 gap-3 sm:flex sm:flex-wrap sm:items-end">
         <div className="space-y-1">
           <label className="text-xs font-medium text-muted-foreground">
-            Status
+            {t("status")}
           </label>
           <Select
             value={statusFilter}
@@ -302,19 +304,19 @@ export function HistoryPage({
             }
           >
             <SelectTrigger className="w-full sm:w-[140px]">
-              <SelectValue placeholder="All statuses" />
+              <SelectValue placeholder={t("allStatus")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All</SelectItem>
-              <SelectItem value="completed">Completed</SelectItem>
-              <SelectItem value="in_progress">In Progress</SelectItem>
+              <SelectItem value="all">{t("allStatus")}</SelectItem>
+              <SelectItem value="completed">{t("completed")}</SelectItem>
+              <SelectItem value="in_progress">{t("inProgress")}</SelectItem>
             </SelectContent>
           </Select>
         </div>
 
         <div className="space-y-1">
           <label className="text-xs font-medium text-muted-foreground">
-            From
+            {t("from")}
           </label>
           <Input
             type="date"
@@ -328,7 +330,7 @@ export function HistoryPage({
 
         <div className="space-y-1">
           <label className="text-xs font-medium text-muted-foreground">
-            To
+            {t("to")}
           </label>
           <Input
             type="date"
@@ -342,7 +344,7 @@ export function HistoryPage({
 
         <div className="space-y-1">
           <label className="text-xs font-medium text-muted-foreground">
-            Series
+            {t("series")}
           </label>
           <Select
             value={seriesFilter}
@@ -351,10 +353,10 @@ export function HistoryPage({
             }
           >
             <SelectTrigger className="w-full sm:w-[200px]">
-              <SelectValue placeholder="All series" />
+              <SelectValue placeholder={t("allSeries")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All series</SelectItem>
+              <SelectItem value="all">{t("allSeries")}</SelectItem>
               {seriesOptions.map((opt) => (
                 <SelectItem key={opt.id} value={opt.id}>
                   {opt.reportName}
@@ -372,7 +374,7 @@ export function HistoryPage({
             className="gap-1 text-muted-foreground"
           >
             <X className="h-3.5 w-3.5" />
-            Clear
+            {t("clear")}
           </Button>
         )}
       </div>
@@ -381,17 +383,17 @@ export function HistoryPage({
       {isSearching && (
         <div className="flex items-center justify-center gap-2 py-12 text-sm text-muted-foreground">
           <Loader2 className="h-4 w-4 animate-spin" />
-          Searching...
+          {t("searching")}
         </div>
       )}
 
       {!isSearching && isShowingSearch && searchResults && searchResults.length === 0 && (
         <div className="py-12 text-center">
           <p className="text-lg font-medium text-muted-foreground">
-            No sessions found matching &quot;{searchQuery.trim()}&quot;.
+            {t("noSearchResults", { query: searchQuery.trim() })}
           </p>
           <p className="mt-1 text-sm text-muted-foreground">
-            Try different keywords or clear the search.
+            {t("noSearchResultsDesc")}
           </p>
         </div>
       )}
@@ -399,7 +401,7 @@ export function HistoryPage({
       {!isSearching && isShowingSearch && searchResults && searchResults.length > 0 && (
         <div className="space-y-2">
           <p className="text-sm text-muted-foreground">
-            {searchResults.length} session{searchResults.length !== 1 ? "s" : ""} found
+            {t("sessionsFound", { count: searchResults.length })}
           </p>
           <div className="rounded-lg border divide-y">
             {searchResults.map((r) => (
@@ -443,12 +445,12 @@ export function HistoryPage({
             <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-16 text-center">
               <ClipboardList className="mb-4 size-12 text-muted-foreground/30" />
               <h3 className="text-lg font-medium">
-                {hasActiveFilters ? "No sessions match your filters" : "No sessions yet"}
+                {hasActiveFilters ? t("noFilterResults") : t("noSessions")}
               </h3>
               <p className="mt-1 text-sm text-muted-foreground">
                 {hasActiveFilters
-                  ? "Try adjusting your filters or clearing them."
-                  : "Complete your first 1:1 session to see it here."}
+                  ? t("noFilterResultsDesc")
+                  : t("noSessionsDesc")}
               </p>
               {hasActiveFilters && (
                 <Button
@@ -457,12 +459,12 @@ export function HistoryPage({
                   className="mt-4"
                   onClick={clearFilters}
                 >
-                  Clear Filters
+                  {t("clearFilters")}
                 </Button>
               )}
               {!hasActiveFilters && (
                 <Button variant="outline" size="sm" className="mt-4" asChild>
-                  <Link href="/sessions">Go to Sessions</Link>
+                  <Link href="/sessions">{t("goToSessions")}</Link>
                 </Button>
               )}
             </div>
@@ -478,7 +480,7 @@ export function HistoryPage({
                           {group.reportName}
                         </p>
                         <p className="text-xs text-muted-foreground">
-                          with {group.managerName}
+                          {t("withManager", { name: group.managerName })}
                         </p>
                       </div>
                     </div>
@@ -529,7 +531,7 @@ export function HistoryPage({
                             )}
                             {s.durationMinutes && (
                               <span className="text-xs text-muted-foreground">
-                                {s.durationMinutes} min
+                                {t("duration", { count: s.durationMinutes })}
                               </span>
                             )}
                             <Badge
@@ -576,10 +578,10 @@ export function HistoryPage({
                 {isLoadingMore ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Loading...
+                    {t("loading")}
                   </>
                 ) : (
-                  "Load more"
+                  t("loadMore")
                 )}
               </Button>
             </div>

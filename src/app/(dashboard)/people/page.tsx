@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { withTenantContext } from "@/lib/db/tenant-context";
 import { users, teams, teamMembers, inviteTokens } from "@/lib/db/schema";
 import { eq, and, gt, isNull, sql } from "drizzle-orm";
+import { getTranslations } from "next-intl/server";
 import { PeopleTabs } from "@/components/people/people-tabs";
 import { PeopleTable } from "@/components/people/people-table";
 import { InviteButton } from "@/components/people/invite-button";
@@ -11,6 +12,8 @@ import type { UserRow } from "@/components/people/people-table-columns";
 export default async function PeoplePage() {
   const session = await auth();
   if (!session?.user) redirect("/login");
+
+  const t = await getTranslations("people");
 
   const data = await withTenantContext(
     session.user.tenantId,
@@ -139,10 +142,8 @@ export default async function PeoplePage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">People</h1>
-          <p className="text-sm text-muted-foreground">
-            Manage your organization&apos;s members
-          </p>
+          <h1 className="text-2xl font-semibold tracking-tight">{t("title")}</h1>
+          <p className="text-sm text-muted-foreground">{t("description")}</p>
         </div>
         {session.user.role === "admin" && <InviteButton />}
       </div>

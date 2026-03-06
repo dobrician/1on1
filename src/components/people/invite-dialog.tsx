@@ -29,6 +29,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
 // Client-side form schema: emails as raw string, role selection
@@ -50,6 +51,7 @@ export function InviteDialog({
   onOpenChange,
   onSuccess,
 }: InviteDialogProps) {
+  const t = useTranslations("people");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<InviteFormValues>({
@@ -82,9 +84,7 @@ export function InviteDialog({
       const data = await response.json();
 
       if (data.sent > 0) {
-        toast.success(
-          `${data.sent} invite${data.sent > 1 ? "s" : ""} sent successfully`
-        );
+        toast.success(t("invite.success", { count: data.sent }));
       }
 
       if (data.skipped?.length > 0) {
@@ -94,7 +94,7 @@ export function InviteDialog({
               `${s.email}: ${s.reason}`
           )
           .join("\n");
-        toast.warning("Some emails were skipped", {
+        toast.warning(t("invite.skipped"), {
           description: skippedMessages,
           duration: 8000,
         });
@@ -106,7 +106,7 @@ export function InviteDialog({
         onSuccess?.();
       }
     } catch {
-      toast.error("Something went wrong. Please try again.");
+      toast.error(t("invite.error"));
     } finally {
       setIsSubmitting(false);
     }
@@ -116,10 +116,8 @@ export function InviteDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Invite people</DialogTitle>
-          <DialogDescription>
-            Send email invitations to join your organization.
-          </DialogDescription>
+          <DialogTitle>{t("invite.title")}</DialogTitle>
+          <DialogDescription>{t("invite.description")}</DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
@@ -129,17 +127,15 @@ export function InviteDialog({
               name="emails"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email addresses</FormLabel>
+                  <FormLabel>{t("invite.emailLabel")}</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Enter email addresses, one per line or comma-separated"
+                      placeholder={t("invite.emailPlaceholder")}
                       rows={4}
                       {...field}
                     />
                   </FormControl>
-                  <FormDescription>
-                    You can invite up to 50 people at once.
-                  </FormDescription>
+                  <FormDescription>{t("invite.emailDesc")}</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -150,25 +146,23 @@ export function InviteDialog({
               name="role"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Role</FormLabel>
+                  <FormLabel>{t("invite.roleLabel")}</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select a role" />
+                        <SelectValue placeholder={t("invite.rolePlaceholder")} />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="member">Member</SelectItem>
-                      <SelectItem value="manager">Manager</SelectItem>
-                      <SelectItem value="admin">Admin</SelectItem>
+                      <SelectItem value="member">{t("table.member")}</SelectItem>
+                      <SelectItem value="manager">{t("table.manager")}</SelectItem>
+                      <SelectItem value="admin">{t("table.admin")}</SelectItem>
                     </SelectContent>
                   </Select>
-                  <FormDescription>
-                    All invitees will receive this role.
-                  </FormDescription>
+                  <FormDescription>{t("invite.roleDesc")}</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -180,10 +174,10 @@ export function InviteDialog({
                 variant="outline"
                 onClick={() => onOpenChange(false)}
               >
-                Cancel
+                {t("invite.cancel")}
               </Button>
               <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? "Sending..." : "Send invites"}
+                {isSubmitting ? t("invite.sending") : t("invite.send")}
               </Button>
             </div>
           </form>

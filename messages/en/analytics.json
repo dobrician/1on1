@@ -1,0 +1,45 @@
+{
+  "analytics": {
+    "title": "Analytics",
+    "description": "View performance trends and insights for your reports.",
+    "teamsSection": "Teams",
+    "individualsSection": "Individuals",
+    "memberCount": "{count, plural, one {# member} other {# members}}",
+    "sessionCount": "{count, plural, one {# session} other {# sessions}}",
+    "empty": "No session data available yet. Complete sessions to see analytics.",
+    "period": {
+      "label": "Period",
+      "from": "From",
+      "to": "To",
+      "last30": "Last 30 days",
+      "last3months": "Last 3 months",
+      "last6months": "Last 6 months",
+      "lastYear": "Last year",
+      "custom": "Custom range"
+    },
+    "chart": {
+      "scoreTrend": "Score Trend",
+      "categoryBreakdown": "Category Breakdown",
+      "actionItemVelocity": "Action Item Velocity",
+      "meetingAdherence": "Meeting Adherence",
+      "sessionComparison": "Session Comparison",
+      "anonymizedNote": "Anonymized averages require at least 2 contributors per category to protect privacy.",
+      "noData": "No completed sessions with scored answers in this period.",
+      "limitedData": "Limited data ({count} contributor(s))",
+      "contributors": "{count} contributors",
+      "avg": "Avg: {value}",
+      "samples": "{count} sample(s)",
+      "limited": "(limited data)"
+    },
+    "export": {
+      "csv": "Export CSV",
+      "all": "Export All Data",
+      "downloaded": "Export downloaded",
+      "failed": "Failed to export data",
+      "scoreTrend": "Export score trend",
+      "categories": "Export categories",
+      "velocity": "Export velocity",
+      "adherence": "Export adherence"
+    }
+  }
+}

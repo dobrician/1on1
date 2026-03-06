@@ -1,6 +1,7 @@
 "use client";
 
 import { Fragment, useState } from "react";
+import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronDown, ChevronRight, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -21,27 +22,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-const ACTION_TYPES = [
-  { value: "invite_sent", label: "Invite Sent" },
-  { value: "invite_accepted", label: "Invite Accepted" },
-  { value: "invite_resent", label: "Invite Resent" },
-  { value: "role_changed", label: "Role Changed" },
-  { value: "manager_assigned", label: "Manager Assigned" },
-  { value: "user_deactivated", label: "User Deactivated" },
-  { value: "user_reactivated", label: "User Reactivated" },
-  { value: "profile_updated", label: "Profile Updated" },
-  { value: "team_created", label: "Team Created" },
-  { value: "team_updated", label: "Team Updated" },
-  { value: "team_deleted", label: "Team Deleted" },
-  { value: "member_added_to_team", label: "Member Added to Team" },
-  { value: "member_removed_from_team", label: "Member Removed from Team" },
-  { value: "team_lead_changed", label: "Team Lead Changed" },
-  { value: "org_settings_changed", label: "Org Settings Changed" },
-];
-
-const ACTION_LABEL_MAP = new Map(
-  ACTION_TYPES.map((a) => [a.value, a.label])
-);
 
 interface AuditEntry {
   id: string;
@@ -62,16 +42,6 @@ interface AuditResponse {
   totalPages: number;
 }
 
-function formatActionLabel(action: string): string {
-  return (
-    ACTION_LABEL_MAP.get(action) ??
-    action
-      .split("_")
-      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-      .join(" ")
-  );
-}
-
 function formatTimestamp(iso: string): string {
   return new Date(iso).toLocaleDateString("en-US", {
     month: "short",
@@ -83,46 +53,77 @@ function formatTimestamp(iso: string): string {
   });
 }
 
-function formatMetadata(
-  action: string,
-  metadata: Record<string, unknown>
-): { key: string; value: string }[] {
-  const entries: { key: string; value: string }[] = [];
+export function AuditLogClient() {
+  const t = useTranslations("settings");
 
-  if (action === "role_changed") {
-    if (metadata.previousRole || metadata.newRole) {
-      entries.push({
-        key: "Role Change",
-        value: `${metadata.previousRole ?? "unknown"} -> ${metadata.newRole ?? "unknown"}`,
-      });
-    }
-  } else if (action === "manager_assigned") {
-    entries.push({
-      key: "Manager Change",
-      value: `${metadata.previousManagerId ?? "None"} -> ${metadata.newManagerId ?? "None"}`,
-    });
-  } else if (action === "team_lead_changed") {
-    entries.push({
-      key: "Lead Change",
-      value: `${metadata.previousLeadId ?? "None"} -> ${metadata.newLeadId ?? "None"}`,
-    });
-  } else {
-    // Generic metadata display
-    for (const [key, value] of Object.entries(metadata)) {
-      entries.push({
-        key: key
-          .replace(/([A-Z])/g, " $1")
-          .replace(/^./, (s) => s.toUpperCase()),
-        value:
-          typeof value === "object" ? JSON.stringify(value) : String(value),
-      });
-    }
+  const ACTION_TYPES = [
+    { value: "invite_sent", label: t("auditLog.actions.inviteSent") },
+    { value: "invite_accepted", label: t("auditLog.actions.inviteAccepted") },
+    { value: "invite_resent", label: t("auditLog.actions.inviteResent") },
+    { value: "role_changed", label: t("auditLog.actions.roleChanged") },
+    { value: "manager_assigned", label: t("auditLog.actions.managerAssigned") },
+    { value: "user_deactivated", label: t("auditLog.actions.userDeactivated") },
+    { value: "user_reactivated", label: t("auditLog.actions.userReactivated") },
+    { value: "profile_updated", label: t("auditLog.actions.profileUpdated") },
+    { value: "team_created", label: t("auditLog.actions.teamCreated") },
+    { value: "team_updated", label: t("auditLog.actions.teamUpdated") },
+    { value: "team_deleted", label: t("auditLog.actions.teamDeleted") },
+    { value: "member_added_to_team", label: t("auditLog.actions.memberAdded") },
+    { value: "member_removed_from_team", label: t("auditLog.actions.memberRemoved") },
+    { value: "team_lead_changed", label: t("auditLog.actions.leadChanged") },
+    { value: "org_settings_changed", label: t("auditLog.actions.orgSettingsChanged") },
+  ];
+
+  const ACTION_LABEL_MAP = new Map(ACTION_TYPES.map((a) => [a.value, a.label]));
+
+  function formatActionLabel(action: string): string {
+    return (
+      ACTION_LABEL_MAP.get(action) ??
+      action
+        .split("_")
+        .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+        .join(" ")
+    );
   }
 
-  return entries;
-}
+  function formatMetadata(
+    action: string,
+    metadata: Record<string, unknown>
+  ): { key: string; value: string }[] {
+    const entries: { key: string; value: string }[] = [];
 
-export function AuditLogClient() {
+    if (action === "role_changed") {
+      if (metadata.previousRole || metadata.newRole) {
+        entries.push({
+          key: t("auditLog.metadata.roleChange"),
+          value: `${metadata.previousRole ?? "unknown"} -> ${metadata.newRole ?? "unknown"}`,
+        });
+      }
+    } else if (action === "manager_assigned") {
+      entries.push({
+        key: t("auditLog.metadata.managerChange"),
+        value: `${metadata.previousManagerId ?? "None"} -> ${metadata.newManagerId ?? "None"}`,
+      });
+    } else if (action === "team_lead_changed") {
+      entries.push({
+        key: t("auditLog.metadata.leadChange"),
+        value: `${metadata.previousLeadId ?? "None"} -> ${metadata.newLeadId ?? "None"}`,
+      });
+    } else {
+      for (const [key, value] of Object.entries(metadata)) {
+        entries.push({
+          key: key
+            .replace(/([A-Z])/g, " $1")
+            .replace(/^./, (s) => s.toUpperCase()),
+          value:
+            typeof value === "object" ? JSON.stringify(value) : String(value),
+        });
+      }
+    }
+
+    return entries;
+  }
+
   const [search, setSearch] = useState("");
   const [action, setAction] = useState<string>("all");
   const [fromDate, setFromDate] = useState("");
@@ -170,7 +171,7 @@ export function AuditLogClient() {
         <div className="relative flex-1 min-w-[200px] max-w-sm">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Search actions..."
+            placeholder={t("auditLog.searchPlaceholder")}
             value={search}
             onChange={(e) => {
               setSearch(e.target.value);
@@ -188,10 +189,10 @@ export function AuditLogClient() {
           }}
         >
           <SelectTrigger className="w-[200px]">
-            <SelectValue placeholder="All actions" />
+            <SelectValue placeholder={t("auditLog.allActions")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All actions</SelectItem>
+            <SelectItem value="all">{t("auditLog.allActions")}</SelectItem>
             {ACTION_TYPES.map((a) => (
               <SelectItem key={a.value} value={a.value}>
                 {a.label}
@@ -211,7 +212,7 @@ export function AuditLogClient() {
             className="w-[150px]"
             placeholder="From"
           />
-          <span className="text-muted-foreground text-sm">to</span>
+          <span className="text-muted-foreground text-sm">{t("auditLog.to")}</span>
           <Input
             type="date"
             value={toDate}
@@ -228,12 +229,12 @@ export function AuditLogClient() {
       {/* Table */}
       {isLoading ? (
         <div className="py-12 text-center text-sm text-muted-foreground">
-          Loading audit log...
+          {t("auditLog.loading")}
         </div>
       ) : entries.length === 0 ? (
         <div className="rounded-lg border border-dashed py-12 text-center">
           <p className="text-sm text-muted-foreground">
-            No audit log entries found
+            {t("auditLog.empty")}
           </p>
         </div>
       ) : (
@@ -242,10 +243,10 @@ export function AuditLogClient() {
             <TableHeader>
               <TableRow>
                 <TableHead className="w-[40px]" />
-                <TableHead>Timestamp</TableHead>
-                <TableHead>Actor</TableHead>
-                <TableHead>Action</TableHead>
-                <TableHead>Target</TableHead>
+                <TableHead>{t("auditLog.timestamp")}</TableHead>
+                <TableHead>{t("auditLog.actor")}</TableHead>
+                <TableHead>{t("auditLog.action")}</TableHead>
+                <TableHead>{t("auditLog.target")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -309,7 +310,7 @@ export function AuditLogClient() {
                         <TableCell colSpan={5} className="bg-muted/30 p-4">
                           <div className="space-y-1.5">
                             <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                              Details
+                              {t("auditLog.details")}
                             </p>
                             {metadataEntries.map((m, i) => (
                               <div
@@ -340,8 +341,7 @@ export function AuditLogClient() {
       {totalPages > 1 && (
         <div className="flex items-center justify-between">
           <p className="text-sm text-muted-foreground">
-            Showing {(page - 1) * 50 + 1}-{Math.min(page * 50, total)} of{" "}
-            {total} entries
+            {t("auditLog.showing", { from: (page - 1) * 50 + 1, to: Math.min(page * 50, total), total })}
           </p>
           <div className="flex items-center gap-2">
             <Button
@@ -350,10 +350,10 @@ export function AuditLogClient() {
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={page <= 1}
             >
-              Previous
+              {t("auditLog.previous")}
             </Button>
             <span className="text-sm text-muted-foreground">
-              Page {page} of {totalPages}
+              {t("auditLog.pageOf", { page, total: totalPages })}
             </span>
             <Button
               variant="outline"
@@ -361,7 +361,7 @@ export function AuditLogClient() {
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
               disabled={page >= totalPages}
             >
-              Next
+              {t("auditLog.next")}
             </Button>
           </div>
         </div>

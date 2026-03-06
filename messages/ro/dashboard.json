@@ -1,0 +1,49 @@
+{
+  "dashboard": {
+    "welcome": "Bun venit, {name}",
+    "welcomeFallback": "Organizația ta",
+    "aiNudges": "Sugestii AI",
+    "upcomingSessions": "Sesiuni viitoare",
+    "recentSessions": "Sesiuni recente",
+    "quickStats": {
+      "directReports": "Rapoarte directe",
+      "sessionsThisMonth": "Sesiuni luna aceasta",
+      "averageScore": "Scor mediu",
+      "na": "N/A"
+    },
+    "recent": {
+      "noSessions": "Nicio sesiune finalizată",
+      "noSessionsDesc": "Finalizează prima sesiune pentru a vedea activitatea recentă"
+    },
+    "upcoming": {
+      "today": "Astăzi",
+      "showLess": "Arată mai puțin",
+      "moreNudge": "+{count} sugestie în plus",
+      "moreNudges": "+{count} sugestii în plus",
+      "resumeSession": "Continuă sesiunea",
+      "startSession": "Începe sesiunea",
+      "noSessions": "Nicio sesiune săptămâna aceasta",
+      "noSessionsDesc": "Creează o serie de întâlniri pentru a începe",
+      "newSeries": "Serie nouă de întâlniri"
+    },
+    "overdue": {
+      "title": "Acțiuni restante",
+      "item": "{count} element",
+      "items": "{count} elemente",
+      "daysOverdue": "{count}z întârziere"
+    },
+    "nudgesModal": {
+      "title": "Sugestii de coaching pentru {name}",
+      "empty": "Nicio sugestie de coaching pentru această sesiune",
+      "dismiss": "Respinge"
+    },
+    "nudge": {
+      "pastDue": "expirat",
+      "today": "astăzi",
+      "tomorrow": "mâine",
+      "inDays": "în {count} zile",
+      "priority": "prioritate {priority}",
+      "dismiss": "Respinge sugestia"
+    }
+  }
+}

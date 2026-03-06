@@ -1,6 +1,7 @@
 "use client";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { MoreHorizontal, UserX, UserCheck, Send, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -28,6 +29,7 @@ export function UserActionsMenu({
   currentUserRole,
   currentUserId,
 }: UserActionsMenuProps) {
+  const t = useTranslations("people");
   const queryClient = useQueryClient();
   const isAdmin = currentUserRole === "admin";
   const isSelf = user.id === currentUserId;
@@ -42,7 +44,7 @@ export function UserActionsMenu({
       return res.json();
     },
     onSuccess: () => {
-      toast.success("User deactivated");
+      toast.success(t("actions.deactivated"));
       queryClient.invalidateQueries({ queryKey: ["users"] });
     },
     onError: (error) => {
@@ -64,7 +66,7 @@ export function UserActionsMenu({
       return res.json();
     },
     onSuccess: () => {
-      toast.success("User reactivated");
+      toast.success(t("actions.reactivated"));
       queryClient.invalidateQueries({ queryKey: ["users"] });
     },
     onError: (error) => {
@@ -86,7 +88,7 @@ export function UserActionsMenu({
       return res.json();
     },
     onSuccess: () => {
-      toast.success("Invite resent");
+      toast.success(t("actions.inviteResent"));
     },
     onError: (error) => {
       toast.error(error.message);
@@ -106,7 +108,7 @@ export function UserActionsMenu({
           <DropdownMenuItem asChild>
             <Link href={`/people/${user.id}`}>
               <Eye className="mr-2 h-4 w-4" />
-              View Profile
+              {t("actions.viewProfile")}
             </Link>
           </DropdownMenuItem>
 
@@ -118,7 +120,7 @@ export function UserActionsMenu({
                 disabled={resendInviteMutation.isPending}
               >
                 <Send className="mr-2 h-4 w-4" />
-                Resend Invite
+                {t("actions.resendInvite")}
               </DropdownMenuItem>
             </>
           )}
@@ -132,7 +134,7 @@ export function UserActionsMenu({
                 className="text-destructive focus:text-destructive"
               >
                 <UserX className="mr-2 h-4 w-4" />
-                Deactivate
+                {t("actions.deactivate")}
               </DropdownMenuItem>
             </>
           )}
@@ -145,7 +147,7 @@ export function UserActionsMenu({
                 disabled={reactivateMutation.isPending}
               >
                 <UserCheck className="mr-2 h-4 w-4" />
-                Reactivate
+                {t("actions.reactivate")}
               </DropdownMenuItem>
             </>
           )}

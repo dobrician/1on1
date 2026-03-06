@@ -1,0 +1,26 @@
+{
+  "teams": {
+    "title": "Teams",
+    "createTeam": "Create Team",
+    "empty": "No teams yet",
+    "emptyDesc": "Create your first team to organize your people.",
+    "backToTeams": "Back to Teams",
+    "noDescription": "No description",
+    "teamLead": "Team Lead: {name}",
+    "addMembers": "Add Members",
+    "deleting": "Deleting...",
+    "deleteTeam": "Delete Team",
+    "deleteConfirm": "Are you sure you want to delete this team?",
+    "members": "Members ({count})",
+    "noMembers": "No members yet. Add members to get started.",
+    "name": "Name",
+    "email": "Email",
+    "role": "Role",
+    "joined": "Joined",
+    "lead": "Lead",
+    "member": "Member",
+    "updated": "Team updated",
+    "memberRemoved": "Member removed",
+    "deleted": "Team deleted"
+  }
+}

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import {
   Sheet,
   SheetContent,
@@ -50,13 +51,8 @@ function getStatusColor(status: string) {
   }
 }
 
-const roleLabels: Record<string, string> = {
-  admin: "Admin",
-  manager: "Manager",
-  member: "Member",
-};
-
 export function ProfileSheet({ user, open, onOpenChange }: ProfileSheetProps) {
+  const t = useTranslations("people");
   if (!user) return null;
 
   return (
@@ -84,7 +80,7 @@ export function ProfileSheet({ user, open, onOpenChange }: ProfileSheetProps) {
         <div className="space-y-6 px-4 pb-4">
           <div className="flex items-center gap-2">
             <Badge variant="secondary">
-              {roleLabels[user.role] ?? user.role}
+              {user.role === "admin" ? t("table.admin") : user.role === "manager" ? t("table.manager") : user.role === "member" ? t("table.member") : user.role}
             </Badge>
             <Badge variant="outline" className={getStatusColor(user.status)}>
               {user.status.charAt(0).toUpperCase() + user.status.slice(1)}
@@ -97,7 +93,7 @@ export function ProfileSheet({ user, open, onOpenChange }: ProfileSheetProps) {
             {user.jobTitle && (
               <div>
                 <p className="text-xs font-medium text-muted-foreground">
-                  Job Title
+                  {t("profile.jobTitle")}
                 </p>
                 <p className="text-sm">{user.jobTitle}</p>
               </div>
@@ -105,15 +101,15 @@ export function ProfileSheet({ user, open, onOpenChange }: ProfileSheetProps) {
 
             <div>
               <p className="text-xs font-medium text-muted-foreground">
-                Manager
+                {t("profile.manager")}
               </p>
-              <p className="text-sm">{user.managerName || "None"}</p>
+              <p className="text-sm">{user.managerName || t("profile.none")}</p>
             </div>
 
             {user.teams.length > 0 && (
               <div>
                 <p className="text-xs font-medium text-muted-foreground">
-                  Teams
+                  {t("profile.teams")}
                 </p>
                 <div className="mt-1 flex flex-wrap gap-1">
                   {user.teams.map((team) => (
@@ -131,7 +127,7 @@ export function ProfileSheet({ user, open, onOpenChange }: ProfileSheetProps) {
           <Button variant="outline" size="sm" asChild className="w-full">
             <Link href={`/people/${user.id}`}>
               <ExternalLink className="mr-2 h-4 w-4" />
-              View Full Profile
+              {t("profile.viewProfile")}
             </Link>
           </Button>
         </div>

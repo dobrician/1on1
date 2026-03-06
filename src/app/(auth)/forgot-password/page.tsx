@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,6 +17,7 @@ import {
 import { forgotPasswordAction } from "@/lib/auth/actions";
 
 export default function ForgotPasswordPage() {
+  const t = useTranslations("auth");
   const [sent, setSent] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -35,7 +37,7 @@ export default function ForgotPasswordPage() {
         setSent(true);
       }
     } catch {
-      setError("Something went wrong. Please try again.");
+      setError(t("forgotPassword.error"));
     } finally {
       setLoading(false);
     }
@@ -45,15 +47,14 @@ export default function ForgotPasswordPage() {
     return (
       <Card>
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold">Check your email</CardTitle>
+          <CardTitle className="text-2xl font-bold">{t("forgotPassword.successTitle")}</CardTitle>
           <CardDescription>
-            If an account with that email exists, we sent a password reset link.
-            Check your inbox and spam folder.
+            {t("forgotPassword.successDesc")}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <Button asChild variant="outline" className="w-full">
-            <Link href="/login">Back to sign in</Link>
+            <Link href="/login">{t("forgotPassword.backToSignIn")}</Link>
           </Button>
         </CardContent>
       </Card>
@@ -63,10 +64,9 @@ export default function ForgotPasswordPage() {
   return (
     <Card>
       <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-bold">Forgot password?</CardTitle>
+        <CardTitle className="text-2xl font-bold">{t("forgotPassword.title")}</CardTitle>
         <CardDescription>
-          Enter your email address and we&apos;ll send you a link to reset your
-          password.
+          {t("forgotPassword.description")}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -78,12 +78,12 @@ export default function ForgotPasswordPage() {
           )}
 
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">{t("forgotPassword.email")}</Label>
             <Input
               id="email"
               name="email"
               type="email"
-              placeholder="you@company.com"
+              placeholder={t("forgotPassword.emailPlaceholder")}
               required
               autoComplete="email"
               autoFocus
@@ -91,18 +91,18 @@ export default function ForgotPasswordPage() {
           </div>
 
           <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? "Sending..." : "Send reset link"}
+            {loading ? t("forgotPassword.submitting") : t("forgotPassword.submit")}
           </Button>
         </form>
       </CardContent>
       <CardFooter className="flex justify-center">
         <p className="text-sm text-muted-foreground">
-          Remember your password?{" "}
+          {t("forgotPassword.rememberPassword")}{" "}
           <Link
             href="/login"
             className="font-medium text-foreground hover:underline"
           >
-            Sign in
+            {t("forgotPassword.signIn")}
           </Link>
         </p>
       </CardFooter>

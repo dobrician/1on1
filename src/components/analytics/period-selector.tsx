@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useMemo } from "react";
+import { useTranslations } from "next-intl";
 import {
   Select,
   SelectContent,
@@ -15,21 +16,22 @@ import { periodToDateRange, type PeriodValue } from "@/lib/analytics/period";
 export type { PeriodValue } from "@/lib/analytics/period";
 export { periodToDateRange } from "@/lib/analytics/period";
 
-const PRESETS = [
-  { value: "30d", label: "Last 30 days" },
-  { value: "3mo", label: "Last 3 months" },
-  { value: "6mo", label: "Last 6 months" },
-  { value: "1yr", label: "Last year" },
-  { value: "custom", label: "Custom range" },
-] as const;
-
 interface PeriodSelectorProps {
   value: PeriodValue;
   onChange: (period: PeriodValue) => void;
 }
 
 export function PeriodSelector({ value, onChange }: PeriodSelectorProps) {
+  const t = useTranslations("analytics");
   const isCustom = value.preset === "custom";
+
+  const PRESETS = [
+    { value: "30d", label: t("period.last30") },
+    { value: "3mo", label: t("period.last3months") },
+    { value: "6mo", label: t("period.last6months") },
+    { value: "1yr", label: t("period.lastYear") },
+    { value: "custom", label: t("period.custom") },
+  ] as const;
 
   const handlePresetChange = useCallback(
     (preset: string) => {
@@ -75,7 +77,7 @@ export function PeriodSelector({ value, onChange }: PeriodSelectorProps) {
   return (
     <div className="flex flex-wrap items-end gap-3">
       <div className="space-y-1">
-        <Label className="text-xs text-muted-foreground">Period</Label>
+        <Label className="text-xs text-muted-foreground">{t("period.label")}</Label>
         <Select value={value.preset} onValueChange={handlePresetChange}>
           <SelectTrigger className="w-[180px]">
             <SelectValue />
@@ -93,7 +95,7 @@ export function PeriodSelector({ value, onChange }: PeriodSelectorProps) {
       {isCustom && (
         <>
           <div className="space-y-1">
-            <Label className="text-xs text-muted-foreground">From</Label>
+            <Label className="text-xs text-muted-foreground">{t("period.from")}</Label>
             <Input
               type="date"
               value={startStr}
@@ -102,7 +104,7 @@ export function PeriodSelector({ value, onChange }: PeriodSelectorProps) {
             />
           </div>
           <div className="space-y-1">
-            <Label className="text-xs text-muted-foreground">To</Label>
+            <Label className="text-xs text-muted-foreground">{t("period.to")}</Label>
             <Input
               type="date"
               value={endStr}

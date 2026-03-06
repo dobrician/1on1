@@ -2,14 +2,17 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { AlertTriangle } from "lucide-react";
 import type { OverdueGroup } from "@/lib/queries/dashboard";
+import { getTranslations } from "next-intl/server";
 
 interface OverdueItemsProps {
   groups: OverdueGroup[];
 }
 
-export function OverdueItems({ groups }: OverdueItemsProps) {
+export async function OverdueItems({ groups }: OverdueItemsProps) {
   // Don't render if nothing overdue
   if (groups.length === 0) return null;
+
+  const t = await getTranslations("dashboard.overdue");
 
   const totalCount = groups.reduce((sum, g) => sum + g.items.length, 0);
 
@@ -17,7 +20,7 @@ export function OverdueItems({ groups }: OverdueItemsProps) {
     <section className="space-y-4">
       <div className="flex items-center gap-2">
         <AlertTriangle className="size-4 text-red-500" />
-        <h2 className="text-lg font-medium">Overdue Action Items</h2>
+        <h2 className="text-lg font-medium">{t("title")}</h2>
         <Badge variant="destructive" className="ml-1 tabular-nums">
           {totalCount}
         </Badge>
@@ -29,8 +32,9 @@ export function OverdueItems({ groups }: OverdueItemsProps) {
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-medium">{group.reportName}</h3>
               <span className="text-xs text-muted-foreground">
-                {group.items.length}{" "}
-                {group.items.length === 1 ? "item" : "items"}
+                {group.items.length === 1
+                  ? t("item", { count: group.items.length })
+                  : t("items", { count: group.items.length })}
               </span>
             </div>
             <div className="space-y-1">
@@ -45,7 +49,7 @@ export function OverdueItems({ groups }: OverdueItemsProps) {
                     variant="destructive"
                     className="shrink-0 tabular-nums text-xs"
                   >
-                    {item.daysOverdue}d overdue
+                    {t("daysOverdue", { count: item.daysOverdue })}
                   </Badge>
                 </Link>
               ))}

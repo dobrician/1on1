@@ -6,7 +6,35 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Changed
+- Dashboard layout: Quick Stats cards now appear above Upcoming Sessions for better visual hierarchy
+
 ### Added
+- Background sparkline charts on Quick Stats cards showing 6-month trends (reports, sessions, avg score)
+- `getStatsTrends()` query for monthly aggregated dashboard metrics
+
+### Added
+- i18n translations for wizard components: category-step, summary-screen, question-history-dialog, yes-no/mood/rating widgets (EN + RO)
+- i18n translations for people role-select and status badges (EN + RO)
+- i18n translations for template question-form dialog — labels, placeholders, answer types, buttons (EN + RO)
+
+### Fixed
+- Language switcher in user menu now reads NEXT_LOCALE cookie as source of truth, fixing checkmark showing English when Romanian is active
+
+### Added
+- Nudges modal: clicking an upcoming session card opens a dialog with coaching nudges for that person's series, sorted by priority
+- Nudge dismiss with optimistic UI update inside the modal
+- EN + RO translations for nudges modal (`dashboard.nudgesModal.*`)
+
+### Changed
+- Removed standalone AI Coaching Nudges grid from dashboard overview
+- Removed inline nudge pills from session cards — nudges now only accessible via modal
+- Session card click opens nudges modal; Start/Resume button still navigates to wizard (stopPropagation)
+
+### Added
+- Mobile wizard carousel: full-height vertical card columns replacing horizontal pill strip on mobile
+- Swipe left/right support with 50px threshold for mobile wizard navigation
+- Active card expanded with content, inactive cards compressed as dark columns with vertical labels
 - next-intl v4 i18n infrastructure with non-routing setup (cookie-based locale resolution)
 - Translation files for EN and RO locales with namespace structure (`messages/{locale}/{namespace}.json`)
 - TypeScript compile-time translation key validation via `AppConfig` augmentation in `global.d.ts`

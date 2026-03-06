@@ -8,11 +8,14 @@ import {
   templateLabels,
 } from "@/lib/db/schema";
 import { eq, and, sql } from "drizzle-orm";
+import { getTranslations } from "next-intl/server";
 import { TemplateList } from "@/components/templates/template-list";
 
 export default async function TemplatesPage() {
   const session = await auth();
   if (!session?.user) redirect("/login");
+
+  const t = await getTranslations("templates");
 
   const templates = await withTenantContext(
     session.user.tenantId,
@@ -88,10 +91,8 @@ export default async function TemplatesPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Templates</h1>
-        <p className="text-sm text-muted-foreground">
-          Manage questionnaire templates for your 1:1 sessions
-        </p>
+        <h1 className="text-2xl font-semibold tracking-tight">{t("title")}</h1>
+        <p className="text-sm text-muted-foreground">{t("description")}</p>
       </div>
 
       <TemplateList

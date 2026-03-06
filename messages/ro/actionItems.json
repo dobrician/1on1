@@ -1,0 +1,29 @@
+{
+  "actionItems": {
+    "title": "Acțiuni",
+    "description": "Urmărește și gestionează acțiunile din toate sesiunile 1:1.",
+    "empty": "Nicio acțiune deschisă",
+    "emptyDesc": "Creează-le în timpul următoarei sesiuni.",
+    "goToSessions": "Mergi la sesiuni",
+    "open": "{count} deschise",
+    "overdue": "{count} restante",
+    "completed": "Acțiune finalizată",
+    "reopened": "Acțiune redeschisă",
+    "updateFailed": "Actualizarea acțiunii a eșuat",
+    "updated": "Acțiune actualizată",
+    "edit": {
+      "title": "Editează acțiunea",
+      "description": "Actualizează detaliile acțiunii.",
+      "titleLabel": "Titlu",
+      "titlePlaceholder": "Titlul acțiunii",
+      "descriptionLabel": "Descriere",
+      "descriptionPlaceholder": "Descriere opțională...",
+      "assigneeLabel": "Responsabil",
+      "assigneePlaceholder": "Selectează responsabilul",
+      "dueDateLabel": "Data scadentă",
+      "cancel": "Anulează",
+      "saving": "Se salvează...",
+      "save": "Salvează modificările"
+    }
+  }
+}

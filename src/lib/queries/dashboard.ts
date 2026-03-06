@@ -58,6 +58,12 @@ export interface QuickStats {
   avgScore: number | null;
 }
 
+export interface StatsTrends {
+  reportsHistory: number[];
+  sessionsHistory: number[];
+  scoresHistory: number[];
+}
+
 export interface RecentSession {
   id: string;
   seriesId: string;
@@ -356,6 +362,102 @@ export async function getQuickStats(
       ? parseFloat(sessionStatsRow.avgScore)
       : null,
   };
+}
+
+// ---------------------------------------------------------------------------
+// 3b. Stats Trends (last 6 months)
+// ---------------------------------------------------------------------------
+
+export async function getStatsTrends(
+  tx: TransactionClient,
+  userId: string,
+  role: string
+): Promise<StatsTrends> {
+  const now = new Date();
+  const sixMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 5, 1);
+
+  const roleFilter =
+    role === "member"
+      ? eq(meetingSeries.reportId, userId)
+      : role === "admin"
+        ? undefined
+        : eq(meetingSeries.managerId, userId);
+
+  // Monthly completed sessions + avg score
+  const sessionConditions = [
+    eq(sessions.status, "completed"),
+    gte(sessions.completedAt, sixMonthsAgo),
+    ...(roleFilter ? [roleFilter] : []),
+  ];
+
+  const monthlyStats = await tx
+    .select({
+      month: sql<string>`to_char(${sessions.completedAt}, 'YYYY-MM')`,
+      sessionCount: count(),
+      avgScore: avg(sessions.sessionScore),
+    })
+    .from(sessions)
+    .innerJoin(meetingSeries, eq(sessions.seriesId, meetingSeries.id))
+    .where(and(...sessionConditions))
+    .groupBy(sql`to_char(${sessions.completedAt}, 'YYYY-MM')`)
+    .orderBy(sql`to_char(${sessions.completedAt}, 'YYYY-MM')`);
+
+  // Monthly active series count (series created before each month-end)
+  const seriesConditions = [
+    eq(meetingSeries.status, "active"),
+    ...(roleFilter ? [roleFilter] : []),
+  ];
+
+  const monthlySeries = await tx
+    .select({
+      month: sql<string>`to_char(gs.month, 'YYYY-MM')`,
+      seriesCount: count(meetingSeries.id),
+    })
+    .from(
+      sql`generate_series(
+        date_trunc('month', ${sixMonthsAgo}::timestamp),
+        date_trunc('month', ${now}::timestamp),
+        '1 month'::interval
+      ) as gs(month)`
+    )
+    .leftJoin(
+      meetingSeries,
+      and(
+        ...seriesConditions,
+        lte(meetingSeries.createdAt, sql`gs.month + interval '1 month' - interval '1 day'`)
+      )
+    )
+    .groupBy(sql`gs.month`)
+    .orderBy(sql`gs.month`);
+
+  // Build month keys for the last 6 months
+  const monthKeys: string[] = [];
+  for (let i = 0; i < 6; i++) {
+    const d = new Date(now.getFullYear(), now.getMonth() - 5 + i, 1);
+    monthKeys.push(
+      `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`
+    );
+  }
+
+  // Map query results to arrays aligned with monthKeys
+  const sessionsByMonth = new Map(
+    monthlyStats.map((r) => [r.month, r])
+  );
+  const seriesByMonth = new Map(
+    monthlySeries.map((r) => [r.month, Number(r.seriesCount)])
+  );
+
+  const sessionsHistory = monthKeys.map(
+    (m) => Number(sessionsByMonth.get(m)?.sessionCount ?? 0)
+  );
+  const scoresHistory: number[] = [];
+  for (const m of monthKeys) {
+    const row = sessionsByMonth.get(m);
+    if (row?.avgScore) scoresHistory.push(parseFloat(row.avgScore));
+  }
+  const reportsHistory = monthKeys.map((m) => seriesByMonth.get(m) ?? 0);
+
+  return { reportsHistory, sessionsHistory, scoresHistory };
 }
 
 // ---------------------------------------------------------------------------

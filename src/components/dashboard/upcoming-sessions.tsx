@@ -19,12 +19,11 @@ import {
   Play,
   RotateCcw,
   Sparkles,
-  ChevronDown,
-  ChevronUp,
   Plus,
 } from "lucide-react";
 import type { UpcomingSession } from "@/lib/queries/dashboard";
-import type { NudgeData } from "@/components/dashboard/nudge-card";
+import { NudgesModal } from "@/components/dashboard/nudges-modal";
+import { useTranslations } from "next-intl";
 
 interface UpcomingSessionsProps {
   sessions: UpcomingSession[];
@@ -47,23 +46,15 @@ function formatTime(dateStr: string): string {
   });
 }
 
-function InlineNudge({ nudge }: { nudge: NudgeData }) {
-  return (
-    <div className="flex items-start gap-2 rounded-md bg-amber-50/60 px-3 py-2 dark:bg-amber-950/30">
-      <Sparkles className="mt-0.5 size-3 shrink-0 text-amber-600 dark:text-amber-400" />
-      <p className="text-xs leading-relaxed text-amber-900 dark:text-amber-200">
-        {nudge.content}
-      </p>
-    </div>
-  );
-}
-
-function SessionCard({ session }: { session: UpcomingSession }) {
+function SessionCard({
+  session,
+  onCardClick,
+}: {
+  session: UpcomingSession;
+  onCardClick: (seriesId: string, reportName: string) => void;
+}) {
   const router = useRouter();
-  const [expanded, setExpanded] = useState(false);
-  const firstNudge = session.nudges[0];
-  const extraNudges = session.nudges.slice(1);
-  const hasExtraNudges = extraNudges.length > 0;
+  const t = useTranslations("dashboard.upcoming");
 
   const startSession = useMutation({
     mutationFn: async () => {
@@ -94,7 +85,10 @@ function SessionCard({ session }: { session: UpcomingSession }) {
   const isInProgress = session.status === "in_progress";
 
   return (
-    <Card className="transition-all duration-200 hover:border-foreground/20 hover:shadow-md">
+    <Card
+      className="cursor-pointer transition-all duration-200 hover:border-foreground/20 hover:shadow-md"
+      onClick={() => onCardClick(session.seriesId, session.reportName)}
+    >
       <CardHeader className="flex flex-row items-center gap-3 pb-2">
         <Avatar className="size-9">
           <AvatarFallback className="text-xs">{initials}</AvatarFallback>
@@ -112,7 +106,7 @@ function SessionCard({ session }: { session: UpcomingSession }) {
         </div>
         {session.isToday && (
           <Badge variant="default" className="shrink-0">
-            Today
+            {t("today")}
           </Badge>
         )}
       </CardHeader>
@@ -121,27 +115,14 @@ function SessionCard({ session }: { session: UpcomingSession }) {
           <p className="text-xs text-muted-foreground">{session.templateName}</p>
         )}
 
-        {/* Inline nudge preview */}
-        {firstNudge && <InlineNudge nudge={firstNudge} />}
-        {expanded &&
-          extraNudges.map((n) => <InlineNudge key={n.id} nudge={n} />)}
-        {hasExtraNudges && (
-          <button
-            onClick={() => setExpanded(!expanded)}
-            className="flex items-center gap-1 text-xs text-amber-700 hover:text-amber-900 dark:text-amber-400 dark:hover:text-amber-300"
-          >
-            {expanded ? (
-              <>
-                <ChevronUp className="size-3" />
-                Show less
-              </>
-            ) : (
-              <>
-                <ChevronDown className="size-3" />+{extraNudges.length} more{" "}
-                {extraNudges.length === 1 ? "nudge" : "nudges"}
-              </>
-            )}
-          </button>
+        {/* Top nudge preview (2-line clamp) */}
+        {session.nudges[0] && (
+          <div className="flex items-start gap-2 rounded-md bg-amber-50/60 px-3 py-2 dark:bg-amber-950/30">
+            <Sparkles className="mt-0.5 size-3 shrink-0 text-amber-600 dark:text-amber-400" />
+            <p className="line-clamp-2 text-xs leading-relaxed text-amber-900 dark:text-amber-200">
+              {session.nudges[0].content}
+            </p>
+          </div>
         )}
 
         {/* Start / Resume button for today's sessions */}
@@ -150,7 +131,8 @@ function SessionCard({ session }: { session: UpcomingSession }) {
             variant={isInProgress ? "outline" : "default"}
             size="sm"
             className="w-full"
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               if (isInProgress && session.activeSessionId) {
                 router.push(`/wizard/${session.activeSessionId}`);
               } else {
@@ -162,12 +144,12 @@ function SessionCard({ session }: { session: UpcomingSession }) {
             {isInProgress ? (
               <>
                 <RotateCcw className="mr-1.5 size-3.5" />
-                Resume Session
+                {t("resumeSession")}
               </>
             ) : (
               <>
                 <Play className="mr-1.5 size-3.5" />
-                Start Session
+                {t("startSession")}
               </>
             )}
           </Button>
@@ -178,18 +160,25 @@ function SessionCard({ session }: { session: UpcomingSession }) {
 }
 
 export function UpcomingSessions({ sessions }: UpcomingSessionsProps) {
+  const t = useTranslations("dashboard.upcoming");
+  const [modalState, setModalState] = useState<{
+    open: boolean;
+    seriesId: string;
+    reportName: string;
+  }>({ open: false, seriesId: "", reportName: "" });
+
   if (sessions.length === 0) {
     return (
       <div className="rounded-lg border border-dashed p-8 text-center">
         <Calendar className="mx-auto mb-3 size-8 text-muted-foreground/50" />
-        <p className="text-sm font-medium">No upcoming sessions this week</p>
+        <p className="text-sm font-medium">{t("noSessions")}</p>
         <p className="mt-1 text-xs text-muted-foreground">
-          Set up a meeting series to get started
+          {t("noSessionsDesc")}
         </p>
         <Button variant="outline" size="sm" className="mt-4" asChild>
           <Link href="/sessions/new">
             <Plus className="mr-1.5 size-3.5" />
-            New Meeting Series
+            {t("newSeries")}
           </Link>
         </Button>
       </div>
@@ -197,10 +186,29 @@ export function UpcomingSessions({ sessions }: UpcomingSessionsProps) {
   }
 
   return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {sessions.map((s) => (
-        <SessionCard key={s.sessionId} session={s} />
-      ))}
-    </div>
+    <>
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {sessions.map((s) => (
+          <SessionCard
+            key={s.sessionId}
+            session={s}
+            onCardClick={(seriesId, reportName) =>
+              setModalState({ open: true, seriesId, reportName })
+            }
+          />
+        ))}
+      </div>
+
+      {modalState.seriesId && (
+        <NudgesModal
+          seriesId={modalState.seriesId}
+          reportName={modalState.reportName}
+          open={modalState.open}
+          onOpenChange={(open) =>
+            setModalState((prev) => ({ ...prev, open }))
+          }
+        />
+      )}
+    </>
   );
 }

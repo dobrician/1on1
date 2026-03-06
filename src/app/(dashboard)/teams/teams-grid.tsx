@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { Plus, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TeamCard } from "@/components/people/team-card";
@@ -29,6 +30,7 @@ export function TeamsGrid({
   users,
   currentUserRole,
 }: TeamsGridProps) {
+  const t = useTranslations("teams");
   const [createOpen, setCreateOpen] = useState(false);
   const canCreate = currentUserRole === "admin" || currentUserRole === "manager";
 
@@ -48,7 +50,7 @@ export function TeamsGrid({
         <div className="flex justify-end">
           <Button onClick={() => setCreateOpen(true)} size="sm">
             <Plus className="mr-2 h-4 w-4" />
-            Create Team
+            {t("createTeam")}
           </Button>
         </div>
       )}
@@ -56,10 +58,8 @@ export function TeamsGrid({
       {teamsList.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-12">
           <Users className="h-10 w-10 text-muted-foreground/50" />
-          <h3 className="mt-4 text-lg font-semibold">No teams yet</h3>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Create your first team to organize your people.
-          </p>
+          <h3 className="mt-4 text-lg font-semibold">{t("empty")}</h3>
+          <p className="mt-1 text-sm text-muted-foreground">{t("emptyDesc")}</p>
           {canCreate && (
             <Button
               className="mt-4"
@@ -67,7 +67,7 @@ export function TeamsGrid({
               onClick={() => setCreateOpen(true)}
             >
               <Plus className="mr-2 h-4 w-4" />
-              Create Team
+              {t("createTeam")}
             </Button>
           )}
         </div>

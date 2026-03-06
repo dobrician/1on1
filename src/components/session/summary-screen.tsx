@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
@@ -18,7 +19,7 @@ import { Separator } from "@/components/ui/separator";
 import { type AnswerValue } from "./question-widget";
 import { type TalkingPoint } from "./talking-point-list";
 import { type ActionItemData } from "./action-item-inline";
-import { computeSessionScore, normalizeAnswer } from "@/lib/utils/scoring";
+import { computeSessionScore } from "@/lib/utils/scoring";
 
 // --- Types ---
 
@@ -57,37 +58,39 @@ const SCORABLE_TYPES = new Set([
 
 function formatAnswerDisplay(
   answerType: string,
-  value: AnswerValue | undefined
+  value: AnswerValue | undefined,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- dynamic translation keys
+  t: (key: any) => string
 ): string {
-  if (!value) return "Not answered";
+  if (!value) return t("notAnswered");
 
   switch (answerType) {
     case "text":
-      return value.answerText || "Not answered";
+      return value.answerText || t("notAnswered");
     case "rating_1_5":
       return value.answerNumeric !== undefined
         ? `${value.answerNumeric} / 5`
-        : "Not answered";
+        : t("notAnswered");
     case "rating_1_10":
       return value.answerNumeric !== undefined
         ? `${value.answerNumeric} / 10`
-        : "Not answered";
+        : t("notAnswered");
     case "yes_no":
-      if (value.answerNumeric === undefined) return "Not answered";
-      return value.answerNumeric === 1 ? "Yes" : "No";
+      if (value.answerNumeric === undefined) return t("notAnswered");
+      return value.answerNumeric === 1 ? t("yes") : t("no");
     case "mood": {
-      const moods = ["Very Bad", "Bad", "Neutral", "Good", "Great"];
+      const moodKeys = ["moodVeryBad", "moodBad", "moodNeutral", "moodGood", "moodGreat"] as const;
       return value.answerNumeric !== undefined
-        ? moods[(value.answerNumeric ?? 1) - 1] ?? `${value.answerNumeric} / 5`
-        : "Not answered";
+        ? t(moodKeys[(value.answerNumeric ?? 1) - 1] ?? "moodNeutral")
+        : t("notAnswered");
     }
     case "multiple_choice":
       if (value.answerJson && Array.isArray(value.answerJson)) {
         return (value.answerJson as string[]).join(", ");
       }
-      return value.answerText || "Not answered";
+      return value.answerText || t("notAnswered");
     default:
-      return value.answerText || "Not answered";
+      return value.answerText || t("notAnswered");
   }
 }
 
@@ -117,6 +120,7 @@ export function SummaryScreen({
   isManager,
 }: SummaryScreenProps) {
   const router = useRouter();
+  const t = useTranslations("sessions.summary");
 
   // Compute score from current answers
   const scoreInput = categories.flatMap((cat) =>
@@ -146,7 +150,7 @@ export function SummaryScreen({
       return res.json();
     },
     onSuccess: () => {
-      toast.success("Session completed!");
+      toast.success(t("sessionCompleted"));
       router.push(`/sessions/${seriesId}`);
     },
     onError: (error: Error) => {
@@ -159,9 +163,9 @@ export function SummaryScreen({
       <div className="mx-auto max-w-3xl px-6 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-2xl font-semibold">Session Summary</h1>
+          <h1 className="text-2xl font-semibold">{t("title")}</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Review everything before completing the session
+            {t("reviewDesc")}
           </p>
         </div>
 
@@ -179,16 +183,16 @@ export function SummaryScreen({
                 {sessionScore.toFixed(1)}
               </p>
               <p className="mt-1 text-sm text-muted-foreground">
-                out of 5.0
+                {t("outOf")}
               </p>
             </>
           ) : (
             <>
               <p className="text-lg font-medium text-muted-foreground">
-                No score
+                {t("noScore")}
               </p>
               <p className="mt-1 text-sm text-muted-foreground">
-                No numeric answers to compute a score
+                {t("noScoreDesc")}
               </p>
             </>
           )}
@@ -213,7 +217,7 @@ export function SummaryScreen({
                   onClick={() => onGoBack(catIndex + 1)}
                 >
                   <Pencil className="h-3 w-3" />
-                  Edit
+                  {t("edit")}
                 </Button>
               </div>
               <Separator className="my-3" />
@@ -242,12 +246,12 @@ export function SummaryScreen({
                             className="shrink-0 gap-1 text-xs"
                           >
                             <AlertTriangle className="h-3 w-3" />
-                            Required
+                            {t("required")}
                           </Badge>
                         )}
                       </div>
                       <p className="mt-1 text-sm text-muted-foreground">
-                        {formatAnswerDisplay(question.answerType, answer)}
+                        {formatAnswerDisplay(question.answerType, answer, t)}
                       </p>
                     </div>
                   );
@@ -257,7 +261,7 @@ export function SummaryScreen({
               {/* Notes */}
               <div className="mt-4">
                 <p className="mb-1 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                  Notes
+                  {t("notes")}
                 </p>
                 {catNotes && catNotes !== "<p></p>" ? (
                   <div
@@ -266,7 +270,7 @@ export function SummaryScreen({
                   />
                 ) : (
                   <p className="text-sm text-muted-foreground italic">
-                    No notes
+                    {t("noNotes")}
                   </p>
                 )}
               </div>
@@ -275,7 +279,7 @@ export function SummaryScreen({
               {catTalkingPoints.length > 0 && (
                 <div className="mt-4">
                   <p className="mb-1 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                    Talking Points
+                    {t("talkingPoints")}
                   </p>
                   <div className="space-y-1">
                     {catTalkingPoints.map((tp) => (
@@ -309,7 +313,7 @@ export function SummaryScreen({
               {catActionItems.length > 0 && (
                 <div className="mt-4">
                   <p className="mb-1 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                    Action Items
+                    {t("actionItemsLabel")}
                   </p>
                   <div className="space-y-1">
                     {catActionItems.map((ai) => (
@@ -336,7 +340,7 @@ export function SummaryScreen({
                             <span className="flex items-center gap-1">
                               <CalendarDays className="h-3 w-3" />
                               {new Date(ai.dueDate).toLocaleDateString(
-                                "en-US",
+                                undefined,
                                 { month: "short", day: "numeric" }
                               )}
                             </span>
@@ -359,7 +363,7 @@ export function SummaryScreen({
             className="gap-1"
           >
             <ChevronLeft className="h-4 w-4" />
-            Go Back
+            {t("goBack")}
           </Button>
 
           {isManager && (
@@ -374,7 +378,7 @@ export function SummaryScreen({
               ) : (
                 <CheckCircle2 className="h-4 w-4" />
               )}
-              Complete Session
+              {t("completeSession")}
             </Button>
           )}
         </div>

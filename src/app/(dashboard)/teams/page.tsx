@@ -3,12 +3,15 @@ import { redirect } from "next/navigation";
 import { withTenantContext } from "@/lib/db/tenant-context";
 import { teams, teamMembers, users } from "@/lib/db/schema";
 import { eq, and, sql } from "drizzle-orm";
+import { getTranslations } from "next-intl/server";
 import { PeopleTabs } from "@/components/people/people-tabs";
 import { TeamsGrid } from "./teams-grid";
 
 export default async function TeamsPage() {
   const session = await auth();
   if (!session?.user) redirect("/login");
+
+  const t = await getTranslations("people");
 
   const data = await withTenantContext(
     session.user.tenantId,
@@ -90,10 +93,8 @@ export default async function TeamsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">People</h1>
-        <p className="text-sm text-muted-foreground">
-          Manage your organization&apos;s members
-        </p>
+        <h1 className="text-2xl font-semibold tracking-tight">{t("title")}</h1>
+        <p className="text-sm text-muted-foreground">{t("description")}</p>
       </div>
 
       <PeopleTabs>

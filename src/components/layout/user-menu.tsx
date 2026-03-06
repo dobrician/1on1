@@ -1,6 +1,7 @@
 "use client";
 
 import { useSession } from "next-auth/react";
+import { useLocale, useTranslations } from "next-intl";
 import { LogOut, Globe, Check } from "lucide-react";
 import { logoutAction } from "@/lib/auth/actions";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -32,23 +33,28 @@ function getInitials(name?: string | null): string {
 
 export function UserMenu() {
   const { data: session, update } = useSession();
+  const t = useTranslations("navigation");
   const user = session?.user;
-  const currentLang = user?.uiLanguage ?? "en";
+  // useLocale reads the actual rendered locale (source of truth)
+  const currentLang = useLocale();
 
   async function switchLanguage(lang: "en" | "ro") {
     if (lang === currentLang) return;
 
-    // 1. Save to DB + set NEXT_LOCALE cookie via API
+    // 1. Set cookie client-side immediately so it's available on reload
+    document.cookie = `NEXT_LOCALE=${lang};path=/;max-age=${60 * 60 * 24 * 365};samesite=lax`;
+
+    // 2. Save to DB + set NEXT_LOCALE cookie via API
     await fetch("/api/user/language", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ language: lang }),
     });
 
-    // 2. Update session JWT so subsequent requests carry new locale
+    // 3. Update session JWT so subsequent requests carry new locale
     await update();
 
-    // 3. Reload to re-render with new translations (server-side message loading)
+    // 4. Reload to re-render with new translations (server-side message loading)
     window.location.reload();
   }
 
@@ -83,7 +89,7 @@ export function UserMenu() {
         <DropdownMenuSeparator />
         <DropdownMenuLabel className="flex items-center gap-2 text-xs text-muted-foreground">
           <Globe className="h-3.5 w-3.5" />
-          Language
+          {t("language")}
         </DropdownMenuLabel>
         {LANGUAGES.map((lang) => (
           <DropdownMenuItem
@@ -102,7 +108,7 @@ export function UserMenu() {
           <DropdownMenuItem asChild>
             <button type="submit" className="w-full cursor-pointer">
               <LogOut className="mr-2 h-4 w-4" />
-              Sign out
+              {t("signOut")}
             </button>
           </DropdownMenuItem>
         </form>

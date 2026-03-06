@@ -1,0 +1,21 @@
+{
+  "navigation": {
+    "overview": "Prezentare generală",
+    "sessions": "Sesiuni",
+    "actionItems": "Acțiuni",
+    "history": "Istoric",
+    "analytics": "Analize",
+    "people": "Persoane",
+    "templates": "Șabloane",
+    "settings": "Setări",
+    "company": "Companie",
+    "auditLog": "Jurnal de audit",
+    "teams": "Echipe",
+    "signOut": "Deconectare",
+    "toggleNavigation": "Comutare navigare",
+    "navigation": "Navigare",
+    "language": "Limbă",
+    "searchPlaceholder": "Caută...",
+    "theme": "Temă"
+  }
+}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useTranslations } from "next-intl";
 import { FileText, ListChecks, MessageSquare } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -77,6 +78,7 @@ export function CategoryStep({
   sessionNumberMap,
   onSavingChange,
 }: CategoryStepProps) {
+  const t = useTranslations("sessions.wizard");
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Smooth scroll to top when step transitions
@@ -95,7 +97,7 @@ export function CategoryStep({
             {categoryName}
           </h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            {visibleQuestions.length} question{visibleQuestions.length !== 1 ? "s" : ""}
+            {t("questionCount", { count: visibleQuestions.length })}
           </p>
         </div>
 
@@ -114,7 +116,7 @@ export function CategoryStep({
                 </h3>
                 {question.isRequired && (
                   <Badge variant="secondary" className="shrink-0 text-xs">
-                    Required
+                    {t("required")}
                   </Badge>
                 )}
               </div>
@@ -142,7 +144,7 @@ export function CategoryStep({
 
         {/* Notes */}
         <div className="space-y-3">
-          <SectionLabel icon={FileText} label="Notes" />
+          <SectionLabel icon={FileText} label={t("notes")} />
           <NotesEditor
             sessionId={sessionId}
             category={categoryName}
@@ -155,7 +157,7 @@ export function CategoryStep({
 
         {/* Talking Points */}
         <div className="space-y-3">
-          <SectionLabel icon={MessageSquare} label="Talking Points" />
+          <SectionLabel icon={MessageSquare} label={t("talkingPoints")} />
           <TalkingPointList
             sessionId={sessionId}
             category={categoryName}
@@ -168,7 +170,7 @@ export function CategoryStep({
 
         {/* Action Items */}
         <div className="space-y-3">
-          <SectionLabel icon={ListChecks} label="Action Items" />
+          <SectionLabel icon={ListChecks} label={t("actionItems")} />
           <ActionItemInline
             sessionId={sessionId}
             category={categoryName}

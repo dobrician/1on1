@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { CalendarDays, Play, RotateCcw } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 interface SeriesCardProps {
   series: {
@@ -34,30 +35,34 @@ interface SeriesCardProps {
 }
 
 const statusVariant: Record<string, "default" | "secondary" | "outline"> = {
-  active: "default",
-  paused: "secondary",
+  active: "secondary",
+  paused: "outline",
   archived: "outline",
 };
 
-function formatRelativeDate(dateStr: string): string {
+function formatRelativeDate(
+  dateStr: string,
+  t: ReturnType<typeof useTranslations<"sessions">>
+): string {
   const date = new Date(dateStr);
   const now = new Date();
   const diffMs = date.getTime() - now.getTime();
   const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
 
-  if (diffDays === 0) return "Today";
-  if (diffDays === 1) return "Tomorrow";
-  if (diffDays === -1) return "Yesterday";
-  if (diffDays > 0 && diffDays <= 7) return `In ${diffDays} days`;
-  if (diffDays < 0 && diffDays >= -7) return `${Math.abs(diffDays)} days ago`;
+  if (diffDays === 0) return t("series.today");
+  if (diffDays === 1) return t("series.tomorrow");
+  if (diffDays === -1) return t("series.yesterday");
+  if (diffDays > 0 && diffDays <= 7) return t("series.inDays", { count: diffDays });
+  if (diffDays < 0 && diffDays >= -7) return t("series.daysAgo", { count: Math.abs(diffDays) });
 
-  return date.toLocaleDateString("en-US", {
+  return date.toLocaleDateString(undefined, {
     month: "short",
     day: "numeric",
   });
 }
 
 export function SeriesCard({ series, currentUserId }: SeriesCardProps) {
+  const t = useTranslations("sessions");
   const router = useRouter();
   const hasInProgress = series.latestSession?.status === "in_progress";
   const isManager = series.managerId === currentUserId;
@@ -98,12 +103,19 @@ export function SeriesCard({ series, currentUserId }: SeriesCardProps) {
           <CardTitle className="text-base truncate">
             {series.report.firstName} {series.report.lastName}
           </CardTitle>
-          <p className="text-sm text-muted-foreground capitalize">
-            {series.cadence}
+          <p className="text-sm text-muted-foreground">
+            {series.cadence === "weekly" ? t("form.weekly")
+              : series.cadence === "biweekly" ? t("form.biweekly")
+              : series.cadence === "monthly" ? t("form.monthly")
+              : series.cadence}
           </p>
         </div>
         <Badge variant={statusVariant[series.status] ?? "outline"}>
-          {series.status}
+          {series.status === "active"
+            ? t("series.statusActive")
+            : series.status === "paused"
+              ? t("series.statusPaused")
+              : t("series.statusArchived")}
         </Badge>
       </CardHeader>
       <CardContent className="space-y-2 pt-0">
@@ -111,9 +123,9 @@ export function SeriesCard({ series, currentUserId }: SeriesCardProps) {
           <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
             <CalendarDays className="h-3.5 w-3.5" />
             {series.nextSessionAt ? (
-              <span>{formatRelativeDate(series.nextSessionAt)}</span>
+              <span>{formatRelativeDate(series.nextSessionAt, t)}</span>
             ) : (
-              <span>Not scheduled</span>
+              <span>{t("series.notScheduled")}</span>
             )}
           </div>
           {series.latestSession?.sessionScore && series.latestSession.status === "completed" && (
@@ -124,7 +136,7 @@ export function SeriesCard({ series, currentUserId }: SeriesCardProps) {
         </div>
         {isManager && series.status === "active" && (
           <Button
-            variant={hasInProgress ? "outline" : "default"}
+            variant={hasInProgress ? "default" : "outline"}
             size="sm"
             className="relative z-10"
             onClick={(e) => {
@@ -141,19 +153,19 @@ export function SeriesCard({ series, currentUserId }: SeriesCardProps) {
             {hasInProgress ? (
               <>
                 <RotateCcw className="mr-1.5 h-3.5 w-3.5" />
-                Resume
+                {t("series.resume")}
               </>
             ) : (
               <>
                 <Play className="mr-1.5 h-3.5 w-3.5" />
-                Start
+                {t("series.start")}
               </>
             )}
           </Button>
         )}
         {hasInProgress && series.latestSession && (
           <p className="text-xs text-muted-foreground">
-            Session #{series.latestSession.sessionNumber} in progress
+            {t("series.inProgress", { number: series.latestSession.sessionNumber })}
           </p>
         )}
       </CardContent>

@@ -1,0 +1,29 @@
+{
+  "actionItems": {
+    "title": "Action Items",
+    "description": "Track and manage action items across all your 1:1 sessions.",
+    "empty": "No open action items",
+    "emptyDesc": "Create them during your next session.",
+    "goToSessions": "Go to Sessions",
+    "open": "{count} open",
+    "overdue": "{count} overdue",
+    "completed": "Action item completed",
+    "reopened": "Action item reopened",
+    "updateFailed": "Failed to update action item",
+    "updated": "Action item updated",
+    "edit": {
+      "title": "Edit Action Item",
+      "description": "Update the details of this action item.",
+      "titleLabel": "Title",
+      "titlePlaceholder": "Action item title",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "Optional description...",
+      "assigneeLabel": "Assignee",
+      "assigneePlaceholder": "Select assignee",
+      "dueDateLabel": "Due Date",
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "save": "Save Changes"
+    }
+  }
+}

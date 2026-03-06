@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -68,23 +69,24 @@ interface SeriesFormProps {
   templates: Template[];
 }
 
-const cadenceOptions = [
-  { value: "weekly", label: "Weekly" },
-  { value: "biweekly", label: "Biweekly" },
-  { value: "monthly", label: "Monthly" },
-  { value: "custom", label: "Custom interval" },
-] as const;
-
-const dayOptions = [
-  { value: "mon", label: "Monday" },
-  { value: "tue", label: "Tuesday" },
-  { value: "wed", label: "Wednesday" },
-  { value: "thu", label: "Thursday" },
-  { value: "fri", label: "Friday" },
-] as const;
-
 export function SeriesForm({ userGroups, templates }: SeriesFormProps) {
+  const t = useTranslations("sessions");
   const router = useRouter();
+
+  const cadenceOptions = [
+    { value: "weekly", label: t("form.weekly") },
+    { value: "biweekly", label: t("form.biweekly") },
+    { value: "monthly", label: t("form.monthly") },
+    { value: "custom", label: t("form.custom") },
+  ] as const;
+
+  const dayOptions = [
+    { value: "mon", label: t("form.monday") },
+    { value: "tue", label: t("form.tuesday") },
+    { value: "wed", label: t("form.wednesday") },
+    { value: "thu", label: t("form.thursday") },
+    { value: "fri", label: t("form.friday") },
+  ] as const;
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -131,7 +133,7 @@ export function SeriesForm({ userGroups, templates }: SeriesFormProps) {
       return res.json();
     },
     onSuccess: () => {
-      toast.success("Meeting series created");
+      toast.success(t("form.created"));
       router.refresh();
       router.push("/sessions");
     },
@@ -151,11 +153,11 @@ export function SeriesForm({ userGroups, templates }: SeriesFormProps) {
           name="reportId"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Report</FormLabel>
+              <FormLabel>{t("form.report")}</FormLabel>
               <Select onValueChange={field.onChange} value={field.value}>
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select a team member" />
+                    <SelectValue placeholder={t("form.reportPlaceholder")} />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
@@ -172,7 +174,7 @@ export function SeriesForm({ userGroups, templates }: SeriesFormProps) {
                 </SelectContent>
               </Select>
               <FormDescription>
-                The team member you will have 1:1s with.
+                {t("form.reportDesc")}
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -184,7 +186,7 @@ export function SeriesForm({ userGroups, templates }: SeriesFormProps) {
           name="cadence"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Cadence</FormLabel>
+              <FormLabel>{t("form.cadence")}</FormLabel>
               <FormControl>
                 <RadioGroup
                   onValueChange={field.onChange}
@@ -219,13 +221,13 @@ export function SeriesForm({ userGroups, templates }: SeriesFormProps) {
             name="cadenceCustomDays"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Custom interval (days)</FormLabel>
+                <FormLabel>{t("form.customDays")}</FormLabel>
                 <FormControl>
                   <Input
                     type="number"
                     min={1}
                     max={365}
-                    placeholder="e.g. 21"
+                    placeholder={t("form.customPlaceholder")}
                     value={field.value ?? ""}
                     onChange={(e) =>
                       field.onChange(
@@ -249,14 +251,14 @@ export function SeriesForm({ userGroups, templates }: SeriesFormProps) {
             name="preferredDay"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Preferred day</FormLabel>
+                <FormLabel>{t("form.preferredDay")}</FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   value={field.value ?? ""}
                 >
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="No preference" />
+                      <SelectValue placeholder={t("form.noPreference")} />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -277,7 +279,7 @@ export function SeriesForm({ userGroups, templates }: SeriesFormProps) {
             name="preferredTime"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Preferred time</FormLabel>
+                <FormLabel>{t("form.preferredTime")}</FormLabel>
                 <FormControl>
                   <Input
                     type="time"
@@ -296,14 +298,14 @@ export function SeriesForm({ userGroups, templates }: SeriesFormProps) {
           name="defaultTemplateId"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Default template</FormLabel>
+              <FormLabel>{t("form.defaultTemplate")}</FormLabel>
               <Select
                 onValueChange={field.onChange}
                 value={field.value ?? ""}
               >
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="No template" />
+                    <SelectValue placeholder={t("form.noTemplate")} />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
@@ -315,7 +317,7 @@ export function SeriesForm({ userGroups, templates }: SeriesFormProps) {
                 </SelectContent>
               </Select>
               <FormDescription>
-                Questions to use in each session.
+                {t("form.templateDesc")}
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -327,7 +329,7 @@ export function SeriesForm({ userGroups, templates }: SeriesFormProps) {
           name="defaultDurationMinutes"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Duration (minutes)</FormLabel>
+              <FormLabel>{t("form.duration")}</FormLabel>
               <FormControl>
                 <Input
                   type="number"
@@ -355,14 +357,14 @@ export function SeriesForm({ userGroups, templates }: SeriesFormProps) {
             type="submit"
             disabled={createSeries.isPending}
           >
-            {createSeries.isPending ? "Creating..." : "Create Series"}
+            {createSeries.isPending ? t("form.creating") : t("form.createSeries")}
           </Button>
           <Button
             type="button"
             variant="outline"
             onClick={() => router.back()}
           >
-            Cancel
+            {t("form.cancel")}
           </Button>
         </div>
       </form>

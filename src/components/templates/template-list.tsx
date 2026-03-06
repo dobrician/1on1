@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { Plus, FileText, Hash } from "lucide-react";
 import { createTemplateSchema } from "@/lib/validations/template";
@@ -59,6 +60,7 @@ export function TemplateList({
   initialTemplates,
   currentUserRole,
 }: TemplateListProps) {
+  const t = useTranslations("templates");
   const [createOpen, setCreateOpen] = useState(false);
   const canCreate =
     currentUserRole === "admin" || currentUserRole === "manager";
@@ -90,7 +92,7 @@ export function TemplateList({
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["templates"] });
-      toast.success("Template created");
+      toast.success(t("create.created"));
       setCreateOpen(false);
       reset();
     },
@@ -124,7 +126,7 @@ export function TemplateList({
         <div className="flex justify-end">
           <Button onClick={() => setCreateOpen(true)} size="sm">
             <Plus className="mr-2 h-4 w-4" />
-            Create Template
+            {t("createTemplate")}
           </Button>
         </div>
       )}
@@ -132,10 +134,8 @@ export function TemplateList({
       {templates.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-12">
           <FileText className="h-10 w-10 text-muted-foreground/50" />
-          <h3 className="mt-4 text-lg font-semibold">No templates yet</h3>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Create your first template to get started.
-          </p>
+          <h3 className="mt-4 text-lg font-semibold">{t("empty")}</h3>
+          <p className="mt-1 text-sm text-muted-foreground">{t("emptyDesc")}</p>
           {canCreate && (
             <Button
               className="mt-4"
@@ -143,7 +143,7 @@ export function TemplateList({
               onClick={() => setCreateOpen(true)}
             >
               <Plus className="mr-2 h-4 w-4" />
-              Create Template
+              {t("createTemplate")}
             </Button>
           )}
         </div>
@@ -160,7 +160,7 @@ export function TemplateList({
                     <div className="flex shrink-0 gap-1">
                       {template.isDefault && (
                         <Badge variant="default" className="text-xs">
-                          Default
+                          {t("default")}
                         </Badge>
                       )}
                     </div>
@@ -192,7 +192,7 @@ export function TemplateList({
                     <div className="flex items-center gap-3 text-xs text-muted-foreground">
                       <span className="flex items-center gap-1">
                         <Hash className="h-3 w-3" />
-                        {template.questionCount} questions
+                        {t("questionsCount", { count: template.questionCount })}
                       </span>
                       <span>v{template.version}</span>
                     </div>
@@ -202,7 +202,7 @@ export function TemplateList({
                       variant={template.isPublished ? "default" : "secondary"}
                       className="text-xs"
                     >
-                      {template.isPublished ? "Published" : "Draft"}
+                      {template.isPublished ? t("published") : t("draft")}
                     </Badge>
                   </div>
                 </CardContent>
@@ -224,17 +224,15 @@ export function TemplateList({
         >
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
-              <DialogTitle>Create Template</DialogTitle>
-              <DialogDescription>
-                Create a new questionnaire template for your 1:1 sessions.
-              </DialogDescription>
+              <DialogTitle>{t("create.title")}</DialogTitle>
+              <DialogDescription>{t("create.description")}</DialogDescription>
             </DialogHeader>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="templateName">Template Name</Label>
+                <Label htmlFor="templateName">{t("create.nameLabel")}</Label>
                 <Input
                   id="templateName"
-                  placeholder="e.g. Weekly Check-in"
+                  placeholder={t("create.namePlaceholder")}
                   {...register("name")}
                 />
                 {errors.name && (
@@ -245,10 +243,10 @@ export function TemplateList({
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="templateDescription">Description</Label>
+                <Label htmlFor="templateDescription">{t("create.descLabel")}</Label>
                 <Textarea
                   id="templateDescription"
-                  placeholder="Describe what this template is for..."
+                  placeholder={t("create.descPlaceholder")}
                   rows={3}
                   {...register("description")}
                 />
@@ -265,10 +263,10 @@ export function TemplateList({
                   variant="outline"
                   onClick={() => setCreateOpen(false)}
                 >
-                  Cancel
+                  {t("create.cancel")}
                 </Button>
                 <Button type="submit" disabled={createMutation.isPending}>
-                  {createMutation.isPending ? "Creating..." : "Create Template"}
+                  {createMutation.isPending ? t("create.creating") : t("create.submit")}
                 </Button>
               </DialogFooter>
             </form>

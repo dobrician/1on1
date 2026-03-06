@@ -1,0 +1,30 @@
+{
+  "history": {
+    "title": "Istoric",
+    "description": "Parcurge toate sesiunile trecute și curente din seriile 1:1.",
+    "searchPlaceholder": "Caută note, răspunsuri, puncte de discuție...",
+    "status": "Status",
+    "from": "De la",
+    "to": "Până la",
+    "series": "Serie",
+    "allStatus": "Toate",
+    "completed": "Finalizate",
+    "inProgress": "În desfășurare",
+    "allSeries": "Toate seriile",
+    "clear": "Șterge",
+    "searching": "Se caută...",
+    "noSearchResults": "Nu s-au găsit sesiuni pentru \"{query}\"",
+    "noSearchResultsDesc": "Încearcă alte cuvinte cheie sau șterge căutarea.",
+    "sessionsFound": "{count} sesiune/sesiuni găsite",
+    "withManager": "cu {name}",
+    "duration": "{count} min",
+    "noFilterResults": "Nicio sesiune nu corespunde filtrelor",
+    "noFilterResultsDesc": "Încearcă să ajustezi filtrele sau să le ștergi.",
+    "noSessions": "Nicio sesiune",
+    "noSessionsDesc": "Finalizează prima sesiune 1:1 pentru a o vedea aici.",
+    "clearFilters": "Șterge filtrele",
+    "goToSessions": "Mergi la sesiuni",
+    "loadMore": "Încarcă mai multe",
+    "loading": "Se încarcă..."
+  }
+}

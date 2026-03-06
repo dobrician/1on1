@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { RotateCcw } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface SessionEntry {
   id: string;
@@ -24,20 +25,29 @@ const statusVariant: Record<
   string,
   "default" | "secondary" | "outline" | "destructive"
 > = {
-  completed: "default",
-  in_progress: "secondary",
+  completed: "secondary",
+  in_progress: "outline",
   scheduled: "outline",
   cancelled: "destructive",
   missed: "destructive",
 };
 
+const statusKeys: Record<string, string> = {
+  completed: "statusCompleted",
+  in_progress: "statusInProgress",
+  scheduled: "statusScheduled",
+  cancelled: "statusCancelled",
+  missed: "statusMissed",
+};
+
 export function SessionTimeline({ sessions }: SessionTimelineProps) {
   const router = useRouter();
+  const t = useTranslations("sessions.timeline");
 
   if (sessions.length === 0) {
     return (
       <p className="py-8 text-center text-sm text-muted-foreground">
-        No sessions yet. Start your first session above.
+        {t("noSessions")}
       </p>
     );
   }
@@ -77,10 +87,10 @@ export function SessionTimeline({ sessions }: SessionTimelineProps) {
             <div className="flex flex-1 items-center justify-between min-w-0">
               <div className="min-w-0">
                 <p className="text-sm font-medium">
-                  Session #{s.sessionNumber}
+                  {t("sessionNumber", { number: s.sessionNumber })}
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  {new Date(s.scheduledAt).toLocaleDateString("en-US", {
+                  {new Date(s.scheduledAt).toLocaleDateString(undefined, {
                     month: "short",
                     day: "numeric",
                     year: "numeric",
@@ -109,14 +119,14 @@ export function SessionTimeline({ sessions }: SessionTimelineProps) {
                     }}
                   >
                     <RotateCcw className="h-3 w-3" />
-                    Resume
+                    {t("resume")}
                   </Button>
                 )}
                 <Badge
                   variant={statusVariant[s.status] ?? "outline"}
                   className="text-xs"
                 >
-                  {s.status.replace("_", " ")}
+                  {t(statusKeys[s.status] as Parameters<typeof t>[0])}
                 </Badge>
               </div>
             </div>

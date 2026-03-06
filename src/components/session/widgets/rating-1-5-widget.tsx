@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -10,7 +11,7 @@ interface Rating15WidgetProps {
   answerConfig?: { labels?: string[] };
 }
 
-const DEFAULT_LABELS = ["Poor", "Fair", "Good", "Very Good", "Excellent"];
+const RATING_KEYS = ["ratingPoor", "ratingFair", "ratingGood", "ratingVeryGood", "ratingExcellent"] as const;
 
 export function Rating15Widget({
   value,
@@ -18,7 +19,9 @@ export function Rating15Widget({
   disabled,
   answerConfig,
 }: Rating15WidgetProps) {
-  const labels = answerConfig?.labels ?? DEFAULT_LABELS;
+  const t = useTranslations("sessions.widgets");
+  const defaultLabels = RATING_KEYS.map((key) => t(key));
+  const labels = answerConfig?.labels ?? defaultLabels;
 
   return (
     <div className="flex flex-col gap-2">

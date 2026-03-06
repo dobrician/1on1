@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   AlertCircle,
@@ -86,6 +87,7 @@ interface SeriesGroup {
 }
 
 export function ActionItemsPage({ initialItems }: ActionItemsPageProps) {
+  const t = useTranslations("actionItems");
   const queryClient = useQueryClient();
   const [editItem, setEditItem] = useState<ActionItemRow | null>(null);
 
@@ -182,14 +184,14 @@ export function ActionItemsPage({ initialItems }: ActionItemsPageProps) {
     },
     onSuccess: (_data, { status }) => {
       toast.success(
-        status === "completed" ? "Action item completed" : "Action item reopened"
+        status === "completed" ? t("completed") : t("reopened")
       );
     },
     onError: (_err, _vars, context) => {
       if (context?.previous) {
         queryClient.setQueryData(["action-items"], context.previous);
       }
-      toast.error("Failed to update action item");
+      toast.error(t("updateFailed"));
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["action-items"] });
@@ -217,12 +219,12 @@ export function ActionItemsPage({ initialItems }: ActionItemsPageProps) {
       return res.json();
     },
     onSuccess: () => {
-      toast.success("Action item updated");
+      toast.success(t("updated"));
       setEditItem(null);
       queryClient.invalidateQueries({ queryKey: ["action-items"] });
     },
     onError: () => {
-      toast.error("Failed to update action item");
+      toast.error(t("updateFailed"));
     },
   });
 
@@ -287,12 +289,12 @@ export function ActionItemsPage({ initialItems }: ActionItemsPageProps) {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center">
         <ListChecks className="size-12 text-muted-foreground/30 mb-4" />
-        <h2 className="text-lg font-medium mb-1">No open action items</h2>
+        <h2 className="text-lg font-medium mb-1">{t("empty")}</h2>
         <p className="text-sm text-muted-foreground mb-4">
-          Create them during your next session.
+          {t("emptyDesc")}
         </p>
         <Button asChild variant="outline">
-          <Link href="/sessions">Go to Sessions</Link>
+          <Link href="/sessions">{t("goToSessions")}</Link>
         </Button>
       </div>
     );
@@ -307,14 +309,14 @@ export function ActionItemsPage({ initialItems }: ActionItemsPageProps) {
             <div className="flex items-center gap-2 mb-3">
               <h2 className="text-sm font-semibold">{group.reportName}</h2>
               <Badge variant="secondary" className="text-[10px] font-normal">
-                {group.items.length} open
+                {t("open", { count: group.items.length })}
               </Badge>
               {group.overdueCount > 0 && (
                 <Badge
                   variant="destructive"
                   className="text-[10px] font-normal"
                 >
-                  {group.overdueCount} overdue
+                  {t("overdue", { count: group.overdueCount })}
                 </Badge>
               )}
             </div>
@@ -409,37 +411,37 @@ export function ActionItemsPage({ initialItems }: ActionItemsPageProps) {
       <Sheet open={!!editItem} onOpenChange={(open) => !open && setEditItem(null)}>
         <SheetContent>
           <SheetHeader>
-            <SheetTitle>Edit Action Item</SheetTitle>
+            <SheetTitle>{t("edit.title")}</SheetTitle>
             <SheetDescription>
-              Update the details of this action item.
+              {t("edit.description")}
             </SheetDescription>
           </SheetHeader>
 
           <div className="mt-6 space-y-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium">Title</label>
+              <label className="text-sm font-medium">{t("edit.titleLabel")}</label>
               <Input
                 value={editTitle}
                 onChange={(e) => setEditTitle(e.target.value)}
-                placeholder="Action item title"
+                placeholder={t("edit.titlePlaceholder")}
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium">Description</label>
+              <label className="text-sm font-medium">{t("edit.descriptionLabel")}</label>
               <Textarea
                 value={editDescription}
                 onChange={(e) => setEditDescription(e.target.value)}
-                placeholder="Optional description..."
+                placeholder={t("edit.descriptionPlaceholder")}
                 rows={3}
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium">Assignee</label>
+              <label className="text-sm font-medium">{t("edit.assigneeLabel")}</label>
               <Select value={editAssigneeId} onValueChange={setEditAssigneeId}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Select assignee" />
+                  <SelectValue placeholder={t("edit.assigneePlaceholder")} />
                 </SelectTrigger>
                 <SelectContent>
                   {editParticipants.map((p) => (
@@ -452,7 +454,7 @@ export function ActionItemsPage({ initialItems }: ActionItemsPageProps) {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium">Due Date</label>
+              <label className="text-sm font-medium">{t("edit.dueDateLabel")}</label>
               <Input
                 type="date"
                 value={editDueDate}
@@ -465,13 +467,13 @@ export function ActionItemsPage({ initialItems }: ActionItemsPageProps) {
                 variant="outline"
                 onClick={() => setEditItem(null)}
               >
-                Cancel
+                {t("edit.cancel")}
               </Button>
               <Button
                 onClick={handleEditSubmit}
                 disabled={!editTitle.trim() || editMutation.isPending}
               >
-                {editMutation.isPending ? "Saving..." : "Save Changes"}
+                {editMutation.isPending ? t("edit.saving") : t("edit.save")}
               </Button>
             </div>
           </div>

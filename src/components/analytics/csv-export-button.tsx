@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import { useTranslations } from "next-intl";
 import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -27,6 +28,7 @@ export function CsvExportButton({
   variant = "icon",
   className,
 }: CsvExportButtonProps) {
+  const t = useTranslations("analytics");
   const [downloading, setDownloading] = useState(false);
 
   const handleExport = useCallback(async () => {
@@ -64,10 +66,10 @@ export function CsvExportButton({
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
 
-      toast.success("Export downloaded");
+      toast.success(t("export.downloaded"));
     } catch (error) {
       console.error("[csv-export] Error:", error);
-      toast.error("Failed to export data");
+      toast.error(t("export.failed"));
     } finally {
       setDownloading(false);
     }
@@ -81,7 +83,7 @@ export function CsvExportButton({
         className={cn("h-8 w-8 text-muted-foreground", className)}
         onClick={handleExport}
         disabled={downloading}
-        title={label ?? "Export CSV"}
+        title={label ?? t("export.csv")}
       >
         {downloading ? (
           <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
@@ -105,7 +107,7 @@ export function CsvExportButton({
       ) : (
         <Download className="mr-2 h-4 w-4" />
       )}
-      {label ?? "Export All Data"}
+      {label ?? t("export.all")}
     </Button>
   );
 }

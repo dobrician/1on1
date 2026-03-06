@@ -6,8 +6,10 @@ import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 import { WizardTopBar, type SaveStatus } from "./wizard-top-bar";
 import { WizardStepSidebar } from "./wizard-step-sidebar";
+import { WizardMobileCarousel } from "./wizard-mobile-carousel";
 import { CategoryStep } from "./category-step";
 import { RecapScreen } from "./recap-screen";
 import { SummaryScreen } from "./summary-screen";
@@ -252,6 +254,7 @@ interface WizardShellProps {
 }
 
 export function WizardShell({ sessionId }: WizardShellProps) {
+  const t = useTranslations("sessions");
   const { data: authSession } = useSession();
   const [state, dispatch] = useReducer(wizardReducer, {
     currentStep: 0,
@@ -792,6 +795,52 @@ export function WizardShell({ sessionId }: WizardShellProps) {
       : "translate-x-[8px] opacity-90"
     : "translate-x-0 opacity-100";
 
+  // Step content renderer (shared between desktop and mobile carousel)
+  const stepContent = (
+    <>
+      {isRecapStep ? (
+        <RecapScreen
+          reportName={reportName}
+          previousSessions={data.previousSessions}
+          openActionItems={data.openActionItems}
+        />
+      ) : isSummaryStep ? (
+        <SummaryScreen
+          sessionId={sessionId}
+          seriesId={data.session.seriesId}
+          categories={state.sections}
+          answers={state.answers}
+          sharedNotes={data.session.sharedNotes ?? {}}
+          talkingPoints={talkingPointsByCategory}
+          actionItems={actionItemsByCategory}
+          onGoBack={handleStepChange}
+          isManager={isManager}
+        />
+      ) : currentSection ? (
+        <div className="max-w-3xl mx-auto py-6 px-4">
+          <CategoryStep
+            sessionId={sessionId}
+            categoryName={currentSection.name}
+            questions={currentSection.questions}
+            answers={state.answers}
+            onAnswerChange={handleAnswerChange}
+            isQuestionVisible={isQuestionVisible}
+            disabled={data.session.status === "completed"}
+            sharedNotesContent={
+              data.session.sharedNotes?.[currentSection.name] ?? ""
+            }
+            privateNotesContent={privateNotes[currentSection.name] ?? ""}
+            talkingPoints={talkingPointsByCategory[currentSection.name] ?? []}
+            actionItems={actionItemsByCategory[currentSection.name] ?? []}
+            seriesParticipants={seriesParticipants}
+            sessionNumberMap={sessionNumberMap}
+            onSavingChange={handleSavingChange}
+          />
+        </div>
+      ) : null}
+    </>
+  );
+
   return (
     <>
       <WizardTopBar
@@ -803,8 +852,19 @@ export function WizardShell({ sessionId }: WizardShellProps) {
         hasUnsavedChanges={aggregatedSaveStatus === "saving"}
       />
 
-      {/* Main layout: step sidebar | content | context widgets */}
-      <div className="flex flex-1 overflow-hidden h-[calc(100vh-3.5rem)]">
+      {/* Mobile: full-height card carousel */}
+      <div className="flex md:hidden flex-1 overflow-hidden h-[calc(100vh-3.5rem)]">
+        <WizardMobileCarousel
+          steps={stepInfos}
+          currentStep={state.currentStep}
+          onStepChange={handleStepChange}
+        >
+          {stepContent}
+        </WizardMobileCarousel>
+      </div>
+
+      {/* Desktop: step sidebar | content | context widgets */}
+      <div className="hidden md:flex flex-1 overflow-hidden h-[calc(100vh-3.5rem)]">
         {/* Left: step sidebar */}
         <WizardStepSidebar
           steps={stepInfos}
@@ -820,46 +880,7 @@ export function WizardShell({ sessionId }: WizardShellProps) {
               slideClass
             )}
           >
-            {isRecapStep ? (
-              <RecapScreen
-                reportName={reportName}
-                previousSessions={data.previousSessions}
-                openActionItems={data.openActionItems}
-              />
-            ) : isSummaryStep ? (
-              <SummaryScreen
-                sessionId={sessionId}
-                seriesId={data.session.seriesId}
-                categories={state.sections}
-                answers={state.answers}
-                sharedNotes={data.session.sharedNotes ?? {}}
-                talkingPoints={talkingPointsByCategory}
-                actionItems={actionItemsByCategory}
-                onGoBack={handleStepChange}
-                isManager={isManager}
-              />
-            ) : currentSection ? (
-              <div className="max-w-3xl mx-auto py-6 px-4">
-                <CategoryStep
-                  sessionId={sessionId}
-                  categoryName={currentSection.name}
-                  questions={currentSection.questions}
-                  answers={state.answers}
-                  onAnswerChange={handleAnswerChange}
-                  isQuestionVisible={isQuestionVisible}
-                  disabled={data.session.status === "completed"}
-                  sharedNotesContent={
-                    data.session.sharedNotes?.[currentSection.name] ?? ""
-                  }
-                  privateNotesContent={privateNotes[currentSection.name] ?? ""}
-                  talkingPoints={talkingPointsByCategory[currentSection.name] ?? []}
-                  actionItems={actionItemsByCategory[currentSection.name] ?? []}
-                  seriesParticipants={seriesParticipants}
-                  sessionNumberMap={sessionNumberMap}
-                  onSavingChange={handleSavingChange}
-                />
-              </div>
-            ) : null}
+            {stepContent}
 
             {/* Inline Prev/Next buttons below form content */}
             {!isSummaryStep && (
@@ -873,11 +894,11 @@ export function WizardShell({ sessionId }: WizardShellProps) {
                     className="gap-1"
                   >
                     <ChevronLeft className="h-4 w-4" />
-                    Previous
+                    {t("wizard.previous")}
                   </Button>
 
                   <span className="text-xs text-muted-foreground">
-                    {state.currentStep + 1} of {totalSteps}
+                    {t("wizard.stepOf", { current: state.currentStep + 1, total: totalSteps })}
                   </span>
 
                   <Button
@@ -886,7 +907,7 @@ export function WizardShell({ sessionId }: WizardShellProps) {
                     onClick={handleNext}
                     className="gap-1"
                   >
-                    {isLastCategoryStep ? "Review" : "Next"}
+                    {isLastCategoryStep ? t("wizard.review") : t("wizard.next")}
                     <ChevronRight className="h-4 w-4" />
                   </Button>
                 </div>
@@ -896,7 +917,7 @@ export function WizardShell({ sessionId }: WizardShellProps) {
         </div>
 
         {/* Right: floating context widgets (desktop only -- lg+ as column) */}
-        <div className="hidden lg:block w-[280px] shrink-0 overflow-y-auto border-l p-4">
+        <div className="hidden lg:block w-[280px] shrink-0 overflow-y-auto p-4">
           <FloatingContextWidgets
             currentStep={state.currentStep}
             currentCategory={currentSection?.name ?? null}

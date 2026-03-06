@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import {
   CommandDialog,
@@ -64,6 +65,7 @@ interface SearchResults {
 // --- Component ---
 
 export function CommandPalette() {
+  const t = useTranslations("search");
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -158,12 +160,12 @@ export function CommandPalette() {
     <CommandDialog
       open={open}
       onOpenChange={setOpen}
-      title="Search"
-      description="Search across sessions, action items, templates, and people"
+      title={t("title")}
+      description={t("description")}
       showCloseButton={false}
     >
       <CommandInput
-        placeholder="Search sessions, action items, templates, people..."
+        placeholder={t("placeholder")}
         value={query}
         onValueChange={handleQueryChange}
       />
@@ -171,19 +173,18 @@ export function CommandPalette() {
         {isLoading && (
           <div className="flex items-center justify-center gap-2 py-6 text-sm text-muted-foreground">
             <Loader2 className="h-4 w-4 animate-spin" />
-            Searching...
+            {t("searching")}
           </div>
         )}
 
         {!isLoading && query.trim() && !hasResults && (
           <CommandEmpty>
-            No results found for &apos;{query.trim()}&apos;. Try different
-            keywords.
+            {t("noResults", { query: query.trim() })}
           </CommandEmpty>
         )}
 
         {!isLoading && results && results.sessions.length > 0 && (
-          <CommandGroup heading="Sessions">
+          <CommandGroup heading={t("sessions")}>
             {results.sessions.map((s) => (
               <CommandItem
                 key={s.sessionId}
@@ -218,7 +219,7 @@ export function CommandPalette() {
           results.actionItems.length > 0 && <CommandSeparator />}
 
         {!isLoading && results && results.actionItems.length > 0 && (
-          <CommandGroup heading="Action Items">
+          <CommandGroup heading={t("actionItems")}>
             {results.actionItems.map((item) => (
               <CommandItem
                 key={item.id}
@@ -254,7 +255,7 @@ export function CommandPalette() {
           results.templates.length > 0 && <CommandSeparator />}
 
         {!isLoading && results && results.templates.length > 0 && (
-          <CommandGroup heading="Templates">
+          <CommandGroup heading={t("templates")}>
             {results.templates.map((t) => (
               <CommandItem
                 key={t.id}
@@ -283,7 +284,7 @@ export function CommandPalette() {
           results.people.length > 0 && <CommandSeparator />}
 
         {!isLoading && results && results.people.length > 0 && (
-          <CommandGroup heading="People">
+          <CommandGroup heading={t("people")}>
             {results.people.map((p) => (
               <CommandItem
                 key={p.id}
@@ -313,6 +314,7 @@ export function CommandPalette() {
  * Shows in the header with keyboard shortcut hint.
  */
 export function SearchTrigger() {
+  const t = useTranslations("search");
   const [open, setOpen] = useState(false);
 
   // Sync with command palette open state via keyboard event dispatch
@@ -346,7 +348,7 @@ export function SearchTrigger() {
         <circle cx="11" cy="11" r="8" />
         <path d="m21 21-4.3-4.3" />
       </svg>
-      <span className="hidden sm:inline">Search...</span>
+      <span className="hidden sm:inline">{t("trigger")}</span>
       <kbd className="pointer-events-none hidden h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
         <span className="text-xs">&#8984;</span>K
       </kbd>

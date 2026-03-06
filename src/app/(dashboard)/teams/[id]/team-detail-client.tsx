@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import {
   ArrowLeft,
@@ -60,6 +61,7 @@ export function TeamDetailClient({
   initialMembers,
   currentUserRole,
 }: TeamDetailClientProps) {
+  const t = useTranslations("teams");
   const router = useRouter();
   const queryClient = useQueryClient();
   const canManage =
@@ -118,7 +120,7 @@ export function TeamDetailClient({
       return res.json();
     },
     onSuccess: () => {
-      toast.success("Team updated");
+      toast.success(t("updated"));
       queryClient.invalidateQueries({
         queryKey: ["team", initialTeam.id],
       });
@@ -143,7 +145,7 @@ export function TeamDetailClient({
       return res.json();
     },
     onSuccess: () => {
-      toast.success("Member removed");
+      toast.success(t("memberRemoved"));
       queryClient.invalidateQueries({
         queryKey: ["team", initialTeam.id],
       });
@@ -169,7 +171,7 @@ export function TeamDetailClient({
       return res.json();
     },
     onSuccess: () => {
-      toast.success("Team deleted");
+      toast.success(t("deleted"));
       queryClient.invalidateQueries({ queryKey: ["teams"] });
       router.push("/teams");
     },
@@ -203,7 +205,7 @@ export function TeamDetailClient({
         className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
       >
         <ArrowLeft className="h-4 w-4" />
-        Back to Teams
+        {t("backToTeams")}
       </Link>
 
       {/* Team header */}
@@ -302,7 +304,7 @@ export function TeamDetailClient({
         ) : (
           <div className="flex items-center gap-2">
             <p className="text-sm text-muted-foreground">
-              {team.description || "No description"}
+              {team.description || t("noDescription")}
             </p>
             {canManage && (
               <Button
@@ -319,7 +321,7 @@ export function TeamDetailClient({
 
         {team.managerName && (
           <div className="flex items-center gap-2">
-            <Badge variant="outline">Team Lead: {team.managerName}</Badge>
+            <Badge variant="outline">{t("teamLead", { name: team.managerName })}</Badge>
           </div>
         )}
       </div>
@@ -332,7 +334,7 @@ export function TeamDetailClient({
             onClick={() => setMemberPickerOpen(true)}
           >
             <Plus className="mr-2 h-4 w-4" />
-            Add Members
+            {t("addMembers")}
           </Button>
         )}
         {isAdmin && (
@@ -340,14 +342,14 @@ export function TeamDetailClient({
             variant="destructive"
             size="sm"
             onClick={() => {
-              if (confirm("Are you sure you want to delete this team?")) {
+              if (confirm(t("deleteConfirm"))) {
                 deleteTeamMutation.mutate();
               }
             }}
             disabled={deleteTeamMutation.isPending}
           >
             <Trash2 className="mr-2 h-4 w-4" />
-            {deleteTeamMutation.isPending ? "Deleting..." : "Delete Team"}
+            {deleteTeamMutation.isPending ? t("deleting") : t("deleteTeam")}
           </Button>
         )}
       </div>
@@ -355,12 +357,12 @@ export function TeamDetailClient({
       {/* Members table */}
       <div>
         <h2 className="text-lg font-medium mb-3">
-          Members ({members.length})
+          {t("members", { count: members.length })}
         </h2>
         {members.length === 0 ? (
           <div className="rounded-lg border border-dashed py-8 text-center">
             <p className="text-sm text-muted-foreground">
-              No members yet. Add members to get started.
+              {t("noMembers")}
             </p>
           </div>
         ) : (
@@ -368,10 +370,10 @@ export function TeamDetailClient({
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Email</TableHead>
-                  <TableHead>Role</TableHead>
-                  <TableHead>Joined</TableHead>
+                  <TableHead>{t("name")}</TableHead>
+                  <TableHead>{t("email")}</TableHead>
+                  <TableHead>{t("role")}</TableHead>
+                  <TableHead>{t("joined")}</TableHead>
                   {canManage && <TableHead className="w-[80px]" />}
                 </TableRow>
               </TableHeader>
@@ -413,7 +415,7 @@ export function TeamDetailClient({
                             member.role === "lead" ? "default" : "secondary"
                           }
                         >
-                          {member.role === "lead" ? "Lead" : "Member"}
+                          {member.role === "lead" ? t("lead") : t("member")}
                         </Badge>
                       </TableCell>
                       <TableCell className="text-muted-foreground">

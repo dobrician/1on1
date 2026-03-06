@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -54,14 +55,7 @@ const TIMEZONES = [
 
 const DURATION_OPTIONS = [15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 75, 90, 120];
 
-const LANGUAGES = [
-  { value: "en", label: "English" },
-  { value: "ro", label: "Romanian" },
-  { value: "de", label: "German" },
-  { value: "fr", label: "French" },
-  { value: "es", label: "Spanish" },
-  { value: "pt", label: "Portuguese" },
-];
+// LANGUAGES labels are derived from t() inside the component
 
 interface CompanySettingsFormProps {
   initialData: {
@@ -79,6 +73,7 @@ interface CompanySettingsFormProps {
 }
 
 export function CompanySettingsForm({ initialData }: CompanySettingsFormProps) {
+  const t = useTranslations("settings");
   const [name, setName] = useState(initialData.name);
   const [timezone, setTimezone] = useState(
     initialData.settings?.timezone || "UTC"
@@ -124,7 +119,7 @@ export function CompanySettingsForm({ initialData }: CompanySettingsFormProps) {
         throw new Error(data.error || "Failed to save settings");
       }
 
-      setMessage({ type: "success", text: "Settings saved successfully." });
+      setMessage({ type: "success", text: t("saved") });
 
       // Apply color theme immediately without requiring a page refresh
       const root = document.documentElement;
@@ -146,8 +141,8 @@ export function CompanySettingsForm({ initialData }: CompanySettingsFormProps) {
 
   const orgTypeLabel =
     initialData.orgType === "non_profit"
-      ? "Non-profit"
-      : "For-profit";
+      ? t("orgDetails.nonprofit")
+      : t("orgDetails.forprofit");
 
   return (
     <div className="space-y-6">
@@ -165,14 +160,14 @@ export function CompanySettingsForm({ initialData }: CompanySettingsFormProps) {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Organization Details</CardTitle>
+          <CardTitle className="text-lg">{t("orgDetails.title")}</CardTitle>
           <CardDescription>
-            Basic information about your organization
+            {t("orgDetails.description")}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="org-name">Organization name</Label>
+            <Label htmlFor="org-name">{t("orgDetails.name")}</Label>
             <Input
               id="org-name"
               value={name}
@@ -182,24 +177,24 @@ export function CompanySettingsForm({ initialData }: CompanySettingsFormProps) {
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>Organization type</Label>
+              <Label>{t("orgDetails.type")}</Label>
               <div className="flex h-9 items-center">
                 <Badge variant="secondary">{orgTypeLabel}</Badge>
               </div>
               <p className="text-xs text-muted-foreground">
-                Set during registration and cannot be changed
+                {t("orgDetails.typeNote")}
               </p>
             </div>
 
             <div className="space-y-2">
-              <Label>Slug</Label>
+              <Label>{t("orgDetails.slug")}</Label>
               <div className="flex h-9 items-center">
                 <code className="rounded bg-muted px-2 py-1 text-sm">
                   {initialData.slug}
                 </code>
               </div>
               <p className="text-xs text-muted-foreground">
-                Auto-generated from organization name
+                {t("orgDetails.slugNote")}
               </p>
             </div>
           </div>
@@ -208,17 +203,17 @@ export function CompanySettingsForm({ initialData }: CompanySettingsFormProps) {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Meeting Defaults</CardTitle>
+          <CardTitle className="text-lg">{t("meetingDefaults.title")}</CardTitle>
           <CardDescription>
-            Default settings for new meeting series in your organization
+            {t("meetingDefaults.description")}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="timezone">Timezone</Label>
+            <Label htmlFor="timezone">{t("orgDetails.timezone")}</Label>
             <Select value={timezone} onValueChange={setTimezone}>
               <SelectTrigger id="timezone" className="w-full">
-                <SelectValue placeholder="Select timezone" />
+                <SelectValue placeholder={t("orgDetails.timezonePlaceholder")} />
               </SelectTrigger>
               <SelectContent>
                 {TIMEZONES.map((tz) => (
@@ -231,17 +226,17 @@ export function CompanySettingsForm({ initialData }: CompanySettingsFormProps) {
           </div>
 
           <div className="space-y-3">
-            <Label>Default meeting cadence</Label>
+            <Label>{t("meetingDefaults.cadence")}</Label>
             <RadioGroup
               value={cadence}
               onValueChange={setCadence}
               className="grid grid-cols-2 gap-3 sm:grid-cols-4"
             >
               {[
-                { value: "weekly", label: "Weekly" },
-                { value: "biweekly", label: "Biweekly" },
-                { value: "monthly", label: "Monthly" },
-                { value: "custom", label: "Custom" },
+                { value: "weekly", label: t("meetingDefaults.weekly") },
+                { value: "biweekly", label: t("meetingDefaults.biweekly") },
+                { value: "monthly", label: t("meetingDefaults.monthly") },
+                { value: "custom", label: t("meetingDefaults.custom") },
               ].map((option) => (
                 <Label
                   key={option.value}
@@ -264,15 +259,15 @@ export function CompanySettingsForm({ initialData }: CompanySettingsFormProps) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="duration">Default meeting duration</Label>
+            <Label htmlFor="duration">{t("meetingDefaults.duration")}</Label>
             <Select value={duration} onValueChange={setDuration}>
               <SelectTrigger id="duration" className="w-[200px]">
-                <SelectValue placeholder="Select duration" />
+                <SelectValue placeholder={t("meetingDefaults.durationPlaceholder")} />
               </SelectTrigger>
               <SelectContent>
                 {DURATION_OPTIONS.map((d) => (
                   <SelectItem key={d} value={String(d)}>
-                    {d} minutes
+                    {t("meetingDefaults.minutes", { count: d })}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -283,21 +278,27 @@ export function CompanySettingsForm({ initialData }: CompanySettingsFormProps) {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Organization Language</CardTitle>
+          <CardTitle className="text-lg">{t("language.title")}</CardTitle>
           <CardDescription>
-            AI-generated content (summaries, nudges, suggestions) will use this
-            language
+            {t("language.description")}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
-            <Label htmlFor="language">Preferred language</Label>
+            <Label htmlFor="language">{t("language.label")}</Label>
             <Select value={language} onValueChange={setLanguage}>
               <SelectTrigger id="language" className="w-[200px]">
-                <SelectValue placeholder="Select language" />
+                <SelectValue placeholder={t("language.placeholder")} />
               </SelectTrigger>
               <SelectContent>
-                {LANGUAGES.map((lang) => (
+                {[
+                  { value: "en", label: t("language.english") },
+                  { value: "ro", label: t("language.romanian") },
+                  { value: "de", label: t("language.german") },
+                  { value: "fr", label: t("language.french") },
+                  { value: "es", label: t("language.spanish") },
+                  { value: "pt", label: t("language.portuguese") },
+                ].map((lang) => (
                   <SelectItem key={lang.value} value={lang.value}>
                     {lang.label}
                   </SelectItem>
@@ -310,10 +311,9 @@ export function CompanySettingsForm({ initialData }: CompanySettingsFormProps) {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Color Theme</CardTitle>
+          <CardTitle className="text-lg">{t("theme.title")}</CardTitle>
           <CardDescription>
-            Choose an accent color theme for your organization. All members will
-            see this theme applied across the dashboard and charts.
+            {t("theme.description")}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -352,7 +352,7 @@ export function CompanySettingsForm({ initialData }: CompanySettingsFormProps) {
 
       <div className="flex justify-end">
         <Button onClick={handleSave} disabled={saving}>
-          {saving ? "Saving..." : "Save changes"}
+          {saving ? t("saving") : t("saveChanges")}
         </Button>
       </div>
     </div>

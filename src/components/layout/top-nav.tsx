@@ -34,6 +34,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 interface NavItem {
   label: string;
@@ -44,20 +45,24 @@ interface NavItem {
   minRole?: "admin" | "manager";
 }
 
-const primaryNavItems: NavItem[] = [
-  { label: "Overview", href: "/overview", icon: LayoutDashboard },
-  { label: "Sessions", href: "/sessions", icon: CalendarDays, matchAlso: ["/sessions"] },
-  { label: "Action Items", href: "/action-items", icon: ListChecks },
-  { label: "History", href: "/history", icon: History },
-  { label: "Analytics", href: "/analytics", icon: BarChart3, matchAlso: ["/analytics"], minRole: "manager" },
-];
+function getPrimaryNavItems(t: ReturnType<typeof useTranslations<"navigation">>): NavItem[] {
+  return [
+    { label: t("overview"), href: "/overview", icon: LayoutDashboard },
+    { label: t("sessions"), href: "/sessions", icon: CalendarDays, matchAlso: ["/sessions"] },
+    { label: t("actionItems"), href: "/action-items", icon: ListChecks },
+    { label: t("history"), href: "/history", icon: History },
+    { label: t("analytics"), href: "/analytics", icon: BarChart3, matchAlso: ["/analytics"], minRole: "manager" },
+  ];
+}
 
-const settingsNavItems: NavItem[] = [
-  { label: "People", href: "/people", icon: Users, matchAlso: ["/teams"], minRole: "manager" },
-  { label: "Templates", href: "/templates", icon: FileText, minRole: "manager" },
-  { label: "Company", href: "/settings/company", icon: Building2, minRole: "admin" },
-  { label: "Audit Log", href: "/settings/audit-log", icon: ScrollText, minRole: "admin" },
-];
+function getSettingsNavItems(t: ReturnType<typeof useTranslations<"navigation">>): NavItem[] {
+  return [
+    { label: t("people"), href: "/people", icon: Users, matchAlso: ["/teams"], minRole: "manager" },
+    { label: t("templates"), href: "/templates", icon: FileText, minRole: "manager" },
+    { label: t("company"), href: "/settings/company", icon: Building2, minRole: "admin" },
+    { label: t("auditLog"), href: "/settings/audit-log", icon: ScrollText, minRole: "admin" },
+  ];
+}
 
 function isPathActive(pathname: string, item: NavItem): boolean {
   if (pathname.startsWith(item.href)) return true;
@@ -83,6 +88,10 @@ export function TopNav() {
   const { data: session } = useSession();
   const userRole = session?.user?.role ?? "member";
   const [mobileOpen, setMobileOpen] = useState(false);
+  const t = useTranslations("navigation");
+
+  const primaryNavItems = getPrimaryNavItems(t);
+  const settingsNavItems = getSettingsNavItems(t);
 
   const visiblePrimary = primaryNavItems.filter((item) => canSeeItem(userRole, item));
   const visibleSettings = settingsNavItems.filter((item) => canSeeItem(userRole, item));
@@ -95,11 +104,11 @@ export function TopNav() {
         <SheetTrigger asChild>
           <Button variant="ghost" size="icon" className="mr-2 md:hidden">
             <Menu className="h-5 w-5" />
-            <span className="sr-only">Toggle navigation</span>
+            <span className="sr-only">{t("toggleNavigation")}</span>
           </Button>
         </SheetTrigger>
         <SheetContent side="left" className="w-[260px] p-0">
-          <SheetTitle className="sr-only">Navigation</SheetTitle>
+          <SheetTitle className="sr-only">{t("navigation")}</SheetTitle>
           <div className="flex h-14 items-center border-b px-5">
             <Link
               href="/overview"
@@ -134,7 +143,7 @@ export function TopNav() {
               <>
                 <div className="mt-4 mb-1 px-3">
                   <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground/70">
-                    Settings
+                    {t("settings")}
                   </span>
                 </div>
                 {visibleSettings.map((item) => {
@@ -203,7 +212,7 @@ export function TopNav() {
                 )}
               >
                 <Settings className="mr-1 h-4 w-4" />
-                Settings
+                {t("settings")}
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start">

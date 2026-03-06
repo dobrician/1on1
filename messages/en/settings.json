@@ -1,0 +1,90 @@
+{
+  "settings": {
+    "title": "Organization Settings",
+    "description": "Manage your organization details and meeting defaults",
+    "orgDetails": {
+      "title": "Organization Details",
+      "description": "Basic information about your organization",
+      "name": "Organization name",
+      "type": "Organization type",
+      "slug": "Slug",
+      "timezone": "Timezone",
+      "timezonePlaceholder": "Select timezone",
+      "nonprofit": "Non-profit",
+      "forprofit": "For-profit",
+      "slugNote": "Auto-generated from organization name",
+      "typeNote": "Set during registration and cannot be changed"
+    },
+    "meetingDefaults": {
+      "title": "Meeting Defaults",
+      "description": "Default settings for new meeting series in your organization",
+      "cadence": "Default meeting cadence",
+      "duration": "Default meeting duration",
+      "durationPlaceholder": "Select duration",
+      "weekly": "Weekly",
+      "biweekly": "Biweekly",
+      "monthly": "Monthly",
+      "custom": "Custom",
+      "minutes": "{count} minutes"
+    },
+    "language": {
+      "title": "Organization Language",
+      "description": "AI-generated content (summaries, nudges, suggestions) will use this language",
+      "label": "Preferred language",
+      "placeholder": "Select language",
+      "english": "English",
+      "romanian": "Romanian",
+      "german": "German",
+      "french": "French",
+      "spanish": "Spanish",
+      "portuguese": "Portuguese"
+    },
+    "theme": {
+      "title": "Color Theme",
+      "description": "Choose an accent color theme for your organization. All members will see this theme applied across the dashboard and charts."
+    },
+    "saved": "Settings saved successfully.",
+    "saving": "Saving...",
+    "saveChanges": "Save changes",
+    "auditLog": {
+      "title": "Audit Log",
+      "description": "View all administrative actions in your organization",
+      "searchPlaceholder": "Search actions...",
+      "allActions": "All actions",
+      "to": "to",
+      "loading": "Loading audit log...",
+      "empty": "No audit log entries found",
+      "timestamp": "Timestamp",
+      "actor": "Actor",
+      "action": "Action",
+      "target": "Target",
+      "details": "Details",
+      "showing": "Showing {from}-{to} of {total} entries",
+      "previous": "Previous",
+      "pageOf": "Page {page} of {total}",
+      "next": "Next",
+      "actions": {
+        "inviteSent": "Invite Sent",
+        "inviteAccepted": "Invite Accepted",
+        "inviteResent": "Invite Resent",
+        "roleChanged": "Role Changed",
+        "managerAssigned": "Manager Assigned",
+        "userDeactivated": "User Deactivated",
+        "userReactivated": "User Reactivated",
+        "profileUpdated": "Profile Updated",
+        "teamCreated": "Team Created",
+        "teamUpdated": "Team Updated",
+        "teamDeleted": "Team Deleted",
+        "memberAdded": "Member Added to Team",
+        "memberRemoved": "Member Removed from Team",
+        "leadChanged": "Team Lead Changed",
+        "orgSettingsChanged": "Org Settings Changed"
+      },
+      "metadata": {
+        "roleChange": "Role Change",
+        "managerChange": "Manager Change",
+        "leadChange": "Lead Change"
+      }
+    }
+  }
+}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -146,6 +147,7 @@ export function IndividualAnalyticsClient({
   const velocity = analyticsData?.velocity ?? [];
   const adherence = analyticsData?.adherence ?? [];
 
+  const t = useTranslations("analytics");
   const initials = `${targetUser.firstName[0]}${targetUser.lastName[0]}`;
 
   return (
@@ -179,6 +181,7 @@ export function IndividualAnalyticsClient({
           userId={targetUserId}
           period={period}
           variant="full"
+          label={t("export.all")}
         />
       </div>
 
@@ -186,12 +189,12 @@ export function IndividualAnalyticsClient({
       <div className="grid gap-6 lg:grid-cols-2">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0">
-            <CardTitle className="text-base">Score Trend</CardTitle>
+            <CardTitle className="text-base">{t("chart.scoreTrend")}</CardTitle>
             <CsvExportButton
               type="score-trend"
               userId={targetUserId}
               period={period}
-              label="Export score trend"
+              label={t("export.scoreTrend")}
             />
           </CardHeader>
           <CardContent>
@@ -201,12 +204,12 @@ export function IndividualAnalyticsClient({
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0">
-            <CardTitle className="text-base">Category Breakdown</CardTitle>
+            <CardTitle className="text-base">{t("chart.categoryBreakdown")}</CardTitle>
             <CsvExportButton
               type="categories"
               userId={targetUserId}
               period={period}
-              label="Export categories"
+              label={t("export.categories")}
             />
           </CardHeader>
           <CardContent>
@@ -219,12 +222,12 @@ export function IndividualAnalyticsClient({
       <div className="grid gap-6 lg:grid-cols-2">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0">
-            <CardTitle className="text-base">Action Item Velocity</CardTitle>
+            <CardTitle className="text-base">{t("chart.actionItemVelocity")}</CardTitle>
             <CsvExportButton
               type="velocity"
               userId={targetUserId}
               period={period}
-              label="Export velocity"
+              label={t("export.velocity")}
             />
           </CardHeader>
           <CardContent>
@@ -234,12 +237,12 @@ export function IndividualAnalyticsClient({
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0">
-            <CardTitle className="text-base">Meeting Adherence</CardTitle>
+            <CardTitle className="text-base">{t("chart.meetingAdherence")}</CardTitle>
             <CsvExportButton
               type="adherence"
               userId={targetUserId}
               period={period}
-              label="Export adherence"
+              label={t("export.adherence")}
             />
           </CardHeader>
           <CardContent>
@@ -251,7 +254,7 @@ export function IndividualAnalyticsClient({
       {/* Session comparison */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Session Comparison</CardTitle>
+          <CardTitle className="text-base">{t("chart.sessionComparison")}</CardTitle>
         </CardHeader>
         <CardContent>
           <SessionComparison

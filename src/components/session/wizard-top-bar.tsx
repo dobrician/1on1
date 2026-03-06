@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useRouter } from "next/navigation";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { useTranslations } from "next-intl";
 
 export type SaveStatus = "saved" | "saving" | "error";
 
@@ -35,6 +36,7 @@ export function WizardTopBar({
   saveStatus,
   hasUnsavedChanges,
 }: WizardTopBarProps) {
+  const t = useTranslations("sessions");
   const router = useRouter();
 
   const handleExit = () => {
@@ -63,16 +65,15 @@ export function WizardTopBar({
             <AlertDialogTrigger asChild>{exitButton}</AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>Exit session wizard?</AlertDialogTitle>
+                <AlertDialogTitle>{t("wizard.exitTitle")}</AlertDialogTitle>
                 <AlertDialogDescription>
-                  You have unsaved changes. Your progress is auto-saved, but any
-                  changes made in the last few seconds may not be saved.
+                  {t("wizard.exitDescription")}
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>Continue editing</AlertDialogCancel>
+                <AlertDialogCancel>{t("wizard.continueEditing")}</AlertDialogCancel>
                 <AlertDialogAction onClick={handleExit}>
-                  Exit anyway
+                  {t("wizard.exitAnyway")}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
@@ -96,19 +97,19 @@ export function WizardTopBar({
           {saveStatus === "saving" && (
             <>
               <Loader2 className="h-3 w-3 animate-spin" />
-              <span>Saving...</span>
+              <span>{t("wizard.saving")}</span>
             </>
           )}
           {saveStatus === "saved" && (
             <>
               <Check className="h-3 w-3 text-green-600 dark:text-green-400" />
-              <span>All changes saved</span>
+              <span>{t("wizard.saved")}</span>
             </>
           )}
           {saveStatus === "error" && (
             <>
               <AlertCircle className="h-3 w-3 text-destructive" />
-              <span className="text-destructive">Error saving</span>
+              <span className="text-destructive">{t("wizard.errorSaving")}</span>
             </>
           )}
         </div>

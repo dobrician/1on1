@@ -1,6 +1,7 @@
 "use client";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -17,13 +18,8 @@ interface RoleSelectProps {
   disabled: boolean;
 }
 
-const roleLabels: Record<string, string> = {
-  admin: "Admin",
-  manager: "Manager",
-  member: "Member",
-};
-
 export function RoleSelect({ userId, currentRole, disabled }: RoleSelectProps) {
+  const t = useTranslations("people");
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
@@ -58,7 +54,7 @@ export function RoleSelect({ userId, currentRole, disabled }: RoleSelectProps) {
       toast.error(error.message);
     },
     onSuccess: () => {
-      toast.success("Role updated");
+      toast.success(t("role.updated"));
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
@@ -68,7 +64,7 @@ export function RoleSelect({ userId, currentRole, disabled }: RoleSelectProps) {
   if (disabled) {
     return (
       <Badge variant="secondary">
-        {roleLabels[currentRole] ?? currentRole}
+        {currentRole === "admin" ? t("table.admin") : currentRole === "manager" ? t("table.manager") : t("table.member")}
       </Badge>
     );
   }
@@ -84,9 +80,9 @@ export function RoleSelect({ userId, currentRole, disabled }: RoleSelectProps) {
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="admin">Admin</SelectItem>
-          <SelectItem value="manager">Manager</SelectItem>
-          <SelectItem value="member">Member</SelectItem>
+          <SelectItem value="admin">{t("table.admin")}</SelectItem>
+          <SelectItem value="manager">{t("table.manager")}</SelectItem>
+          <SelectItem value="member">{t("table.member")}</SelectItem>
         </SelectContent>
       </Select>
     </div>

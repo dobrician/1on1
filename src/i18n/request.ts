@@ -17,6 +17,17 @@ export default getRequestConfig(async () => {
   const messages = {
     ...(await import(`../../messages/${locale}/common.json`)).default,
     ...(await import(`../../messages/${locale}/auth.json`)).default,
+    ...(await import(`../../messages/${locale}/navigation.json`)).default,
+    ...(await import(`../../messages/${locale}/dashboard.json`)).default,
+    ...(await import(`../../messages/${locale}/sessions.json`)).default,
+    ...(await import(`../../messages/${locale}/people.json`)).default,
+    ...(await import(`../../messages/${locale}/teams.json`)).default,
+    ...(await import(`../../messages/${locale}/templates.json`)).default,
+    ...(await import(`../../messages/${locale}/actionItems.json`)).default,
+    ...(await import(`../../messages/${locale}/analytics.json`)).default,
+    ...(await import(`../../messages/${locale}/history.json`)).default,
+    ...(await import(`../../messages/${locale}/search.json`)).default,
+    ...(await import(`../../messages/${locale}/settings.json`)).default,
   };
 
   return {

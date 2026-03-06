@@ -1,0 +1,69 @@
+{
+  "people": {
+    "title": "People",
+    "description": "Manage your organization's members",
+    "tabs": {
+      "people": "People",
+      "teams": "Teams"
+    },
+    "table": {
+      "name": "Name",
+      "email": "Email",
+      "role": "Role",
+      "teams": "Teams",
+      "manager": "Manager",
+      "status": "Status",
+      "searchPlaceholder": "Search by name, email, or job title...",
+      "allRoles": "All Roles",
+      "admin": "Admin",
+      "manager": "Manager",
+      "member": "Member",
+      "allTeams": "All Teams",
+      "allStatus": "All Status",
+      "active": "Active",
+      "pending": "Pending",
+      "deactivated": "Deactivated",
+      "noUsers": "No users found.",
+      "showing": "Showing {from}-{to} of {total} users",
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "invite": {
+      "button": "Invite",
+      "title": "Invite people",
+      "description": "Send email invitations to join your organization.",
+      "emailLabel": "Email addresses",
+      "emailPlaceholder": "Enter email addresses, one per line or comma-separated",
+      "emailDesc": "You can invite up to 50 people at once.",
+      "roleLabel": "Role",
+      "rolePlaceholder": "Select a role",
+      "roleDesc": "All invitees will receive this role.",
+      "cancel": "Cancel",
+      "sending": "Sending...",
+      "send": "Send invites",
+      "success": "{count} invite(s) sent successfully",
+      "skipped": "Some emails were skipped",
+      "error": "Something went wrong. Please try again.",
+      "failed": "Failed to send invites"
+    },
+    "profile": {
+      "jobTitle": "Job Title",
+      "manager": "Manager",
+      "teams": "Teams",
+      "none": "None",
+      "viewProfile": "View Full Profile"
+    },
+    "role": {
+      "updated": "Role updated"
+    },
+    "actions": {
+      "viewProfile": "View Profile",
+      "resendInvite": "Resend Invite",
+      "deactivate": "Deactivate",
+      "reactivate": "Reactivate",
+      "deactivated": "User deactivated",
+      "reactivated": "User reactivated",
+      "inviteResent": "Invite resent"
+    }
+  }
+}

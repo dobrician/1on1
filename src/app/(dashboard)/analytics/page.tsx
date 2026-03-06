@@ -8,6 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { BarChart3, Users } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 
 interface ReportSummary {
   userId: string;
@@ -28,6 +29,7 @@ interface TeamSummary {
 export default async function AnalyticsPage() {
   const session = await auth();
   if (!session) redirect("/login");
+  const t = await getTranslations("analytics");
 
   const { user } = session;
 
@@ -150,16 +152,16 @@ export default async function AnalyticsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Analytics</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">{t("title")}</h1>
         <p className="text-sm text-muted-foreground">
-          View performance trends and insights for your reports.
+          {t("description")}
         </p>
       </div>
 
       {/* Team analytics section */}
       {teamsList.length > 0 && (
         <div>
-          <h2 className="mb-3 text-lg font-medium">Teams</h2>
+          <h2 className="mb-3 text-lg font-medium">{t("teamsSection")}</h2>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {teamsList.map((team) => (
               <Link key={team.id} href={`/analytics/team/${team.id}`}>
@@ -173,8 +175,7 @@ export default async function AnalyticsPage() {
                         {team.name}
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        {team.memberCount}{" "}
-                        {team.memberCount === 1 ? "member" : "members"}
+                        {t("memberCount", { count: team.memberCount })}
                       </p>
                     </div>
                   </CardContent>
@@ -188,14 +189,14 @@ export default async function AnalyticsPage() {
       {/* Individual reports section */}
       <div>
         {teamsList.length > 0 && (
-          <h2 className="mb-3 text-lg font-medium">Individuals</h2>
+          <h2 className="mb-3 text-lg font-medium">{t("individualsSection")}</h2>
         )}
         {reports.length === 0 ? (
           <Card>
             <CardContent className="flex flex-col items-center justify-center py-12 text-center">
               <BarChart3 className="mb-3 h-10 w-10 text-muted-foreground/50" />
               <p className="text-sm text-muted-foreground">
-                No session data available yet. Complete sessions to see analytics.
+                {t("empty")}
               </p>
             </CardContent>
           </Card>
@@ -234,8 +235,7 @@ export default async function AnalyticsPage() {
                           </Badge>
                         )}
                         <span className="text-xs text-muted-foreground">
-                          {report.sessionCount}{" "}
-                          {report.sessionCount === 1 ? "session" : "sessions"}
+                          {t("sessionCount", { count: report.sessionCount })}
                         </span>
                       </div>
                     </CardContent>

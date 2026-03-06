@@ -10,8 +10,10 @@ import {
 } from "@/lib/db/schema";
 import { eq, and } from "drizzle-orm";
 import { SeriesForm } from "@/components/series/series-form";
+import { getTranslations } from "next-intl/server";
 
 export default async function NewSeriesPage() {
+  const t = await getTranslations("sessions");
   const session = await auth();
   if (!session?.user) redirect("/login");
 
@@ -104,16 +106,18 @@ export default async function NewSeriesPage() {
     }
   }
 
+  const noTeamLabel = t("noTeam");
+
   // Add users without any team
   const noTeamUsers = usersList.filter((u) => !usersWithTeam.has(u.id));
   if (noTeamUsers.length > 0) {
-    teamGroups.set("No Team", noTeamUsers);
+    teamGroups.set(noTeamLabel, noTeamUsers);
   }
 
   // Sort groups alphabetically, but put "No Team" last
   const sortedGroups = [...teamGroups.entries()].sort(([a], [b]) => {
-    if (a === "No Team") return 1;
-    if (b === "No Team") return -1;
+    if (a === noTeamLabel) return 1;
+    if (b === noTeamLabel) return -1;
     return a.localeCompare(b);
   });
 
@@ -121,10 +125,10 @@ export default async function NewSeriesPage() {
     <div className="mx-auto max-w-2xl space-y-6">
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">
-          New Meeting Series
+          {t("newSeriesTitle")}
         </h1>
         <p className="text-muted-foreground">
-          Set up a recurring 1:1 meeting with a team member.
+          {t("newSeriesDesc")}
         </p>
       </div>
 

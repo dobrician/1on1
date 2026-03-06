@@ -1,6 +1,7 @@
 "use client";
 
 import type { ColumnDef } from "@tanstack/react-table";
+import type { useTranslations } from "next-intl";
 import { ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -48,12 +49,14 @@ interface CreateColumnsOptions {
   currentUserRole: string;
   currentUserId: string;
   allUsers: { id: string; firstName: string; lastName: string }[];
+  t: ReturnType<typeof useTranslations<"people">>;
 }
 
 export function createColumns({
   currentUserRole,
   currentUserId,
   allUsers,
+  t,
 }: CreateColumnsOptions): ColumnDef<UserRow>[] {
   const isAdmin = currentUserRole === "admin";
 
@@ -68,7 +71,7 @@ export function createColumns({
           className="-ml-3 h-8"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Name
+          {t("table.name")}
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       ),
@@ -97,7 +100,7 @@ export function createColumns({
           className="-ml-3 h-8"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Email
+          {t("table.email")}
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       ),
@@ -114,7 +117,7 @@ export function createColumns({
           className="-ml-3 h-8"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Role
+          {t("table.role")}
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       ),
@@ -132,8 +135,8 @@ export function createColumns({
     },
     {
       id: "teams",
-      accessorFn: (row) => row.teams.map((t) => t.name).join(", "),
-      header: "Teams",
+      accessorFn: (row) => row.teams.map((team) => team.name).join(", "),
+      header: () => t("table.teams"),
       cell: ({ row }) => {
         const userTeams = row.original.teams;
         if (userTeams.length === 0) {
@@ -164,7 +167,7 @@ export function createColumns({
           className="-ml-3 h-8"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Manager
+          {t("table.manager")}
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       ),
@@ -187,7 +190,7 @@ export function createColumns({
           className="-ml-3 h-8"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Status
+          {t("table.status")}
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       ),
@@ -195,7 +198,7 @@ export function createColumns({
         const status = row.original.status;
         return (
           <Badge variant="outline" className={getStatusColor(status)}>
-            {status.charAt(0).toUpperCase() + status.slice(1)}
+            {t(`table.${status}`)}
           </Badge>
         );
       },

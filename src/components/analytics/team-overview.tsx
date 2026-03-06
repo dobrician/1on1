@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Card, CardContent } from "@/components/ui/card";
 import type { TeamAverage } from "@/lib/analytics/queries";
 
@@ -21,6 +22,7 @@ function scoreColor(score: number): string {
 }
 
 export function TeamOverview({ data, loading, anonymize, memberCount }: TeamOverviewProps) {
+  const t = useTranslations("analytics");
   if (loading) {
     return (
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -40,8 +42,8 @@ export function TeamOverview({ data, loading, anonymize, memberCount }: TeamOver
   if (data.length === 0) {
     const message =
       anonymize
-        ? "Anonymized averages require at least 2 contributors per category to protect privacy."
-        : "No completed sessions with scored answers in this period.";
+        ? t("chart.anonymizedNote")
+        : t("chart.noData");
     return (
       <div className="flex h-[120px] items-center justify-center text-center text-sm text-muted-foreground">
         {message}
@@ -75,8 +77,8 @@ export function TeamOverview({ data, loading, anonymize, memberCount }: TeamOver
               {/* Member count / limited data footnote */}
               <p className="mt-1.5 text-xs text-muted-foreground">
                 {limited
-                  ? `Limited data (${item.memberCount} contributor${item.memberCount === 1 ? "" : "s"})`
-                  : `${item.memberCount} contributors`}
+                  ? t("chart.limitedData", { count: item.memberCount })
+                  : t("chart.contributors", { count: item.memberCount })}
               </p>
             </CardContent>
           </Card>

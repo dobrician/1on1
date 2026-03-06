@@ -8,6 +8,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 <!-- Add new changes here -->
 
+## [1.1.1] - 2026-03-06
+
+### Changed
+- Color themes updated to shadcn/ui v4 oklch palette values
+- Orange: vivid traffic orange (`oklch(0.76 0.20 50)`) with warm amber chart palette
+- Green: pistachio (`oklch(0.76 0.13 145)`) — light, yellowish-green with matching charts
+- Rose renamed to **Yellow**: sunny golden (`oklch(0.795 0.184 86.047)`) with golden chart ramp
+- Blue: indigo-blue (`oklch(0.51 0.23 277)`) — deeper and more modern than previous cobalt
+- Zinc, Slate, Stone primaries now use official shadcn/ui v4 near-black/near-white values
+- All chart palettes are now per-theme hue ranges instead of monochromatic opacity ramps
+- `colorThemeValues` validation updated: `rose` → `yellow`
+
 ## [1.1.0] - 2026-03-06
 
 ### Added

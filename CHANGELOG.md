@@ -6,7 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+- Translation keys for people management: `managerSelect`, `memberPicker`, `profileForm` namespaces in EN/RO
+- Translation keys for team creation dialog: `teams.create` namespace in EN/RO
+- Translation keys for template builder: `questionCard`, `answerConfig`, `conditionalLogic` namespaces in EN/RO
+
 ### Changed
+- People management components (manager-select, member-picker, team-card, team-create-dialog, profile-edit-form) now use `useTranslations` for all visible strings
+- Profile page uses `getTranslations`/`getFormatter` for locale-aware dates and translated labels
+- Team detail page uses `useFormatter` for locale-aware joined dates instead of `toLocaleDateString("en-US")`
+- Template builder components (question-card, answer-config-form, conditional-logic-form) now use `useTranslations` for all visible strings
+- Team create dialog and profile edit form call `useZodI18nErrors()` for translated validation
 - All analytics chart components (score-trend, velocity, adherence, session-comparison, team-heatmap, category-breakdown, team-overview) use locale-aware `useFormatter()` for dates and numbers instead of hardcoded `toLocaleDateString("en-US")` and `.toFixed()`
 - Audit log page and client use `getTranslations`/`useFormatter` for fully translated settings UI
 - Analytics page uses `getFormatter` from next-intl/server for locale-aware number display

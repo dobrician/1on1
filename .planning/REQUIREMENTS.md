@@ -22,8 +22,8 @@ Requirements for internationalization milestone. Each maps to roadmap phases.
 - [x] **UITR-03**: All auth pages (login, register, invite, forgot-password, verification, reset) are translated
 - [x] **UITR-04**: All dashboard components (stats, upcoming, overdue, recent) are translated
 - [ ] **UITR-05**: All session wizard components (steps, context panel, talking points, notes) are translated
-- [ ] **UITR-06**: All people/teams management pages are translated
-- [ ] **UITR-07**: All template builder pages are translated
+- [x] **UITR-06**: All people/teams management pages are translated
+- [x] **UITR-07**: All template builder pages are translated
 - [x] **UITR-08**: All analytics pages (trends, category, team, velocity, export) are translated
 - [x] **UITR-09**: All settings pages (company, profile, members, integrations) are translated
 - [x] **UITR-10**: Command palette and search UI are translated
@@ -97,8 +97,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | UITR-03 | Phase 12 | Complete |
 | UITR-04 | Phase 12 | Complete |
 | UITR-05 | Phase 12 | Pending |
-| UITR-06 | Phase 12 | Pending |
-| UITR-07 | Phase 12 | Pending |
+| UITR-06 | Phase 12 | Complete |
+| UITR-07 | Phase 12 | Complete |
 | UITR-08 | Phase 12 | Complete |
 | UITR-09 | Phase 12 | Complete |
 | UITR-10 | Phase 12 | Complete |

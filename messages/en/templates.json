@@ -83,6 +83,55 @@
       "cancel": "Cancel",
       "updateQuestion": "Update Question",
       "addQuestionBtn": "Add Question"
+    },
+    "questionCard": {
+      "dragToReorder": "Drag to reorder",
+      "editQuestion": "Edit question",
+      "removeQuestion": "Remove question",
+      "removeTitle": "Remove Question",
+      "removeDesc": "Are you sure you want to remove this question? This change takes effect when you save the template.",
+      "cancel": "Cancel",
+      "remove": "Remove",
+      "conditional": "Conditional",
+      "showsWhen": "Shows when Q{index} {operator} {value}"
+    },
+    "answerConfig": {
+      "ratingLabels": "Rating Labels",
+      "optional": "optional",
+      "labelForLowest": "Label for {value} (lowest)",
+      "labelForHighest": "Label for {value} (highest)",
+      "lowPlaceholder": "e.g. Poor",
+      "highPlaceholder": "e.g. Excellent",
+      "multipleChoiceOptions": "Multiple Choice Options",
+      "optionPlaceholder": "Option {index}",
+      "removeOption": "Remove option",
+      "minOptionsRequired": "At least 2 options are required",
+      "addOption": "Add Option",
+      "allowMultiple": "Allow multiple selections",
+      "moodLabels": "Mood Labels"
+    },
+    "conditionalLogic": {
+      "title": "Show this question conditionally",
+      "description": "Only show when a previous answer matches a condition",
+      "noEarlierQuestions": "No earlier questions available. Conditional logic can only reference questions that appear before this one.",
+      "whenQuestion": "When question...",
+      "selectQuestion": "Select a question",
+      "is": "...is",
+      "selectOperator": "Select operator",
+      "value": "...value",
+      "selectValue": "Select value",
+      "selectOption": "Select option",
+      "selectMood": "Select mood level",
+      "enterValue": "Enter value",
+      "allFieldsRequired": "All three fields are required for conditional logic",
+      "yes": "Yes",
+      "no": "No",
+      "operatorEq": "equals",
+      "operatorNeq": "not equals",
+      "operatorLt": "less than",
+      "operatorGt": "greater than",
+      "operatorLte": "at most",
+      "operatorGte": "at least"
     }
   }
 }

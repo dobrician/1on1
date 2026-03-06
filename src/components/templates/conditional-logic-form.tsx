@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useTranslations } from "next-intl";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import {
@@ -16,15 +17,6 @@ import {
   conditionalOperators,
 } from "@/lib/validations/template";
 import type { QuestionData } from "./template-editor";
-
-const operatorLabels: Record<string, string> = {
-  eq: "equals",
-  neq: "not equals",
-  lt: "less than",
-  gt: "greater than",
-  lte: "at most",
-  gte: "at least",
-};
 
 interface ConditionalCondition {
   conditionalOnQuestionId: string | null;
@@ -45,6 +37,7 @@ export function ConditionalLogicForm({
   initialCondition,
   onConditionChange,
 }: ConditionalLogicFormProps) {
+  const t = useTranslations("templates");
   const hasInitialCondition = !!(
     initialCondition?.conditionalOnQuestionId &&
     initialCondition?.conditionalOperator &&
@@ -63,23 +56,27 @@ export function ConditionalLogicForm({
   );
   const [validationError, setValidationError] = useState<string | null>(null);
 
-  // Only earlier questions (lower index) can be referenced
+  const operatorKey: Record<string, string> = {
+    eq: "conditionalLogic.operatorEq",
+    neq: "conditionalLogic.operatorNeq",
+    lt: "conditionalLogic.operatorLt",
+    gt: "conditionalLogic.operatorGt",
+    lte: "conditionalLogic.operatorLte",
+    gte: "conditionalLogic.operatorGte",
+  };
+
   const availableQuestions = allQuestions.filter((_, i) => i < currentQuestionIndex);
 
-  // Get the selected target question (match by id or fallback index key)
   const targetQuestion = targetQuestionId
     ? allQuestions.find((q, i) => (q.id ?? `q-${i}`) === targetQuestionId)
     : null;
 
-  // Get valid operators for the target question's answer type
   const validOperators = targetQuestion
     ? (operatorsForAnswerType[targetQuestion.answerType] ?? conditionalOperators)
     : [];
 
-  // Reset operator/value when target changes
   useEffect(() => {
     if (targetQuestion) {
-      // If current operator is not valid for new target type, reset
       if (operator && !validOperators.includes(operator)) {
         setOperator(null);
         setValue(null);
@@ -88,7 +85,6 @@ export function ConditionalLogicForm({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [targetQuestionId]);
 
-  // Propagate changes to parent
   useEffect(() => {
     if (!enabled) {
       onConditionChange(null);
@@ -104,9 +100,7 @@ export function ConditionalLogicForm({
       });
       setValidationError(null);
     } else if (enabled && (targetQuestionId || operator || value)) {
-      // Partially filled: show validation error
-      setValidationError("All three fields are required for conditional logic");
-      // Still propagate partial state so form knows it's incomplete
+      setValidationError(t("conditionalLogic.allFieldsRequired"));
       onConditionChange({
         conditionalOnQuestionId: targetQuestionId,
         conditionalOperator: operator,
@@ -125,7 +119,6 @@ export function ConditionalLogicForm({
     }
   }
 
-  // Render value input based on target question's answer type
   function renderValueInput() {
     if (!targetQuestion) return null;
 
@@ -134,18 +127,13 @@ export function ConditionalLogicForm({
     switch (answerType) {
       case "rating_1_5":
         return (
-          <Select
-            value={value ?? ""}
-            onValueChange={(v) => setValue(v)}
-          >
+          <Select value={value ?? ""} onValueChange={(v) => setValue(v)}>
             <SelectTrigger>
-              <SelectValue placeholder="Select value" />
+              <SelectValue placeholder={t("conditionalLogic.selectValue")} />
             </SelectTrigger>
             <SelectContent>
               {[1, 2, 3, 4, 5].map((n) => (
-                <SelectItem key={n} value={String(n)}>
-                  {n}
-                </SelectItem>
+                <SelectItem key={n} value={String(n)}>{n}</SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -153,18 +141,13 @@ export function ConditionalLogicForm({
 
       case "rating_1_10":
         return (
-          <Select
-            value={value ?? ""}
-            onValueChange={(v) => setValue(v)}
-          >
+          <Select value={value ?? ""} onValueChange={(v) => setValue(v)}>
             <SelectTrigger>
-              <SelectValue placeholder="Select value" />
+              <SelectValue placeholder={t("conditionalLogic.selectValue")} />
             </SelectTrigger>
             <SelectContent>
               {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => (
-                <SelectItem key={n} value={String(n)}>
-                  {n}
-                </SelectItem>
+                <SelectItem key={n} value={String(n)}>{n}</SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -172,45 +155,36 @@ export function ConditionalLogicForm({
 
       case "yes_no":
         return (
-          <Select
-            value={value ?? ""}
-            onValueChange={(v) => setValue(v)}
-          >
+          <Select value={value ?? ""} onValueChange={(v) => setValue(v)}>
             <SelectTrigger>
-              <SelectValue placeholder="Select value" />
+              <SelectValue placeholder={t("conditionalLogic.selectValue")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="true">Yes</SelectItem>
-              <SelectItem value="false">No</SelectItem>
+              <SelectItem value="true">{t("conditionalLogic.yes")}</SelectItem>
+              <SelectItem value="false">{t("conditionalLogic.no")}</SelectItem>
             </SelectContent>
           </Select>
         );
 
       case "multiple_choice": {
-        const options =
-          (targetQuestion.answerConfig?.options as string[]) ?? [];
+        const options = (targetQuestion.answerConfig?.options as string[]) ?? [];
         if (options.length === 0) {
           return (
             <Input
-              placeholder="Enter value"
+              placeholder={t("conditionalLogic.enterValue")}
               value={value ?? ""}
               onChange={(e) => setValue(e.target.value)}
             />
           );
         }
         return (
-          <Select
-            value={value ?? ""}
-            onValueChange={(v) => setValue(v)}
-          >
+          <Select value={value ?? ""} onValueChange={(v) => setValue(v)}>
             <SelectTrigger>
-              <SelectValue placeholder="Select option" />
+              <SelectValue placeholder={t("conditionalLogic.selectOption")} />
             </SelectTrigger>
             <SelectContent>
               {options.map((opt) => (
-                <SelectItem key={opt} value={opt}>
-                  {opt}
-                </SelectItem>
+                <SelectItem key={opt} value={opt}>{opt}</SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -219,18 +193,13 @@ export function ConditionalLogicForm({
 
       case "mood":
         return (
-          <Select
-            value={value ?? ""}
-            onValueChange={(v) => setValue(v)}
-          >
+          <Select value={value ?? ""} onValueChange={(v) => setValue(v)}>
             <SelectTrigger>
-              <SelectValue placeholder="Select mood level" />
+              <SelectValue placeholder={t("conditionalLogic.selectMood")} />
             </SelectTrigger>
             <SelectContent>
               {[1, 2, 3, 4, 5].map((n) => (
-                <SelectItem key={n} value={String(n)}>
-                  {n}
-                </SelectItem>
+                <SelectItem key={n} value={String(n)}>{n}</SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -240,7 +209,7 @@ export function ConditionalLogicForm({
       default:
         return (
           <Input
-            placeholder="Enter value"
+            placeholder={t("conditionalLogic.enterValue")}
             value={value ?? ""}
             onChange={(e) => setValue(e.target.value)}
           />
@@ -248,21 +217,19 @@ export function ConditionalLogicForm({
     }
   }
 
-  // Truncate question text for the dropdown
   function truncateText(text: string, maxLength = 40): string {
     return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
   }
 
   return (
     <div className="space-y-3 rounded-lg border p-3">
-      {/* Toggle */}
       <div className="flex items-center justify-between">
         <div>
           <Label htmlFor="conditionalToggle" className="cursor-pointer text-sm font-medium">
-            Show this question conditionally
+            {t("conditionalLogic.title")}
           </Label>
           <p className="text-xs text-muted-foreground">
-            Only show when a previous answer matches a condition
+            {t("conditionalLogic.description")}
           </p>
         </div>
         <Switch
@@ -272,32 +239,28 @@ export function ConditionalLogicForm({
         />
       </div>
 
-      {/* Condition fields */}
       {enabled && (
         <div className="space-y-3 pt-1">
           {availableQuestions.length === 0 ? (
             <p className="text-xs text-muted-foreground">
-              No earlier questions available. Conditional logic can only
-              reference questions that appear before this one.
+              {t("conditionalLogic.noEarlierQuestions")}
             </p>
           ) : (
             <>
-              {/* Target question */}
               <div className="space-y-1.5">
                 <Label className="text-xs text-muted-foreground">
-                  When question...
+                  {t("conditionalLogic.whenQuestion")}
                 </Label>
                 <Select
                   value={targetQuestionId ?? ""}
                   onValueChange={(v) => {
                     setTargetQuestionId(v);
-                    // Reset operator and value when target changes
                     setOperator(null);
                     setValue(null);
                   }}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select a question" />
+                    <SelectValue placeholder={t("conditionalLogic.selectQuestion")} />
                   </SelectTrigger>
                   <SelectContent>
                     {availableQuestions.map((q, idx) => {
@@ -315,23 +278,23 @@ export function ConditionalLogicForm({
                 </Select>
               </div>
 
-              {/* Operator */}
               {targetQuestionId && (
                 <div className="space-y-1.5">
                   <Label className="text-xs text-muted-foreground">
-                    ...is
+                    {t("conditionalLogic.is")}
                   </Label>
                   <Select
                     value={operator ?? ""}
                     onValueChange={(v) => setOperator(v)}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select operator" />
+                      <SelectValue placeholder={t("conditionalLogic.selectOperator")} />
                     </SelectTrigger>
                     <SelectContent>
                       {validOperators.map((op) => (
                         <SelectItem key={op} value={op}>
-                          {operatorLabels[op] ?? op}
+                          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                          {operatorKey[op] ? t(operatorKey[op] as any) : op}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -339,11 +302,10 @@ export function ConditionalLogicForm({
                 </div>
               )}
 
-              {/* Value */}
               {targetQuestionId && operator && (
                 <div className="space-y-1.5">
                   <Label className="text-xs text-muted-foreground">
-                    ...value
+                    {t("conditionalLogic.value")}
                   </Label>
                   {renderValueInput()}
                 </div>
@@ -351,7 +313,6 @@ export function ConditionalLogicForm({
             </>
           )}
 
-          {/* Validation error */}
           {validationError && (
             <p className="text-xs text-destructive">{validationError}</p>
           )}

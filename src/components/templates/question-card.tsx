@@ -2,6 +2,7 @@
 
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { useTranslations } from "next-intl";
 import { GripVertical, Pencil, Trash2, GitBranch } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -18,24 +19,6 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import type { QuestionData } from "./template-editor";
-
-const answerTypeLabels: Record<string, string> = {
-  text: "Text",
-  rating_1_5: "Rating (1-5)",
-  rating_1_10: "Rating (1-10)",
-  yes_no: "Yes/No",
-  multiple_choice: "Multiple Choice",
-  mood: "Mood",
-};
-
-const operatorLabels: Record<string, string> = {
-  eq: "equals",
-  neq: "not equals",
-  lt: "less than",
-  gt: "greater than",
-  lte: "at most",
-  gte: "at least",
-};
 
 interface QuestionCardProps {
   question: QuestionData;
@@ -54,6 +37,7 @@ export function QuestionCard({
   onEdit,
   onRemove,
 }: QuestionCardProps) {
+  const t = useTranslations("templates");
   const sortableId = question.id ?? `new-${index}`;
   const {
     attributes,
@@ -69,6 +53,24 @@ export function QuestionCard({
     transition,
   };
 
+  const answerTypeKey: Record<string, string> = {
+    text: "editor.answerTypeText",
+    rating_1_5: "editor.answerTypeRating5",
+    rating_1_10: "editor.answerTypeRating10",
+    yes_no: "editor.answerTypeYesNo",
+    multiple_choice: "editor.answerTypeMultipleChoice",
+    mood: "editor.answerTypeMood",
+  };
+
+  const operatorKey: Record<string, string> = {
+    eq: "conditionalLogic.operatorEq",
+    neq: "conditionalLogic.operatorNeq",
+    lt: "conditionalLogic.operatorLt",
+    gt: "conditionalLogic.operatorGt",
+    lte: "conditionalLogic.operatorLte",
+    gte: "conditionalLogic.operatorGte",
+  };
+
   // Find the referenced question for the conditional indicator
   const conditionTarget = question.conditionalOnQuestionId && allQuestions
     ? allQuestions.find((q) => q.id === question.conditionalOnQuestionId)
@@ -76,6 +78,18 @@ export function QuestionCard({
   const conditionTargetIndex = conditionTarget && allQuestions
     ? allQuestions.indexOf(conditionTarget) + 1
     : null;
+
+  const answerTypeLabel = answerTypeKey[question.answerType]
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ? t(answerTypeKey[question.answerType] as any)
+    : question.answerType;
+
+  const operatorLabel = question.conditionalOperator
+    ? (operatorKey[question.conditionalOperator]
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ? t(operatorKey[question.conditionalOperator] as any)
+      : question.conditionalOperator)
+    : "";
 
   return (
     <div ref={setNodeRef} style={style}>
@@ -96,7 +110,7 @@ export function QuestionCard({
               {...listeners}
             >
               <GripVertical className="h-4 w-4" />
-              <span className="sr-only">Drag to reorder</span>
+              <span className="sr-only">{t("questionCard.dragToReorder")}</span>
             </button>
           )}
 
@@ -133,7 +147,7 @@ export function QuestionCard({
                     onClick={onEdit}
                   >
                     <Pencil className="h-4 w-4" />
-                    <span className="sr-only">Edit question</span>
+                    <span className="sr-only">{t("questionCard.editQuestion")}</span>
                   </Button>
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
@@ -144,21 +158,20 @@ export function QuestionCard({
                         className="h-8 w-8 text-destructive hover:text-destructive"
                       >
                         <Trash2 className="h-4 w-4" />
-                        <span className="sr-only">Remove question</span>
+                        <span className="sr-only">{t("questionCard.removeQuestion")}</span>
                       </Button>
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                       <AlertDialogHeader>
-                        <AlertDialogTitle>Remove Question</AlertDialogTitle>
+                        <AlertDialogTitle>{t("questionCard.removeTitle")}</AlertDialogTitle>
                         <AlertDialogDescription>
-                          Are you sure you want to remove this question? This
-                          change takes effect when you save the template.
+                          {t("questionCard.removeDesc")}
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogCancel>{t("questionCard.cancel")}</AlertDialogCancel>
                         <AlertDialogAction onClick={onRemove}>
-                          Remove
+                          {t("questionCard.remove")}
                         </AlertDialogAction>
                       </AlertDialogFooter>
                     </AlertDialogContent>
@@ -170,7 +183,7 @@ export function QuestionCard({
             {/* Badges */}
             <div className="flex flex-wrap items-center gap-2">
               <Badge variant="secondary" className="text-xs">
-                {answerTypeLabels[question.answerType] ?? question.answerType}
+                {answerTypeLabel}
               </Badge>
               {question.conditionalOnQuestionId && (
                 <Badge
@@ -178,7 +191,7 @@ export function QuestionCard({
                   className="text-xs border-amber-300 text-amber-700 dark:text-amber-400"
                 >
                   <GitBranch className="mr-1 h-3 w-3" />
-                  Conditional
+                  {t("questionCard.conditional")}
                 </Badge>
               )}
             </div>
@@ -187,9 +200,11 @@ export function QuestionCard({
             {question.conditionalOnQuestionId && conditionTargetIndex && (
               <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
                 <GitBranch className="h-3 w-3 shrink-0" />
-                Shows when Q{conditionTargetIndex}{" "}
-                {operatorLabels[question.conditionalOperator ?? ""] ?? question.conditionalOperator}{" "}
-                {question.conditionalValue}
+                {t("questionCard.showsWhen", {
+                  index: conditionTargetIndex,
+                  operator: operatorLabel,
+                  value: question.conditionalValue ?? "",
+                })}
               </p>
             )}
           </div>

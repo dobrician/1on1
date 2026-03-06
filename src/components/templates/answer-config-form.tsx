@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useTranslations } from "next-intl";
 import { Plus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,7 +22,6 @@ export function AnswerConfigForm({
   switch (answerType) {
     case "text":
     case "yes_no":
-      // No configuration needed
       return null;
 
     case "rating_1_5":
@@ -60,7 +60,6 @@ export function AnswerConfigForm({
   }
 }
 
-// Rating labels component
 function RatingLabels({
   answerConfig,
   onChange,
@@ -72,6 +71,7 @@ function RatingLabels({
   low: number;
   high: number;
 }) {
+  const t = useTranslations("templates");
   const labels = (answerConfig.labels as Record<string, string>) ?? {};
 
   function updateLabel(key: string, value: string) {
@@ -83,28 +83,28 @@ function RatingLabels({
   return (
     <div className="space-y-3 rounded-lg border p-3">
       <Label className="text-sm font-medium">
-        Rating Labels{" "}
-        <span className="text-muted-foreground font-normal">(optional)</span>
+        {t("answerConfig.ratingLabels")}{" "}
+        <span className="text-muted-foreground font-normal">({t("answerConfig.optional")})</span>
       </Label>
       <div className="grid gap-3 sm:grid-cols-2">
         <div className="space-y-1">
           <Label htmlFor={`label-${low}`} className="text-xs text-muted-foreground">
-            Label for {low} (lowest)
+            {t("answerConfig.labelForLowest", { value: low })}
           </Label>
           <Input
             id={`label-${low}`}
-            placeholder="e.g. Poor"
+            placeholder={t("answerConfig.lowPlaceholder")}
             value={labels[String(low)] ?? ""}
             onChange={(e) => updateLabel(String(low), e.target.value)}
           />
         </div>
         <div className="space-y-1">
           <Label htmlFor={`label-${high}`} className="text-xs text-muted-foreground">
-            Label for {high} (highest)
+            {t("answerConfig.labelForHighest", { value: high })}
           </Label>
           <Input
             id={`label-${high}`}
-            placeholder="e.g. Excellent"
+            placeholder={t("answerConfig.highPlaceholder")}
             value={labels[String(high)] ?? ""}
             onChange={(e) => updateLabel(String(high), e.target.value)}
           />
@@ -114,7 +114,6 @@ function RatingLabels({
   );
 }
 
-// Multiple choice configuration
 function MultipleChoiceConfig({
   answerConfig,
   onChange,
@@ -122,6 +121,7 @@ function MultipleChoiceConfig({
   answerConfig: Record<string, unknown>;
   onChange: (config: Record<string, unknown>) => void;
 }) {
+  const t = useTranslations("templates");
   const rawOptions = answerConfig.options;
   const [options, setOptions] = useState<string[]>(
     Array.isArray(rawOptions) && rawOptions.every((o) => typeof o === "string")
@@ -130,7 +130,6 @@ function MultipleChoiceConfig({
   );
   const allowMultiple = (answerConfig.allow_multiple as boolean) ?? false;
 
-  // Sync options to parent config
   useEffect(() => {
     onChange({
       ...answerConfig,
@@ -149,18 +148,18 @@ function MultipleChoiceConfig({
   }
 
   function removeOption(index: number) {
-    if (options.length <= 2) return; // Minimum 2 options
+    if (options.length <= 2) return;
     setOptions((prev) => prev.filter((_, i) => i !== index));
   }
 
   return (
     <div className="space-y-3 rounded-lg border p-3">
-      <Label className="text-sm font-medium">Multiple Choice Options</Label>
+      <Label className="text-sm font-medium">{t("answerConfig.multipleChoiceOptions")}</Label>
       <div className="space-y-2">
         {options.map((option, index) => (
           <div key={index} className="flex items-center gap-2">
             <Input
-              placeholder={`Option ${index + 1}`}
+              placeholder={t("answerConfig.optionPlaceholder", { index: index + 1 })}
               value={option}
               onChange={(e) => updateOption(index, e.target.value)}
             />
@@ -173,14 +172,14 @@ function MultipleChoiceConfig({
               disabled={options.length <= 2}
             >
               <X className="h-4 w-4" />
-              <span className="sr-only">Remove option</span>
+              <span className="sr-only">{t("answerConfig.removeOption")}</span>
             </Button>
           </div>
         ))}
       </div>
       {options.length < 2 && (
         <p className="text-xs text-destructive">
-          At least 2 options are required
+          {t("answerConfig.minOptionsRequired")}
         </p>
       )}
       <Button
@@ -190,7 +189,7 @@ function MultipleChoiceConfig({
         onClick={addOption}
       >
         <Plus className="mr-2 h-4 w-4" />
-        Add Option
+        {t("answerConfig.addOption")}
       </Button>
 
       <div className="flex items-center gap-2 pt-1">
@@ -206,14 +205,13 @@ function MultipleChoiceConfig({
           }}
         />
         <Label htmlFor="allowMultiple" className="text-sm cursor-pointer">
-          Allow multiple selections
+          {t("answerConfig.allowMultiple")}
         </Label>
       </div>
     </div>
   );
 }
 
-// Mood configuration
 function MoodConfig({
   answerConfig,
   onChange,
@@ -221,6 +219,7 @@ function MoodConfig({
   answerConfig: Record<string, unknown>;
   onChange: (config: Record<string, unknown>) => void;
 }) {
+  const t = useTranslations("templates");
   const labels = (answerConfig.labels as Record<string, string>) ?? {};
   const defaultLabels = [
     "Very Unhappy",
@@ -239,14 +238,14 @@ function MoodConfig({
   return (
     <div className="space-y-3 rounded-lg border p-3">
       <Label className="text-sm font-medium">
-        Mood Labels{" "}
-        <span className="text-muted-foreground font-normal">(optional)</span>
+        {t("answerConfig.moodLabels")}{" "}
+        <span className="text-muted-foreground font-normal">({t("answerConfig.optional")})</span>
       </Label>
       <div className="space-y-2">
         {defaultLabels.map((defaultLabel, index) => (
           <div key={index} className="flex items-center gap-2">
             <span className="w-6 text-center text-lg">
-              {["😢", "😟", "😐", "😊", "😄"][index]}
+              {["\u{1F622}", "\u{1F61F}", "\u{1F610}", "\u{1F60A}", "\u{1F604}"][index]}
             </span>
             <Input
               placeholder={defaultLabel}

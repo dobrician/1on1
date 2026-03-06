@@ -6,7 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+- `useZodI18nErrors` hook for translated Zod validation error messages (EN + RO)
+- `useApiErrorToast` hook for translated API error toast messages (EN + RO)
+- `validation.json` namespace with common form validation messages (required, email, min/max length, password rules)
+- Error keys in `common.json` for API responses (unauthorized, forbidden, not found, rate limited, server error)
+- Full i18n for auth pages: reset-password, verify-email, invite flow, email-verification-banner
+- Audit and fix partial auth pages: register (added useZodI18nErrors + error fallback), forgot-password (confirmed complete)
+
 ### Changed
+- All `toast.error()` calls with hardcoded English strings across 13 components now use `useApiErrorToast` for locale-aware error display
 - Dashboard layout: Quick Stats cards now appear above Upcoming Sessions for better visual hierarchy
 
 ### Added

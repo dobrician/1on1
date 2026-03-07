@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: AI-Ready Templates
-status: planning
-stopped_at: Completed 15-03 (ExportButton component, template list and editor wiring)
-last_updated: "2026-03-07T07:53:23.346Z"
-last_activity: 2026-03-07 -- Roadmap created for v1.2 (3 phases, 19 requirements, 100% coverage)
+status: verifying
+stopped_at: "15-04 checkpoint: awaiting manual RBAC verification for export button and schema docs page"
+last_updated: "2026-03-07T07:55:36.846Z"
+last_activity: "2026-03-07 -- 15-04 checkpoint: manual RBAC verification for EXP-01"
 progress:
   total_phases: 7
-  completed_phases: 4
+  completed_phases: 5
   total_plans: 17
-  completed_plans: 16
+  completed_plans: 17
   percent: 0
 ---
 
@@ -25,10 +25,10 @@ See: .planning/PROJECT.md (updated 2026-03-07)
 
 ## Current Position
 
-Phase: Phase 15 (Schema, Spec & Export) -- not started
-Plan: —
-Status: Ready for planning
-Last activity: 2026-03-07 -- Roadmap created for v1.2 (3 phases, 19 requirements, 100% coverage)
+Phase: Phase 15 (Schema, Spec & Export)
+Plan: 4/4 -- checkpoint reached (human-verify)
+Status: Awaiting manual verification of export RBAC and /templates/schema page
+Last activity: 2026-03-07 -- 15-04 checkpoint: manual RBAC verification for EXP-01
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -120,6 +120,6 @@ None active.
 
 ## Session Continuity
 
-Last session: 2026-03-07T07:53:23.342Z
-Stopped at: Completed 15-03 (ExportButton component, template list and editor wiring)
+Last session: 2026-03-07T07:55:36.843Z
+Stopped at: 15-04 checkpoint: awaiting manual RBAC verification for export button and schema docs page
 Resume file: None

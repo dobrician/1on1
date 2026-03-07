@@ -77,11 +77,11 @@ Requirements for AI-ready template milestone. Each maps to roadmap phases.
 
 ### Import
 
-- [ ] **IMP-01**: Admin or manager can import a template by uploading a `.json` file
-- [ ] **IMP-02**: Before confirming import, user sees a preview: template name, section count, question count, question type breakdown
-- [ ] **IMP-03**: If the JSON `language` field doesn't match the company's content language, user sees a language mismatch warning before proceeding
-- [ ] **IMP-04**: If a template with the same name already exists, user is offered: rename, create as copy, or cancel
-- [ ] **IMP-05**: Import validation reports detailed, field-specific errors (e.g., "Question 3, field `answerType`: invalid value `checkbox`") -- not a generic error toast
+- [x] **IMP-01**: Admin or manager can import a template by uploading a `.json` file
+- [x] **IMP-02**: Before confirming import, user sees a preview: template name, section count, question count, question type breakdown
+- [x] **IMP-03**: If the JSON `language` field doesn't match the company's content language, user sees a language mismatch warning before proceeding
+- [x] **IMP-04**: If a template with the same name already exists, user is offered: rename, create as copy, or cancel
+- [x] **IMP-05**: Import validation reports detailed, field-specific errors (e.g., "Question 3, field `answerType`: invalid value `checkbox`") -- not a generic error toast
 
 ### In-app AI Generator
 
@@ -170,11 +170,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | EXP-03 | Phase 15 | Complete |
 | EXP-04 | Phase 15 | Complete |
 | EXP-05 | Phase 15 | Complete |
-| IMP-01 | Phase 16 | Pending |
-| IMP-02 | Phase 16 | Pending |
-| IMP-03 | Phase 16 | Pending |
-| IMP-04 | Phase 16 | Pending |
-| IMP-05 | Phase 16 | Pending |
+| IMP-01 | Phase 16 | Complete |
+| IMP-02 | Phase 16 | Complete |
+| IMP-03 | Phase 16 | Complete |
+| IMP-04 | Phase 16 | Complete |
+| IMP-05 | Phase 16 | Complete |
 | AIGEN-01 | Phase 17 | Pending |
 | AIGEN-02 | Phase 17 | Pending |
 | AIGEN-03 | Phase 17 | Pending |

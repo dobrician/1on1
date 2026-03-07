@@ -37,12 +37,13 @@ The AI context layer that makes every meeting smarter than the last — knowing 
 - ✓ Browser locale detection for pre-login screens — v1.1
 - ✓ JSON schema spec for templates (downloadable, AI-friendly, methodology principles + weight system docs) — v1.2
 - ✓ Template export as portable JSON (schemaVersion, tenant-neutral, language field, role-gated) — v1.2
+- ✓ Template import from JSON (preview, language mismatch warning, conflict resolution, field-specific validation errors) — v1.2
+- ✓ In-app AI template generator (describe → AI generates in company language → preview → save) — v1.2
+- ✓ DIY prompt kit (copyable schema + principles + example for Claude, ChatGPT, etc.) — v1.2
 
 ### Active
 
-- [ ] Template import from JSON (preview, language mismatch warning, conflict resolution, detailed validation errors)
-- [ ] In-app AI template generator (describe → AI generates in company language → preview → save)
-- [ ] DIY prompt kit (copyable schema + principles + example for use with external AI tools)
+- [ ] Playwright E2E testing suite with GitHub Actions CI, SMTP mocking, role-switching helpers (v1.3)
 
 ### Future
 
@@ -73,20 +74,20 @@ The AI context layer that makes every meeting smarter than the last — knowing 
 - Manager scoring / ranking — creates perverse incentives
 - Multi-language template translations — questionnaires defined in one language per company, no per-template multi-language support yet
 
-## Current Milestone: v1.2 AI-Ready Templates
+## Current Milestone: v1.3 Playwright Testing Suite (Planning)
 
-**Goal:** Give every user the tools to leverage AI as a template co-author — in-app generator, portable JSON export/import, and a DIY prompt kit for external AI tools. All content in the company's language.
+**Goal:** Comprehensive E2E testing suite that covers all critical user flows, CI-integrated via GitHub Actions, with SMTP mocking, role-switching helpers, full edge cases and regression coverage — maintainable and expandable with every new feature going forward.
 
 **Target features:**
-- Template JSON schema spec with methodology principles and weight system documentation
-- Single-template export as portable, tenant-neutral JSON
-- Template import with preview, language mismatch warning, conflict resolution, and detailed validation errors
-- In-app AI template generator (describe → AI generates in company language → preview → save)
-- DIY prompt kit (copyable schema + principles + example for Claude, ChatGPT, etc.)
+- Playwright test suite with GitHub Actions CI integration
+- SMTP mocking (no real email in CI)
+- Role-switching test helpers (admin/manager/member flows)
+- Full edge case and regression coverage for all existing features
+- Designed for future maintainability and expansion
 
 ## Context
 
-**Shipped v1.0 MVP** on 2026-03-05 with 41,464 LOC TypeScript/TSX across 290 source files.
+**Shipped v1.2 AI-Ready Templates** on 2026-03-07 (323 TypeScript/TSX source files). v1.0 shipped 2026-03-05 (41,464 LOC / 290 files), v1.1 shipped 2026-03-07 (i18n + Romanian), v1.2 shipped 2026-03-07 (template portability + AI co-authoring).
 
 **Tech stack:** Next.js 15 (App Router) + TypeScript + Drizzle ORM + PostgreSQL 16 + shadcn/ui + Tailwind CSS 4 + Vercel AI SDK + Auth.js v5 + Inngest + TanStack Query + Recharts + React Email + Tiptap.
 
@@ -131,4 +132,4 @@ The AI context layer that makes every meeting smarter than the last — knowing 
 | Nodemailer over Resend | Works with any SMTP provider | ✓ Good — provider flexibility |
 
 ---
-*Last updated: 2026-03-07 after Phase 15 (Schema, Spec & Export)*
+*Last updated: 2026-03-07 after v1.2 milestone (AI-Ready Templates)*

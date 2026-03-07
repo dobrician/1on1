@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Internationalization
 status: executing
-stopped_at: Completed 13-03-PLAN.md
-last_updated: "2026-03-06T19:48:46.563Z"
+stopped_at: Completed 14-01-PLAN.md
+last_updated: "2026-03-07T06:09:10.950Z"
 last_activity: "2026-03-06 -- Completed 13-01: createEmailTranslator utility + emails.json for en/ro"
 progress:
   total_phases: 4
   completed_phases: 3
-  total_plans: 11
-  completed_plans: 11
+  total_plans: 13
+  completed_plans: 12
   percent: 82
 ---
 
@@ -52,6 +52,7 @@ Progress: [████████░░] 82%
 | Phase 13-email-translation P01 | 2 | 2 tasks | 4 files |
 | Phase 13-email-translation P02 | 5min | 2 tasks | 13 files |
 | Phase 13-email-translation P03 | 8 | 2 tasks | 7 files |
+| Phase 14-romanian-quality P01 | 8 | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -90,6 +91,8 @@ Recent decisions affecting current work:
 - [Phase 13-email-translation]: translator.ts messages typed as Record<string, any> so TypeScript can traverse nested use-intl/core key paths without resolving to never
 - [Phase 13-email-translation]: Per-recipient labels bags (labelsReport/labelsManager) in summary-email.ts differ only in greeting — spread baseLabels and override greeting
 - [Phase 13-email-translation]: Date formatting stays as toLocaleDateString('en-US') in sender.ts — locale-aware email date formatting deferred to future phase
+- [Phase 14-01]: eliminat (past participle) correctly has no diacritic — word-boundary regex needed to distinguish from verb elimina; audit confirmed 0 true bad forms
+- [Phase 14-01]: few and other ICU plural forms use identical surface text per CLDR spec — correct duplication for Romanian
 
 ### Blockers/Concerns
 
@@ -97,6 +100,6 @@ None active.
 
 ## Session Continuity
 
-Last session: 2026-03-06T19:45:39.163Z
-Stopped at: Completed 13-03-PLAN.md
+Last session: 2026-03-07T06:09:10.947Z
+Stopped at: Completed 14-01-PLAN.md
 Resume file: None

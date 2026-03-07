@@ -131,4 +131,4 @@ Phase 11 (foundation)
 | 11. i18n Foundation | 2/2 | Complete    | 2026-03-05 | - |
 | 12. UI Translation | 6/6 | Complete    | 2026-03-06 | - |
 | 13. Email Translation | 3/3 | Complete    | 2026-03-06 | - |
-| 14. Romanian & Quality | v1.1 | 0/2 | Not started | - |
+| 14. Romanian & Quality | 1/2 | In Progress|  | - |

@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: AI-Ready Templates
 status: planning
-stopped_at: ""
-last_updated: "2026-03-07T00:00:00.000Z"
-last_activity: "2026-03-07 -- Roadmap created: 3 phases (15-17), 19 requirements mapped"
+stopped_at: "Completed 15-01-PLAN.md: TemplateExport interface + buildExportPayload()"
+last_updated: "2026-03-07T07:41:03.993Z"
+last_activity: 2026-03-07 -- Roadmap created for v1.2 (3 phases, 19 requirements, 100% coverage)
 progress:
-  total_phases: 3
-  completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
+  total_phases: 7
+  completed_phases: 4
+  total_plans: 17
+  completed_plans: 14
   percent: 0
 ---
 
@@ -49,6 +49,7 @@ Progress: [░░░░░░░░░░] 0%
 | 14-romanian-quality | 2/2 | 12min | 6.0min |
 
 *Updated after each plan completion*
+| Phase 15-schema-spec-export P01 | 3 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -91,6 +92,9 @@ v1.1 decisions archived below for reference:
 - [Phase 14-01]: few and other ICU plural forms use identical surface text per CLDR spec -- correct duplication for Romanian
 - [Phase 14-02]: queryFn throws HTTP status code string instead of English message -- keeps all user-visible text in translation layer
 - [Phase 14-02]: exitWizard key is sr-only but still translated -- screen reader users in Romanian locale deserve native language labels
+- [Phase 15-01]: parseFloat(scoreWeight ?? '1') converts Drizzle decimal string to JS number at export boundary
+- [Phase 15-01]: conditionalOnQuestionId UUID remapped to sortOrder integer via pre-built Map; named conditionalOnQuestionSortOrder in export
+- [Phase 15-01]: RawTemplate internal types accept any superset -- allows export route to pass DB rows directly without explicit cast
 
 ### v1.2 Roadmap Decisions
 
@@ -109,6 +113,6 @@ None active.
 
 ## Session Continuity
 
-Last session: 2026-03-07
-Stopped at: Roadmap creation -- v1.2 phases 15-17 defined, ready for Phase 15 planning
+Last session: 2026-03-07T07:41:03.990Z
+Stopped at: Completed 15-01-PLAN.md: TemplateExport interface + buildExportPayload()
 Resume file: None

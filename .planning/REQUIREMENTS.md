@@ -70,10 +70,10 @@ Requirements for AI-ready template milestone. Each maps to roadmap phases.
 ### Export
 
 - [ ] **EXP-01**: Admin or manager can export a single template as a downloadable `.json` file from the template list or template builder
-- [ ] **EXP-02**: Exported JSON includes a `schemaVersion` field (e.g., `1`) for compatibility tracking
-- [ ] **EXP-03**: Exported JSON is tenant-neutral -- no internal tenant IDs or per-org UUIDs, fully portable across organizations
-- [ ] **EXP-04**: Exported JSON includes a `language` field indicating the template content language
-- [ ] **EXP-05**: Exported JSON captures all question metadata: `scoreWeight`, `answerConfig`, conditional logic, section structure
+- [x] **EXP-02**: Exported JSON includes a `schemaVersion` field (e.g., `1`) for compatibility tracking
+- [x] **EXP-03**: Exported JSON is tenant-neutral -- no internal tenant IDs or per-org UUIDs, fully portable across organizations
+- [x] **EXP-04**: Exported JSON includes a `language` field indicating the template content language
+- [x] **EXP-05**: Exported JSON captures all question metadata: `scoreWeight`, `answerConfig`, conditional logic, section structure
 
 ### Import
 
@@ -166,10 +166,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SPEC-02 | Phase 15 | Pending |
 | SPEC-03 | Phase 15 | Pending |
 | EXP-01 | Phase 15 | Pending |
-| EXP-02 | Phase 15 | Pending |
-| EXP-03 | Phase 15 | Pending |
-| EXP-04 | Phase 15 | Pending |
-| EXP-05 | Phase 15 | Pending |
+| EXP-02 | Phase 15 | Complete |
+| EXP-03 | Phase 15 | Complete |
+| EXP-04 | Phase 15 | Complete |
+| EXP-05 | Phase 15 | Complete |
 | IMP-01 | Phase 16 | Pending |
 | IMP-02 | Phase 16 | Pending |
 | IMP-03 | Phase 16 | Pending |

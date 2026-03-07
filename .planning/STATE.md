@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: AI-Ready Templates
 status: verifying
-stopped_at: Phase 17 context gathered
-last_updated: "2026-03-07T15:30:50.210Z"
+stopped_at: Completed 17-03-PLAN.md (i18n AI Editor & DIY Prompt Kit translations)
+last_updated: "2026-03-07T16:05:43.029Z"
 last_activity: 2026-03-07 -- 15-04 verified complete (user approved export RBAC and schema docs)
 progress:
   total_phases: 7
   completed_phases: 6
-  total_plans: 22
-  completed_plans: 22
+  total_plans: 29
+  completed_plans: 23
   percent: 100
 ---
 
@@ -57,6 +57,7 @@ Progress: [██████████] 100%
 | Phase 16-template-import P02 | 14 | 2 tasks | 4 files |
 | Phase 16-template-import P03 | 8 | 1 tasks | 1 files |
 | Phase 16-template-import P04 | 8 | 2 tasks | 3 files |
+| Phase 17-ai-generator-diy-kit P03 | 3 | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -117,6 +118,8 @@ v1.1 decisions archived below for reference:
 - [Phase 16-04]: Alert component absent from shadcn/ui install -- used inline div with Tailwind yellow classes for language mismatch warning
 - [Phase 16-04]: ImportDialog uses controlled open state (setOpen) + sibling file input -- avoids nested interactive element pitfall from DialogTrigger wrapping
 - [Phase 16-template-import]: Phase 16 (Template Import) verified complete via manual browser walkthrough of all 6 test scenarios — RBAC, happy path, language mismatch, conflict resolution, invalid file errors, dialog reset
+- [Phase 17-ai-generator-diy-kit]: RO preview uses ICU three-form plurals (one/few/other) for sectionCount and questionCount in aiEditor — matches CLDR spec for Romanian
+- [Phase 17-ai-generator-diy-kit]: aiEditor keys placed at same level as editor/import/export in templates namespace; spec.promptKit at same level as spec.schema/methodology/weights — mirrors page tab structure
 
 ### v1.2 Roadmap Decisions
 
@@ -135,6 +138,6 @@ None active.
 
 ## Session Continuity
 
-Last session: 2026-03-07T15:30:50.206Z
-Stopped at: Phase 17 context gathered
-Resume file: .planning/phases/17-ai-generator-diy-kit/17-CONTEXT.md
+Last session: 2026-03-07T16:05:43.026Z
+Stopped at: Completed 17-03-PLAN.md (i18n AI Editor & DIY Prompt Kit translations)
+Resume file: None

@@ -85,15 +85,15 @@ Requirements for AI-ready template milestone. Each maps to roadmap phases.
 
 ### In-app AI Generator
 
-- [ ] **AIGEN-01**: Admin or manager can open a "Generate with AI" flow, describe their team and meeting goals in plain language, and receive a generated template draft
-- [ ] **AIGEN-02**: Generated template is shown in a preview (name, section count, question breakdown) for review before saving -- user can accept, edit, or discard
+- [x] **AIGEN-01**: Admin or manager can open a "Generate with AI" flow, describe their team and meeting goals in plain language, and receive a generated template draft
+- [x] **AIGEN-02**: Generated template is shown in a preview (name, section count, question breakdown) for review before saving -- user can accept, edit, or discard
 - [ ] **AIGEN-03**: AI generates all question text, help text, and section names in the company's content language
 - [ ] **AIGEN-04**: AI generation uses the JSON schema, core methodology principles, and weight system as context
 
 ### DIY Prompt Kit
 
-- [ ] **DIY-01**: User can access and copy a "prompt kit" -- JSON schema + methodology principles + worked example -- formatted for use with external AI tools (Claude, ChatGPT, etc.)
-- [ ] **DIY-02**: Prompt kit narrative and examples are rendered in the company's content language (JSON schema itself remains in English)
+- [x] **DIY-01**: User can access and copy a "prompt kit" -- JSON schema + methodology principles + worked example -- formatted for use with external AI tools (Claude, ChatGPT, etc.)
+- [x] **DIY-02**: Prompt kit narrative and examples are rendered in the company's content language (JSON schema itself remains in English)
 
 ## Future Requirements
 
@@ -175,12 +175,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 | IMP-03 | Phase 16 | Complete |
 | IMP-04 | Phase 16 | Complete |
 | IMP-05 | Phase 16 | Complete |
-| AIGEN-01 | Phase 17 | Pending |
-| AIGEN-02 | Phase 17 | Pending |
+| AIGEN-01 | Phase 17 | Complete |
+| AIGEN-02 | Phase 17 | Complete |
 | AIGEN-03 | Phase 17 | Pending |
 | AIGEN-04 | Phase 17 | Pending |
-| DIY-01 | Phase 17 | Pending |
-| DIY-02 | Phase 17 | Pending |
+| DIY-01 | Phase 17 | Complete |
+| DIY-02 | Phase 17 | Complete |
 
 **Coverage:**
 - v1.1 requirements: 29 total

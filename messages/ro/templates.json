@@ -225,12 +225,41 @@
         "placeholder": "Descrie echipa ta, obiectivele sau cere modificări...",
         "send": "Trimite",
         "thinking": "Se gândește...",
-        "errorToast": "Generarea AI a eșuat. Încearcă din nou."
+        "errorToast": "Generarea AI a eșuat. Încearcă din nou.",
+        "greetingNew": "Bună! Sunt aici să te ajut să construiești un șablon de 1:1 adaptat echipei tale.\n\nPe cine ai aceste 1:1-uri? Spune-mi câte ceva despre rolul lor și dimensiunea echipei.",
+        "greetingExisting": "Bună! Îți văd șablonul curent. Pot sugera îmbunătățiri, adăuga sau elimina întrebări ori restructura secțiunile.\n\nCe ai vrea să schimbi — sau să arunc eu o privire și să îți dau recomandările mele?"
       },
       "saveSuccess": "Șablon salvat",
       "entryPoints": {
         "generateWithAI": "Generează cu AI",
         "editWithAI": "Editează cu AI"
+      },
+      "guidelines": {
+        "title": "Sfaturi pentru șabloane 1:1 de calitate",
+        "length": {
+          "title": "Păstrează-l scurt",
+          "body": "8–12 întrebări per sesiune este ideal. Un șablon completat de fiecare dată valorează mai mult decât unul cuprinzător abandonat la jumătate."
+        },
+        "specific": {
+          "title": "Întrebările specifice produc informații reale",
+          "body": "Evită deschiderile vagi precum „Cum merge?" — preferă „Ce îți blochează progresul săptămâna aceasta?" Întrebările specifice sunt acționabile."
+        },
+        "balance": {
+          "title": "Combină retrospectivul cu prospectivul",
+          "body": "Echilibrează întrebările despre ce s-a întâmplat (blocaje, realizări) cu întrebări despre ce urmează (obiective, dezvoltare)."
+        },
+        "helpText": {
+          "title": "Ancorează scalele de evaluare",
+          "body": "Folosește textul ajutător pentru a defini ambele capete: „1 = blocat și frustrat, 5 = complet concentrat și productiv." Scalele ambigue produc zgomot, nu semnal."
+        },
+        "safety": {
+          "title": "Prioritizează siguranța psihologică",
+          "body": "Întrebările trebuie să fie confortabile de răspuns cu sinceritate, chiar și față de un manager cu autoritate. Evită întrebările care par evaluări de performanță."
+        },
+        "coverage": {
+          "title": "Acoperă cele cinci domenii",
+          "body": "Șabloanele de calitate abordează: starea de bine, progresul la muncă, blocajele, dezvoltarea și feedbackul pentru manager."
+        }
       }
     }
   }

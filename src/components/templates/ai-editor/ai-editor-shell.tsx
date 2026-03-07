@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useMutation } from "@tanstack/react-query";
@@ -53,46 +53,24 @@ export function AiEditorShell({
   userRole: _userRole,
 }: AiEditorShellProps) {
   const t = useTranslations("templates");
-  const mounted = useRef(false);
+  // Static welcome message shown instantly — no API call on mount.
+  // The hidden synthetic user turn is prepended so the AI has the full
+  // conversation context (including its own opening) on the first real turn.
+  const greetingText = initialTemplate
+    ? t("aiEditor.chat.greetingExisting")
+    : t("aiEditor.chat.greetingNew");
 
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const initialMessages: ChatMessage[] = [
+    { role: "user", content: "__start__", hidden: true },
+    { role: "assistant", content: greetingText },
+  ];
+
+  const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
   const [currentTemplate, setCurrentTemplate] = useState<TemplateExport | null>(
     initialTemplate ?? null
   );
   const [isLoading, setIsLoading] = useState(false);
   const [resetDialogOpen, setResetDialogOpen] = useState(false);
-
-  // On mount: trigger AI greeting turn automatically
-  useEffect(() => {
-    if (mounted.current) return;
-    mounted.current = true;
-
-    const greetingContent = initialTemplate
-      ? "__greeting_existing__"
-      : "Start";
-
-    const greetingMessages: ChatMessage[] = [
-      { role: "user", content: greetingContent },
-    ];
-
-    setIsLoading(true);
-    postAiChat(greetingMessages, initialTemplate ?? null)
-      .then((result) => {
-        setMessages([
-          { role: "user", content: greetingContent, hidden: true },
-          { role: "assistant", content: result.chatMessage },
-        ]);
-        if (result.templateJson !== null) {
-          setCurrentTemplate(result.templateJson);
-        }
-      })
-      .catch(() => {
-        // Silently ignore greeting failure — user can start typing manually
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const chatMutation = useMutation({
     mutationFn: ({
@@ -178,7 +156,7 @@ export function AiEditorShell({
   }
 
   function handleReset() {
-    setMessages([]);
+    setMessages(initialMessages);
     setCurrentTemplate(initialTemplate ?? null);
     setResetDialogOpen(false);
   }
@@ -225,15 +203,15 @@ export function AiEditorShell({
       {/* Main split-screen */}
       <div className="flex flex-1 overflow-hidden">
         {/* Left: Template Preview */}
-        <div className="w-1/2 border-r overflow-y-auto p-6">
+        <div className="flex-1 border-r overflow-y-auto p-6">
           <h2 className="text-sm font-medium text-muted-foreground mb-4 uppercase tracking-wide">
             {t("aiEditor.preview.title")}
           </h2>
           <TemplatePreviewPanel template={currentTemplate} />
         </div>
 
-        {/* Right: Chat */}
-        <div className="w-1/2 flex flex-col overflow-hidden">
+        {/* Right: Chat — fixed narrow column */}
+        <div className="w-[360px] shrink-0 flex flex-col overflow-hidden">
           <ChatPanel messages={messages} isLoading={isLoading} />
           <div className="border-t p-4 shrink-0">
             <ChatInput onSend={handleSend} disabled={isLoading} />

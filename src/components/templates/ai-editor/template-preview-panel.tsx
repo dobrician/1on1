@@ -14,10 +14,42 @@ export function TemplatePreviewPanel({ template }: TemplatePreviewPanelProps) {
 
   if (template === null) {
     return (
-      <div className="flex items-center justify-center h-full min-h-[200px]">
-        <p className="text-muted-foreground text-sm">
+      <div className="space-y-8 max-w-xl">
+        <p className="text-sm text-muted-foreground">
           {t("aiEditor.preview.empty")}
         </p>
+
+        <div className="space-y-6">
+          <div>
+            <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">
+              {t("aiEditor.guidelines.title")}
+            </h3>
+            <div className="space-y-4">
+              {(
+                [
+                  "length",
+                  "specific",
+                  "balance",
+                  "helpText",
+                  "safety",
+                  "coverage",
+                ] as const
+              ).map((key) => (
+                <div key={key} className="flex gap-3">
+                  <span className="mt-0.5 h-1.5 w-1.5 rounded-full bg-muted-foreground shrink-0 translate-y-[6px]" />
+                  <div>
+                    <p className="text-sm font-medium">
+                      {t(`aiEditor.guidelines.${key}.title`)}
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      {t(`aiEditor.guidelines.${key}.body`)}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

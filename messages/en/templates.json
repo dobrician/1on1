@@ -225,12 +225,41 @@
         "placeholder": "Describe your team, goals, or ask for changes...",
         "send": "Send",
         "thinking": "Thinking...",
-        "errorToast": "AI generation failed. Please try again."
+        "errorToast": "AI generation failed. Please try again.",
+        "greetingNew": "Hi! I'm here to help you build a 1:1 template tailored to your team.\n\nTo get started — who are you having these 1:1s with? Tell me a bit about their role and the size of your team.",
+        "greetingExisting": "Hi! I can see your current template. I can suggest improvements, add or remove questions, or restructure sections.\n\nWhat would you like to change — or should I take a look and give you my recommendations?"
       },
       "saveSuccess": "Template saved",
       "entryPoints": {
         "generateWithAI": "Generate with AI",
         "editWithAI": "Edit with AI"
+      },
+      "guidelines": {
+        "title": "Tips for great 1:1 templates",
+        "length": {
+          "title": "Keep it short",
+          "body": "8–12 questions per session is ideal. A template that gets completed every time beats a comprehensive one that gets abandoned halfway."
+        },
+        "specific": {
+          "title": "Specific questions surface real signal",
+          "body": "Avoid vague openers like \"How are things going?\" — prefer \"What's blocking your progress this week?\" Specific questions are actionable."
+        },
+        "balance": {
+          "title": "Mix retrospective and prospective",
+          "body": "Balance questions about what happened (last week's blockers, wins) with questions about what's next (goals, growth)."
+        },
+        "helpText": {
+          "title": "Anchor your rating scales",
+          "body": "Use help text to define both endpoints: \"1 = blocked and frustrated, 5 = fully focused and productive.\" Ambiguous scales produce noise, not signal."
+        },
+        "safety": {
+          "title": "Prioritise psychological safety",
+          "body": "Questions should feel safe to answer honestly, even to a manager with authority. Avoid questions that feel like performance evaluations."
+        },
+        "coverage": {
+          "title": "Cover the five areas",
+          "body": "High-quality templates address: wellbeing, work progress, blockers, growth, and manager feedback."
+        }
       }
     }
   }

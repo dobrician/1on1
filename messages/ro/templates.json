@@ -242,7 +242,7 @@
         },
         "specific": {
           "title": "Întrebările specifice produc informații reale",
-          "body": "Evită deschiderile vagi precum „Cum merge?" — preferă „Ce îți blochează progresul săptămâna aceasta?" Întrebările specifice sunt acționabile."
+          "body": "Evită deschiderile vagi precum 'Cum merge?' — preferă 'Ce îți blochează progresul săptămâna aceasta?' Întrebările specifice sunt acționabile."
         },
         "balance": {
           "title": "Combină retrospectivul cu prospectivul",
@@ -250,7 +250,7 @@
         },
         "helpText": {
           "title": "Ancorează scalele de evaluare",
-          "body": "Folosește textul ajutător pentru a defini ambele capete: „1 = blocat și frustrat, 5 = complet concentrat și productiv." Scalele ambigue produc zgomot, nu semnal."
+          "body": "Folosește textul ajutător pentru a defini ambele capete: '1 = blocat și frustrat, 5 = complet concentrat și productiv.' Scalele ambigue produc zgomot, nu semnal."
         },
         "safety": {
           "title": "Prioritizează siguranța psihologică",

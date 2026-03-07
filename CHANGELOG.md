@@ -7,6 +7,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## [Unreleased]
 
 ### Added
+- `src/components/templates/ai-editor/chat-input.tsx` — controlled Textarea + Send button; submits on button click or Ctrl+Enter; disabled and shows "Thinking..." when AI is loading
+- `src/components/templates/ai-editor/chat-panel.tsx` — scrolling message list with right-aligned user bubbles and left-aligned assistant messages; animated three-dot typing indicator when loading; auto-scrolls to bottom on new messages
+- `src/components/templates/ai-editor/template-preview-panel.tsx` — read-only live template preview; renders name, description, sections, and question cards with answer type badges; empty state placeholder when no template exists
+- `src/components/templates/ai-editor/ai-editor-shell.tsx` — full-page split-screen AI editor; manages messages/template/loading state; triggers AI greeting on mount; handleSend appends user turn and POSTs to /api/templates/ai-chat; Save uses /api/templates/import; Reset confirmation clears both panels
 - `src/components/templates/template-list.tsx` — added "Generate with AI" button (Wand2) in template list header; visible to admin and manager only via `canManageTemplates`; navigates to `/templates/ai-editor`
 - `src/components/templates/template-editor.tsx` — added "Edit with AI" button (Wand2) in template editor header; visible to admin and manager only via `canManageTemplates`; navigates to `/templates/[id]/ai-editor`
 - `src/app/(dashboard)/templates/schema/page.tsx` — added 4th "Prompt Kit" tab with `PROMPT_KIT_EXAMPLE` constant (Engineering 1:1 worked example), `promptKitBlock` assembled server-side (section headers translated, JSON content always English), `PromptKitActions` copy button component

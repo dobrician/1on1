@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: AI-Ready Templates
 status: verifying
-stopped_at: Completed 17-01-PLAN.md (Wave 0 TDD stubs)
-last_updated: "2026-03-07T16:06:18.733Z"
+stopped_at: Completed 17-02-PLAN.md (AI contracts layer)
+last_updated: "2026-03-07T16:09:14.316Z"
 last_activity: 2026-03-07 -- 15-04 verified complete (user approved export RBAC and schema docs)
 progress:
   total_phases: 7
   completed_phases: 6
   total_plans: 29
-  completed_plans: 24
+  completed_plans: 25
   percent: 100
 ---
 
@@ -59,6 +59,7 @@ Progress: [██████████] 100%
 | Phase 16-template-import P04 | 8 | 2 tasks | 3 files |
 | Phase 17-ai-generator-diy-kit P03 | 3 | 2 tasks | 4 files |
 | Phase 17-ai-generator-diy-kit P01 | 4 | 3 tasks | 4 files |
+| Phase 17-ai-generator-diy-kit P02 | 8 | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -124,6 +125,9 @@ v1.1 decisions archived below for reference:
 - [Phase 17-ai-generator-diy-kit]: Wave 0 (RED) test stubs import from modules that don't exist yet; module-not-found error is the expected CI failure
 - [Phase 17-ai-generator-diy-kit]: DIY_WORKED_EXAMPLE uses scoreWeight 0/1/2/3 variety and text/rating_1_5/yes_no/mood answer types — living spec for AI generator output
 - [Phase 17-ai-generator-diy-kit]: withLanguageInstruction tests import from '../service' directly; Wave 1 exports the private function
+- [Phase 17-ai-generator-diy-kit]: ModelMessage (not CoreMessage) is the AI SDK v4 type for messages — CoreMessage is not exported from 'ai'
+- [Phase 17-ai-generator-diy-kit]: z.record requires 2 args in zod v4: z.record(z.string(), z.unknown()) not z.record(z.unknown())
+- [Phase 17-ai-generator-diy-kit]: generateTemplateChatTurn uses ModelMessage[] for chat history; wraps errors with 'AI generation failed:' prefix
 
 ### v1.2 Roadmap Decisions
 
@@ -142,6 +146,6 @@ None active.
 
 ## Session Continuity
 
-Last session: 2026-03-07T16:06:18.725Z
-Stopped at: Completed 17-01-PLAN.md (Wave 0 TDD stubs)
+Last session: 2026-03-07T16:09:14.311Z
+Stopped at: Completed 17-02-PLAN.md (AI contracts layer)
 Resume file: None

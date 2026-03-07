@@ -19,8 +19,18 @@ export const TEMPLATE_EDITOR_SYSTEM = buildTemplateEditorSystemPrompt();
  * @param existingTemplate - Optional existing template to embed for editing context.
  *   When provided, the AI improves this template. When absent, the AI starts fresh.
  */
+const LANGUAGE_NAMES: Record<string, string> = {
+  en: "English",
+  ro: "Romanian",
+  de: "German",
+  fr: "French",
+  es: "Spanish",
+  pt: "Portuguese",
+};
+
 export function buildTemplateEditorSystemPrompt(
-  existingTemplate?: TemplateExport
+  existingTemplate?: TemplateExport,
+  language?: string
 ): string {
   const sections: string[] = [];
 
@@ -47,7 +57,11 @@ Acknowledge what's already there, identify 1–2 specific improvements you'd sug
 **After generating:**
 Stay in the conversation. Ask "How does this look? Anything you'd like to adjust?" Proactively suggest improvements: "This section has 5 questions — that may feel heavy for a 30-minute 1:1. Want me to trim it?"
 
-Be warm, direct, and opinionated. Don't hedge excessively. Good template design has right and wrong answers — share your expertise.`);
+Be warm, direct, and opinionated. Don't hedge excessively. Good template design has right and wrong answers — share your expertise.${
+    language && language !== "en"
+      ? `\n\n**Language:** The company's content language is ${LANGUAGE_NAMES[language] ?? language}. You MUST conduct the entire conversation in ${LANGUAGE_NAMES[language] ?? language}. All template content — question text, help text, section names, template name, and description — must be written in ${LANGUAGE_NAMES[language] ?? language}. JSON field names (e.g. "schemaVersion", "questionText", "answerType") are code identifiers — keep them in English exactly as specified in the schema.`
+      : ""
+  }`);
 
   // -------------------------------------------------------------------------
   // Section 2 — JSON Schema Spec

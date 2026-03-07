@@ -250,8 +250,11 @@ export async function generateTemplateChatTurn(
 ): Promise<ChatTurnResponse> {
   try {
     const systemPrompt = buildTemplateEditorSystemPrompt(
-      currentTemplate ?? undefined
+      currentTemplate ?? undefined,
+      language
     );
+    // withLanguageInstruction is a no-op here since language is already embedded
+    // in the template editor prompt with precise scope. Keep for consistency.
     const finalSystemPrompt = withLanguageInstruction(systemPrompt, language);
 
     const { output } = await generateText({

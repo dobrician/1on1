@@ -3,17 +3,13 @@
 import { useEffect, useRef } from "react";
 import Markdown from "react-markdown";
 
-export interface ChatMessage {
-  role: "user" | "assistant";
-  content: string;
-  /** Hide from the chat UI (e.g. synthetic seed messages) */
-  hidden?: boolean;
-  /** Exclude from the messages array sent to the AI (e.g. UI-language greeting) */
-  hiddenFromAI?: boolean;
-}
+import type { AiChatMessage } from "@/lib/ai/editor-types";
+
+// Re-export under the legacy name for any existing consumers
+export type { AiChatMessage as ChatMessage } from "@/lib/ai/editor-types";
 
 interface ChatPanelProps {
-  messages: ChatMessage[];
+  messages: AiChatMessage[];
   isLoading: boolean;
 }
 

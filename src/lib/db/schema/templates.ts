@@ -29,6 +29,10 @@ export const questionnaireTemplates = pgTable("questionnaire_template", {
   createdBy: uuid("created_by").references(() => users.id),
   version: integer("version").notNull().default(1),
   isArchived: boolean("is_archived").notNull().default(false),
+  /** Persisted AI chat messages for this template's editor session */
+  aiChatHistory: jsonb("ai_chat_history"),
+  /** Persisted AI version snapshots — array of { timestamp, template } */
+  aiVersionHistory: jsonb("ai_version_history"),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
     .defaultNow(),

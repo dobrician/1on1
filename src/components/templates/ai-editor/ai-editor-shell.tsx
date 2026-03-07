@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { ArrowLeft, RotateCcw, Save } from "lucide-react";
 import type { TemplateExport } from "@/lib/templates/export-schema";
 import type { ChatTurnResponse } from "@/lib/ai/schemas/template-chat";
+import type { AiChatMessage, AiVersionSnapshot } from "@/lib/ai/editor-types";
 import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
@@ -20,7 +21,6 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { ChatPanel } from "@/components/templates/ai-editor/chat-panel";
-import type { ChatMessage } from "@/components/templates/ai-editor/chat-panel";
 import { ChatInput } from "@/components/templates/ai-editor/chat-input";
 import { TemplatePreviewPanel } from "@/components/templates/ai-editor/template-preview-panel";
 
@@ -29,10 +29,12 @@ interface AiEditorShellProps {
   templateId?: string;
   contentLanguage: string;
   userRole: string;
+  initialChatHistory?: AiChatMessage[] | null;
+  initialVersionHistory?: AiVersionSnapshot[] | null;
 }
 
 async function postAiChat(
-  messages: ChatMessage[],
+  messages: AiChatMessage[],
   currentTemplate: TemplateExport | null
 ): Promise<ChatTurnResponse> {
   // Strip hiddenFromAI messages before sending — prevents UI-language greeting
@@ -49,28 +51,44 @@ async function postAiChat(
   return res.json() as Promise<ChatTurnResponse>;
 }
 
+function formatVersionTimestamp(iso: string): string {
+  return new Date(iso).toLocaleString(undefined, {
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
 export function AiEditorShell({
   initialTemplate,
   templateId,
   contentLanguage: _contentLanguage,
   userRole: _userRole,
+  initialChatHistory,
+  initialVersionHistory,
 }: AiEditorShellProps) {
   const t = useTranslations("templates");
-  // Static welcome message shown instantly — no API call on mount.
-  // The hidden synthetic user turn is prepended so the AI has the full
-  // conversation context (including its own opening) on the first real turn.
+
+  // Default greeting shown when there is no persisted conversation yet.
   const greetingText = initialTemplate
     ? t("aiEditor.chat.greetingExisting")
     : t("aiEditor.chat.greetingNew");
 
-  const initialMessages: ChatMessage[] = [
+  const defaultMessages: AiChatMessage[] = [
     { role: "user", content: "__start__", hidden: true, hiddenFromAI: true },
     // Greeting is shown in the user's UI language but excluded from AI context
     // so it doesn't bias the AI towards the UI language instead of the company's content language.
     { role: "assistant", content: greetingText, hiddenFromAI: true },
   ];
 
-  const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
+  // Restore persisted conversation, or fall back to the default greeting.
+  const [messages, setMessages] = useState<AiChatMessage[]>(
+    initialChatHistory && initialChatHistory.length > 0
+      ? initialChatHistory
+      : defaultMessages
+  );
+
   const [currentTemplate, setCurrentTemplate] = useState<TemplateExport | null>(
     initialTemplate ?? null
   );
@@ -78,13 +96,14 @@ export function AiEditorShell({
   const [resetDialogOpen, setResetDialogOpen] = useState(false);
   const [chatWidth, setChatWidth] = useState(360);
 
-  // Version history — one entry per AI-applied template change
-  const initialVersions = initialTemplate
-    ? [{ label: "v1", template: initialTemplate }]
-    : [];
-  const [versions, setVersions] = useState<{ label: string; template: TemplateExport }[]>(initialVersions);
+  // Version history — one snapshot per AI-applied template change, labeled by timestamp.
+  const [versions, setVersions] = useState<AiVersionSnapshot[]>(
+    initialVersionHistory ?? []
+  );
   const [selectedVersionIdx, setSelectedVersionIdx] = useState<number | null>(
-    initialTemplate ? 0 : null
+    initialVersionHistory && initialVersionHistory.length > 0
+      ? initialVersionHistory.length - 1
+      : null
   );
   const isDragging = useRef(false);
 
@@ -111,24 +130,49 @@ export function AiEditorShell({
     window.addEventListener("mouseup", onMouseUp);
   }, [chatWidth]);
 
+  // Fire-and-forget: persist chat history (and optionally a new version snapshot) to DB.
+  function saveHistory(
+    msgs: AiChatMessage[],
+    newVersionTemplate?: TemplateExport
+  ) {
+    if (!templateId) return;
+    void fetch(`/api/templates/${templateId}/ai-history`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        messages: msgs,
+        ...(newVersionTemplate ? { newVersion: { template: newVersionTemplate } } : {}),
+      }),
+    });
+  }
+
   const chatMutation = useMutation({
     mutationFn: ({
       updatedMessages,
       template,
     }: {
-      updatedMessages: ChatMessage[];
+      updatedMessages: AiChatMessage[];
       template: TemplateExport | null;
     }) => postAiChat(updatedMessages, template),
     onSuccess: (result) => {
-      setMessages((prev) => [
-        ...prev,
-        { role: "assistant", content: result.chatMessage },
-      ]);
+      const assistantMsg: AiChatMessage = { role: "assistant", content: result.chatMessage };
+      setMessages((prev) => {
+        const next = [...prev, assistantMsg];
+        if (result.templateJson !== null) {
+          saveHistory(next, result.templateJson);
+        } else {
+          saveHistory(next);
+        }
+        return next;
+      });
       if (result.templateJson !== null) {
         setCurrentTemplate(result.templateJson);
+        const snapshot: AiVersionSnapshot = {
+          timestamp: new Date().toISOString(),
+          template: result.templateJson,
+        };
         setVersions((prev) => {
-          const newLabel = `v${prev.length + 1}`;
-          const next = [...prev, { label: newLabel, template: result.templateJson! }];
+          const next = [...prev, snapshot];
           setSelectedVersionIdx(next.length - 1);
           return next;
         });
@@ -143,7 +187,7 @@ export function AiEditorShell({
   });
 
   function handleSend(userMessage: string) {
-    const updatedMessages: ChatMessage[] = [
+    const updatedMessages: AiChatMessage[] = [
       ...messages,
       { role: "user", content: userMessage },
     ];
@@ -188,21 +232,32 @@ export function AiEditorShell({
     const v = versions[idx];
     setSelectedVersionIdx(idx);
     setCurrentTemplate(v.template);
-    setMessages((prev) => [
-      ...prev,
-      {
-        role: "user",
-        content: `[System context: user switched the template preview to ${v.label}. This version is now the active template context.]`,
-        hidden: true,
-      },
-    ]);
+    setMessages((prev) => {
+      const next: AiChatMessage[] = [
+        ...prev,
+        {
+          role: "user",
+          content: `[System context: user switched the template preview to version from ${formatVersionTimestamp(v.timestamp)}. This version is now the active template context.]`,
+          hidden: true,
+        },
+      ];
+      saveHistory(next);
+      return next;
+    });
   }
 
   function handleReset() {
-    setMessages(initialMessages);
+    setMessages(defaultMessages);
     setCurrentTemplate(initialTemplate ?? null);
-    setVersions(initialVersions);
-    setSelectedVersionIdx(initialTemplate ? 0 : null);
+    setVersions([]);
+    setSelectedVersionIdx(null);
+    if (templateId) {
+      void fetch(`/api/templates/${templateId}/ai-history`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: defaultMessages }),
+      });
+    }
     setResetDialogOpen(false);
   }
 
@@ -253,7 +308,7 @@ export function AiEditorShell({
             <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
               {t("aiEditor.preview.title")}
             </h2>
-            {versions.length > 1 && (
+            {versions.length > 0 && (
               <select
                 value={selectedVersionIdx ?? versions.length - 1}
                 onChange={(e) => handleVersionSelect(Number(e.target.value))}
@@ -261,8 +316,7 @@ export function AiEditorShell({
               >
                 {versions.map((v, i) => (
                   <option key={i} value={i}>
-                    {v.label}
-                    {v.template.name ? ` — ${v.template.name}` : ""}
+                    {formatVersionTimestamp(v.timestamp)}
                   </option>
                 ))}
               </select>

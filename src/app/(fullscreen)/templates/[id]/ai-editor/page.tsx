@@ -10,6 +10,7 @@ import {
 import { eq, and, asc } from "drizzle-orm";
 import { buildExportPayload } from "@/lib/templates/export-schema";
 import { AiEditorShell } from "@/components/templates/ai-editor/ai-editor-shell";
+import type { AiChatMessage, AiVersionSnapshot } from "@/lib/ai/editor-types";
 
 type PageProps = { params: Promise<{ id: string }> };
 
@@ -74,6 +75,8 @@ export default async function ExistingTemplateAiEditorPage({
           ...s,
           questions: questionsBySection.get(s.id) ?? [],
         })),
+        aiChatHistory: tmpl.aiChatHistory as AiChatMessage[] | null,
+        aiVersionHistory: tmpl.aiVersionHistory as AiVersionSnapshot[] | null,
       };
     }
   );
@@ -88,6 +91,8 @@ export default async function ExistingTemplateAiEditorPage({
       templateId={id}
       contentLanguage={contentLanguage}
       userRole={session.user.role}
+      initialChatHistory={template.aiChatHistory}
+      initialVersionHistory={template.aiVersionHistory}
     />
   );
 }

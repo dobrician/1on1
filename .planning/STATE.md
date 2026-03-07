@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: AI-Ready Templates
 status: verifying
-stopped_at: Completed 17-04-PLAN.md (AI chat route)
-last_updated: "2026-03-07T16:13:44.794Z"
+stopped_at: Completed 17-06-PLAN.md (DIY Prompt Kit + AI editor entry points)
+last_updated: "2026-03-07T16:18:38.502Z"
 last_activity: 2026-03-07 -- 15-04 verified complete (user approved export RBAC and schema docs)
 progress:
   total_phases: 7
   completed_phases: 6
   total_plans: 29
-  completed_plans: 26
+  completed_plans: 27
   percent: 100
 ---
 
@@ -61,6 +61,7 @@ Progress: [██████████] 100%
 | Phase 17-ai-generator-diy-kit P01 | 4 | 3 tasks | 4 files |
 | Phase 17-ai-generator-diy-kit P02 | 8 | 2 tasks | 4 files |
 | Phase 17-ai-generator-diy-kit P04 | 3 | 1 tasks | 2 files |
+| Phase 17 P06 | 3 | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -132,6 +133,8 @@ v1.1 decisions archived below for reference:
 - [Phase 17-ai-generator-diy-kit]: Used session.user.contentLanguage instead of DB query in ai-chat route — session already carries content language, no DB transaction needed, consistent with export route pattern
 - [Phase 17-ai-generator-diy-kit]: No withTenantContext in ai-chat route — AI call-only route needs no DB transaction context, avoids unnecessary overhead
 - [Phase 17-ai-generator-diy-kit]: No audit log for AI chat turns — template audited on explicit Save only (separate API call to existing endpoint)
+- [Phase 17]: Prompt kit block assembled server-side: translated section headers, English JSON content (technical standard not UI chrome)
+- [Phase 17]: PROMPT_KIT_EXAMPLE defined inline in schema page, not imported from test files — avoids test/production coupling
 
 ### v1.2 Roadmap Decisions
 
@@ -150,6 +153,6 @@ None active.
 
 ## Session Continuity
 
-Last session: 2026-03-07T16:13:44.791Z
-Stopped at: Completed 17-04-PLAN.md (AI chat route)
+Last session: 2026-03-07T16:18:32.928Z
+Stopped at: Completed 17-06-PLAN.md (DIY Prompt Kit + AI editor entry points)
 Resume file: None

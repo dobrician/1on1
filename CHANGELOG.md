@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## [Unreleased]
 
 ### Added
+- `src/lib/ai/schemas/__tests__/template-chat.test.ts` — Wave 0 RED test stub for `templateChatResponseSchema` and `ChatTurnResponse` type; 5 tests covering valid/invalid parse cases; fails with module-not-found until Wave 1 (17-02) creates the implementation
 - `src/lib/templates/__tests__/import-schema.test.ts` — 11 Vitest unit tests (RED) for `templateImportSchema`, `formatImportErrors`, and `derivePreviewStats`; covers valid payload, schema version rejection, invalid/valid answerTypes, error path formatting, preview stats, language mismatch convention, copy suffix convention, and round-trip with `buildExportPayload`
 - `src/lib/auth/__tests__/rbac.test.ts` — 5 Vitest unit tests for `canManageTemplates`; all pass GREEN (rbac.ts already implemented)
 - `src/global.d.ts` — added `spec.json` to Messages type union for next-intl type safety

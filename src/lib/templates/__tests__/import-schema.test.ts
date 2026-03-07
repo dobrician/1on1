@@ -427,7 +427,7 @@ const DIY_WORKED_EXAMPLE = {
           answerConfig: {},
           isRequired: false,
           sortOrder: 1,
-          scoreWeight: 0,
+          scoreWeight: 1,
           conditionalOnQuestionSortOrder: null,
           conditionalOperator: null,
           conditionalValue: null,
@@ -505,5 +505,26 @@ describe('DIY kit worked example', () => {
     );
     expect(parsed.sections.length).toBe(3);
     expect(questionCount).toBe(9);
+  });
+
+  it('DIY_WORKED_EXAMPLE contains text, rating_1_5, and yes_no answer types', () => {
+    const parsed = templateImportSchema.parse(DIY_WORKED_EXAMPLE);
+    const allTypes = parsed.sections.flatMap((s) =>
+      s.questions.map((q) => q.answerType)
+    );
+    expect(allTypes).toContain('text');
+    expect(allTypes).toContain('rating_1_5');
+    expect(allTypes).toContain('yes_no');
+  });
+
+  it('DIY_WORKED_EXAMPLE uses scoreWeight values 0, 1, 2, and 3', () => {
+    const parsed = templateImportSchema.parse(DIY_WORKED_EXAMPLE);
+    const allWeights = new Set(
+      parsed.sections.flatMap((s) => s.questions.map((q) => q.scoreWeight))
+    );
+    expect(allWeights.has(0)).toBe(true);
+    expect(allWeights.has(1)).toBe(true);
+    expect(allWeights.has(2)).toBe(true);
+    expect(allWeights.has(3)).toBe(true);
   });
 });

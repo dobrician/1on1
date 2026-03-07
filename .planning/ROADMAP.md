@@ -127,10 +127,10 @@ Plans:
 **Plans**: 4 plans
 
 Plans:
-- [ ] 15-01-PLAN.md — TDD: TemplateExport interface, SCHEMA_VERSION constant, buildExportPayload() with 7 unit tests (EXP-02 through EXP-05)
-- [ ] 15-02-PLAN.md — Export API route (GET /api/templates/[id]/export) + spec.json translation namespace (en + ro) + /templates/schema docs page (SPEC-01, SPEC-02, SPEC-03)
-- [ ] 15-03-PLAN.md — ExportButton component + wire into template-list.tsx and template-editor.tsx + translation keys (EXP-01)
-- [ ] 15-04-PLAN.md — Manual verification: role-gating UI check (member sees no button, admin/manager sees button + working download)
+- [x] 15-01-PLAN.md — TDD: TemplateExport interface, SCHEMA_VERSION constant, buildExportPayload() with 7 unit tests (EXP-02 through EXP-05)
+- [x] 15-02-PLAN.md — Export API route (GET /api/templates/[id]/export) + spec.json translation namespace (en + ro) + /templates/schema docs page (SPEC-01, SPEC-02, SPEC-03)
+- [x] 15-03-PLAN.md — ExportButton component + wire into template-list.tsx and template-editor.tsx + translation keys (EXP-01)
+- [x] 15-04-PLAN.md — Manual verification: role-gating UI check (member sees no button, admin/manager sees button + working download)
 
 ### Phase 16: Template Import
 **Goal**: Users can import a template from a portable JSON file with full visibility into what they are importing, warnings about mismatches, and actionable error messages if the file is invalid

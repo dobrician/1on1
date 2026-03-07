@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: AI-Ready Templates
 status: verifying
-stopped_at: Completed 17-02-PLAN.md (AI contracts layer)
-last_updated: "2026-03-07T16:09:14.316Z"
+stopped_at: Completed 17-04-PLAN.md (AI chat route)
+last_updated: "2026-03-07T16:13:44.794Z"
 last_activity: 2026-03-07 -- 15-04 verified complete (user approved export RBAC and schema docs)
 progress:
   total_phases: 7
   completed_phases: 6
   total_plans: 29
-  completed_plans: 25
+  completed_plans: 26
   percent: 100
 ---
 
@@ -60,6 +60,7 @@ Progress: [██████████] 100%
 | Phase 17-ai-generator-diy-kit P03 | 3 | 2 tasks | 4 files |
 | Phase 17-ai-generator-diy-kit P01 | 4 | 3 tasks | 4 files |
 | Phase 17-ai-generator-diy-kit P02 | 8 | 2 tasks | 4 files |
+| Phase 17-ai-generator-diy-kit P04 | 3 | 1 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -128,6 +129,9 @@ v1.1 decisions archived below for reference:
 - [Phase 17-ai-generator-diy-kit]: ModelMessage (not CoreMessage) is the AI SDK v4 type for messages — CoreMessage is not exported from 'ai'
 - [Phase 17-ai-generator-diy-kit]: z.record requires 2 args in zod v4: z.record(z.string(), z.unknown()) not z.record(z.unknown())
 - [Phase 17-ai-generator-diy-kit]: generateTemplateChatTurn uses ModelMessage[] for chat history; wraps errors with 'AI generation failed:' prefix
+- [Phase 17-ai-generator-diy-kit]: Used session.user.contentLanguage instead of DB query in ai-chat route — session already carries content language, no DB transaction needed, consistent with export route pattern
+- [Phase 17-ai-generator-diy-kit]: No withTenantContext in ai-chat route — AI call-only route needs no DB transaction context, avoids unnecessary overhead
+- [Phase 17-ai-generator-diy-kit]: No audit log for AI chat turns — template audited on explicit Save only (separate API call to existing endpoint)
 
 ### v1.2 Roadmap Decisions
 
@@ -146,6 +150,6 @@ None active.
 
 ## Session Continuity
 
-Last session: 2026-03-07T16:09:14.311Z
-Stopped at: Completed 17-02-PLAN.md (AI contracts layer)
+Last session: 2026-03-07T16:13:44.791Z
+Stopped at: Completed 17-04-PLAN.md (AI chat route)
 Resume file: None

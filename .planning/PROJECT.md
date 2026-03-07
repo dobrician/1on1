@@ -35,17 +35,18 @@ The AI context layer that makes every meeting smarter than the last — knowing 
 - ✓ AI-generated content (summaries, nudges, action items) in company language — v1.1
 - ✓ Email notifications in company language — v1.1
 - ✓ Browser locale detection for pre-login screens — v1.1
+- ✓ JSON schema spec for templates (downloadable, AI-friendly, methodology principles + weight system docs) — v1.2
+- ✓ Template export as portable JSON (schemaVersion, tenant-neutral, language field, role-gated) — v1.2
 
 ### Active
 
-- [ ] JSON schema spec for templates (downloadable, AI-friendly, with methodology principles + weight system documentation)
-- [ ] Template export as portable JSON (schemaVersion, tenant-neutral, language field)
 - [ ] Template import from JSON (preview, language mismatch warning, conflict resolution, detailed validation errors)
 - [ ] In-app AI template generator (describe → AI generates in company language → preview → save)
 - [ ] DIY prompt kit (copyable schema + principles + example for use with external AI tools)
 
 ### Future
 
+- **v1.3 planned:** Playwright E2E testing suite with CI integration (GitHub Actions), SMTP mocking, role-switching helpers, full edge case + regression coverage, designed for maintainability and future-proof expansion
 - AI personal profiles built from accumulated session data (pgvector embeddings)
 - AI live suggestions during active sessions (streaming, low latency)
 - AI-generated growth narratives ("Over Q1, Alex improved communication by 23%...")
@@ -130,4 +131,4 @@ The AI context layer that makes every meeting smarter than the last — knowing 
 | Nodemailer over Resend | Works with any SMTP provider | ✓ Good — provider flexibility |
 
 ---
-*Last updated: 2026-03-07 after v1.2 milestone started*
+*Last updated: 2026-03-07 after Phase 15 (Schema, Spec & Export)*

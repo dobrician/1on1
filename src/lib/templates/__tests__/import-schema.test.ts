@@ -194,7 +194,7 @@ describe('formatImportErrors', () => {
         received: 'number',
         path: ['sections', 0, 'questions', 2, 'answerType'],
         message: 'Expected string, received number',
-      },
+      } as any,
     ]);
     const errors = formatImportErrors(zodError);
     expect(errors).toHaveLength(1);
@@ -212,7 +212,7 @@ describe('formatImportErrors', () => {
         inclusive: true,
         path: ['name'],
         message: 'String must contain at least 1 character(s)',
-      },
+      } as any,
     ]);
     const errors = formatImportErrors(zodError);
     expect(errors).toHaveLength(1);

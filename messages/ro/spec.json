@@ -5,7 +5,8 @@
     "tabs": {
       "schema": "Schema JSON",
       "methodology": "Metodologie",
-      "weights": "Ponderi scoruri"
+      "weights": "Ponderi scoruri",
+      "promptKit": "Kit de Prompt"
     },
     "schema": {
       "title": "Schema JSON pentru șabloane",
@@ -48,6 +49,18 @@
         "basic": "Un șablon cu trei întrebări de evaluare toate ponderate cu 1 contribuie în mod egal la scorul ședinței.",
         "emphasized": "Măriți ponderea la 2 sau 3 pentru întrebările care semnalează rezultate importante — de exemplu, o întrebare despre blocaje sau o evaluare generală a satisfacției.",
         "unscored": "Setați ponderea la 0 pentru întrebările text cu răspuns liber unde un scor numeric nu are sens, cum ar fi «Ce îți trece prin minte săptămâna aceasta?»"
+      }
+    },
+    "promptKit": {
+      "title": "Kit de Prompt DIY",
+      "intro": "Lipește aceasta în Claude, ChatGPT sau orice asistent AI pentru a genera un șablon de 1:1 adaptat echipei tale.",
+      "copy": "Copiază Kitul de Prompt",
+      "copied": "Copiat!",
+      "sections": {
+        "schema": "Specificația JSON Schema",
+        "methodology": "Principiile Metodologiei 1:1",
+        "weights": "Sistemul de Ponderi",
+        "example": "Șablon Exemplu Complet"
       }
     }
   }

@@ -5,7 +5,8 @@
     "tabs": {
       "schema": "JSON Schema",
       "methodology": "Methodology",
-      "weights": "Score Weights"
+      "weights": "Score Weights",
+      "promptKit": "Prompt Kit"
     },
     "schema": {
       "title": "Template JSON Schema",
@@ -48,6 +49,18 @@
         "basic": "A template with three rating questions all weighted 1 contributes equally to the session score.",
         "emphasized": "Increase weight to 2 or 3 for questions that signal high-importance outcomes — for example, a \"blockers\" question or an overall satisfaction rating.",
         "unscored": "Set weight to 0 for open-ended text questions where a numeric score doesn't make sense, such as \"What's on your mind this week?\""
+      }
+    },
+    "promptKit": {
+      "title": "DIY Prompt Kit",
+      "intro": "Paste this into Claude, ChatGPT, or any AI assistant to generate a 1on1 template tailored to your team.",
+      "copy": "Copy Prompt Kit",
+      "copied": "Copied!",
+      "sections": {
+        "schema": "JSON Schema Spec",
+        "methodology": "1:1 Methodology Principles",
+        "weights": "Score Weight System",
+        "example": "Worked Example Template"
       }
     }
   }

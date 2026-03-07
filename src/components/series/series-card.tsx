@@ -13,6 +13,7 @@ import { useApiErrorToast } from "@/lib/i18n/api-error-toast";
 import { useTranslations, useFormatter } from "next-intl";
 import { useMemo } from "react";
 import { AreaChart, Area, ResponsiveContainer, YAxis } from "recharts";
+import { hashSeriesColor } from "@/lib/chart-colors";
 
 interface SeriesCardProps {
   series: {
@@ -40,17 +41,6 @@ interface SeriesCardProps {
     questionHistories: { questionText: string; scoreWeight: number; values: number[] }[];
   };
   currentUserId: string;
-}
-
-const Q_PALETTE = [
-  "#6366f1", "#8b5cf6", "#ec4899", "#f59e0b", "#10b981",
-  "#06b6d4", "#f97316", "#84cc16", "#ef4444", "#14b8a6",
-];
-
-function hashQuestionColor(text: string): string {
-  let sum = 0;
-  for (let i = 0; i < text.length; i++) sum += text.charCodeAt(i);
-  return Q_PALETTE[sum % Q_PALETTE.length];
 }
 
 function questionOpacity(weight: number): number {
@@ -99,7 +89,7 @@ function ScoreSparkline({ assessmentHistory, questionHistories, id }: SparklineP
               <stop offset="100%" stopColor="var(--chart-1)" stopOpacity={0} />
             </linearGradient>
             {questionHistories.map((q, qi) => {
-              const color = hashQuestionColor(q.questionText);
+              const color = hashSeriesColor(q.questionText);
               const gid = `sparkGrad-q-${id}-${qi}`;
               return (
                 <linearGradient key={gid} id={gid} x1="0" y1="0" x2="0" y2="1">
@@ -112,7 +102,7 @@ function ScoreSparkline({ assessmentHistory, questionHistories, id }: SparklineP
           <YAxis domain={[minValue, maxValue]} hide />
           {/* Per-question areas (rendered first = behind) */}
           {questionHistories.map((q, qi) => {
-            const color = hashQuestionColor(q.questionText);
+            const color = hashSeriesColor(q.questionText);
             const opacity = questionOpacity(q.scoreWeight);
             return (
               <Area

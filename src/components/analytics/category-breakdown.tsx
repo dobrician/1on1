@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import { useTranslations, useFormatter } from "next-intl";
 import { Card, CardContent } from "@/components/ui/card";
 import { AreaChart, Area, ResponsiveContainer, YAxis } from "recharts";
+import { hashSeriesColor } from "@/lib/chart-colors";
 
 interface CategoryBreakdownProps {
   data: Array<{ category: string; avgScore: number; sampleCount: number; history: number[] }>;
@@ -19,24 +20,25 @@ function scoreColor(score: number): string {
   return "var(--color-danger)";
 }
 
-function BackgroundSparkline({ data, id }: { data: number[]; id: string }) {
+function BackgroundSparkline({ data, category }: { data: number[]; category: string }) {
   const chartData = useMemo(() => data.map((value, index) => ({ index, value })), [data]);
   if (data.length < 2) return null;
   const min = Math.max(0, Math.min(...data) - 0.3);
   const max = Math.min(5, Math.max(...data) + 0.3);
-  const gradientId = `catSparkGrad-${id}`;
+  const color = hashSeriesColor(category);
+  const gradientId = `catSparkGrad-${category.replace(/\s+/g, "-")}`;
   return (
     <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-[30%] opacity-[0.20] dark:opacity-[0.35]">
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart data={chartData} margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
           <defs>
             <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="var(--chart-1)" stopOpacity={1} />
-              <stop offset="100%" stopColor="var(--chart-1)" stopOpacity={0} />
+              <stop offset="0%" stopColor={color} stopOpacity={1} />
+              <stop offset="100%" stopColor={color} stopOpacity={0} />
             </linearGradient>
           </defs>
           <YAxis domain={[min, max]} hide />
-          <Area type="monotone" dataKey="value" stroke="var(--chart-1)" strokeWidth={2} fill={`url(#${gradientId})`} isAnimationActive={false} />
+          <Area type="monotone" dataKey="value" stroke={color} strokeWidth={2} fill={`url(#${gradientId})`} isAnimationActive={false} />
         </AreaChart>
       </ResponsiveContainer>
     </div>
@@ -84,7 +86,7 @@ export function CategoryBreakdown({ data }: CategoryBreakdownProps) {
                   : t("chart.samples", { count: item.sampleCount })}
               </p>
             </CardContent>
-            <BackgroundSparkline data={item.history} id={catId} />
+            <BackgroundSparkline data={item.history} category={item.category} />
           </Card>
         );
       })}

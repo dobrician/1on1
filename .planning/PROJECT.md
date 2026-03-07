@@ -30,15 +30,19 @@ The AI context layer that makes every meeting smarter than the last — knowing 
 - ✓ Vercel-deployable production build — v1.0
 - ✓ Dark mode with org color themes — v1.0
 - ✓ Full-text search and command palette (Cmd+K) — v1.0
+- ✓ i18n framework with UI language per-user and content language per-company — v1.1
+- ✓ Full UI translation: English + Romanian (~650-800 keys, locale-aware formatting) — v1.1
+- ✓ AI-generated content (summaries, nudges, action items) in company language — v1.1
+- ✓ Email notifications in company language — v1.1
+- ✓ Browser locale detection for pre-login screens — v1.1
 
 ### Active
 
-- [ ] i18n framework with UI language per-user and content language per-company
-- [ ] Full UI translation: English + Romanian
-- [ ] Date/number formatting per locale
-- [ ] AI-generated content (summaries, nudges, action items) in company language
-- [ ] Email notifications in company language
-- [ ] Browser locale detection for pre-login screens
+- [ ] JSON schema spec for templates (downloadable, AI-friendly, with methodology principles + weight system documentation)
+- [ ] Template export as portable JSON (schemaVersion, tenant-neutral, language field)
+- [ ] Template import from JSON (preview, language mismatch warning, conflict resolution, detailed validation errors)
+- [ ] In-app AI template generator (describe → AI generates in company language → preview → save)
+- [ ] DIY prompt kit (copyable schema + principles + example for use with external AI tools)
 
 ### Future
 
@@ -68,17 +72,16 @@ The AI context layer that makes every meeting smarter than the last — knowing 
 - Manager scoring / ranking — creates perverse incentives
 - Multi-language template translations — questionnaires defined in one language per company, no per-template multi-language support yet
 
-## Current Milestone: v1.1 Internationalization
+## Current Milestone: v1.2 AI-Ready Templates
 
-**Goal:** Add i18n support with two language layers — UI language (per-user, browser locale default) and content language (per-company, admin setting) — starting with English and Romanian.
+**Goal:** Give every user the tools to leverage AI as a template co-author — in-app generator, portable JSON export/import, and a DIY prompt kit for external AI tools. All content in the company's language.
 
 **Target features:**
-- i18n framework with per-user UI language and per-company content language
-- Full UI string extraction and Romanian translation
-- Locale-aware date/number formatting
-- AI content generation in company language
-- Email notifications in company language
-- Browser locale detection for pre-login screens
+- Template JSON schema spec with methodology principles and weight system documentation
+- Single-template export as portable, tenant-neutral JSON
+- Template import with preview, language mismatch warning, conflict resolution, and detailed validation errors
+- In-app AI template generator (describe → AI generates in company language → preview → save)
+- DIY prompt kit (copyable schema + principles + example for Claude, ChatGPT, etc.)
 
 ## Context
 
@@ -127,4 +130,4 @@ The AI context layer that makes every meeting smarter than the last — knowing 
 | Nodemailer over Resend | Works with any SMTP provider | ✓ Good — provider flexibility |
 
 ---
-*Last updated: 2026-03-05 after v1.1 milestone started*
+*Last updated: 2026-03-07 after v1.2 milestone started*

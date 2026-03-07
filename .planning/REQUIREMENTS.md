@@ -57,6 +57,44 @@ Requirements for internationalization milestone. Each maps to roadmap phases.
 - [x] **QUAL-01**: CI check enforces key parity between en.json and ro.json
 - [x] **QUAL-02**: No hardcoded English strings remain in user-facing components
 
+## v1.2 Requirements
+
+Requirements for AI-ready template milestone. Each maps to roadmap phases.
+
+### Spec & Documentation
+
+- [ ] **SPEC-01**: A JSON schema document for templates is accessible in-app — downloadable and copyable — describing every field, type, and constraint (in English, as a technical standard)
+- [ ] **SPEC-02**: In-app methodology documentation (core 1:1 principles, what makes a good question, conversation flow) is rendered in the company's content language
+- [ ] **SPEC-03**: The spec documents the scoring/weight system — how `scoreWeight` affects analytics, valid values, examples — rendered in the company's content language
+
+### Export
+
+- [ ] **EXP-01**: Admin or manager can export a single template as a downloadable `.json` file from the template list or template builder
+- [ ] **EXP-02**: Exported JSON includes a `schemaVersion` field (e.g., `1`) for compatibility tracking
+- [ ] **EXP-03**: Exported JSON is tenant-neutral — no internal tenant IDs or per-org UUIDs, fully portable across organizations
+- [ ] **EXP-04**: Exported JSON includes a `language` field indicating the template content language
+- [ ] **EXP-05**: Exported JSON captures all question metadata: `scoreWeight`, `answerConfig`, conditional logic, section structure
+
+### Import
+
+- [ ] **IMP-01**: Admin or manager can import a template by uploading a `.json` file
+- [ ] **IMP-02**: Before confirming import, user sees a preview: template name, section count, question count, question type breakdown
+- [ ] **IMP-03**: If the JSON `language` field doesn't match the company's content language, user sees a language mismatch warning before proceeding
+- [ ] **IMP-04**: If a template with the same name already exists, user is offered: rename, create as copy, or cancel
+- [ ] **IMP-05**: Import validation reports detailed, field-specific errors (e.g., "Question 3, field `answerType`: invalid value `checkbox`") — not a generic error toast
+
+### In-app AI Generator
+
+- [ ] **AIGEN-01**: Admin or manager can open a "Generate with AI" flow, describe their team and meeting goals in plain language, and receive a generated template draft
+- [ ] **AIGEN-02**: Generated template is shown in a preview (name, section count, question breakdown) for review before saving — user can accept, edit, or discard
+- [ ] **AIGEN-03**: AI generates all question text, help text, and section names in the company's content language
+- [ ] **AIGEN-04**: AI generation uses the JSON schema, core methodology principles, and weight system as context
+
+### DIY Prompt Kit
+
+- [ ] **DIY-01**: User can access and copy a "prompt kit" — JSON schema + methodology principles + worked example — formatted for use with external AI tools (Claude, ChatGPT, etc.)
+- [ ] **DIY-02**: Prompt kit narrative and examples are rendered in the company's content language (JSON schema itself remains in English)
+
 ## Future Requirements
 
 ### Additional Languages
@@ -70,6 +108,10 @@ Requirements for internationalization milestone. Each maps to roadmap phases.
 - **ADV-01**: Multi-language questionnaire templates (same template in multiple languages)
 - **ADV-02**: Machine translation of user-generated content
 
+### Template Translation
+
+- **TMTR-01**: Auto-translate an imported template from its source language to the company's content language with cultural adaptation (not just literal translation)
+
 ## Out of Scope
 
 | Feature | Reason |
@@ -80,6 +122,10 @@ Requirements for internationalization milestone. Each maps to roadmap phases.
 | Additional languages beyond EN + RO | Revisit on user demand |
 | Machine translation of user content | Privacy and quality concerns |
 | URL-based locale routing | Locale driven by user/company settings, not URL prefixes |
+| Public template marketplace | URL-based sharing — future milestone |
+| Schema version migration | Fail with clear version mismatch message; no auto-migration |
+| Bulk export (all templates) | Single export covers primary use case; defer to future |
+| Auto-translate on import | Cultural adaptation requires careful design; defer to future (TMTR-01) |
 
 ## Traceability
 
@@ -122,6 +168,31 @@ Which phases cover which requirements. Updated during roadmap creation.
 - Mapped to phases: 29
 - Unmapped: 0
 
+| SPEC-01 | Phase 15 | Pending |
+| SPEC-02 | Phase 15 | Pending |
+| SPEC-03 | Phase 15 | Pending |
+| EXP-01 | Phase 15 | Pending |
+| EXP-02 | Phase 15 | Pending |
+| EXP-03 | Phase 15 | Pending |
+| EXP-04 | Phase 15 | Pending |
+| EXP-05 | Phase 15 | Pending |
+| IMP-01 | Phase 15 | Pending |
+| IMP-02 | Phase 15 | Pending |
+| IMP-03 | Phase 15 | Pending |
+| IMP-04 | Phase 15 | Pending |
+| IMP-05 | Phase 15 | Pending |
+| AIGEN-01 | Phase 16 | Pending |
+| AIGEN-02 | Phase 16 | Pending |
+| AIGEN-03 | Phase 16 | Pending |
+| AIGEN-04 | Phase 16 | Pending |
+| DIY-01 | Phase 16 | Pending |
+| DIY-02 | Phase 16 | Pending |
+
+**Coverage (v1.2):**
+- v1.2 requirements: 19 total
+- Mapped to phases: 19 (tentative — roadmapper will finalize)
+- Unmapped: 0
+
 ---
 *Requirements defined: 2026-03-05*
-*Last updated: 2026-03-05 after roadmap revision*
+*Last updated: 2026-03-07 after v1.2 milestone started*

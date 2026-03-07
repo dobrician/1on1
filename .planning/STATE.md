@@ -1,36 +1,36 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.1
-milestone_name: Internationalization
-status: executing
-stopped_at: "Checkpoint: 14-02 Task 3 human-verify — awaiting visual confirmation of Romanian strings and layout"
-last_updated: "2026-03-07T06:14:44.122Z"
-last_activity: "2026-03-06 -- Completed 13-01: createEmailTranslator utility + emails.json for en/ro"
+milestone: v1.2
+milestone_name: AI-Ready Templates
+status: planning
+stopped_at: ""
+last_updated: "2026-03-07T00:00:00.000Z"
+last_activity: "2026-03-07 -- Milestone v1.2 started, requirements defined"
 progress:
-  total_phases: 4
-  completed_phases: 4
-  total_plans: 13
-  completed_plans: 13
-  percent: 82
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-03-05)
+See: .planning/PROJECT.md (updated 2026-03-07)
 
 **Core value:** The AI context layer that makes every meeting smarter than the last
-**Current focus:** v1.1 Internationalization -- Phases 11 + 12 shipped as v1.1.0; Phases 13–14 next
+**Current focus:** v1.2 AI-Ready Templates -- Requirements defined, roadmap pending
 
 ## Current Position
 
-Phase: 13 of 14 (Email Translation) -- In Progress
-Plan: 1 of 3 in current phase (13-01 complete)
-Status: In Progress
-Last activity: 2026-03-06 -- Completed 13-01: createEmailTranslator utility + emails.json for en/ro
+Phase: Not started (roadmap pending)
+Plan: —
+Status: Defining roadmap
+Last activity: 2026-03-07 -- Milestone v1.2 started, requirements defined (19 requirements across SPEC/EXP/IMP/AIGEN/DIY)
 
-Progress: [████████░░] 82%
+Progress: [░░░░░░░░░░] 0%
 
 ## Performance Metrics
 

@@ -105,7 +105,7 @@ Plans:
 **Requirements**: ROLN-01, ROLN-02, ROLN-03, ROLN-04, QUAL-01, QUAL-02
 **Success Criteria** (what must be TRUE):
   1. All ~650-800 translation keys in `messages/ro.json` have natural Romanian phrasing -- not machine-translation artifacts
-  2. Pluralized strings use correct ICU MessageFormat with three Romanian forms (one/few/other) -- verified with values 0, 1, 2, 5, 19, 20, 21, 100
+  2. Pluralized strings use correct ICU MessageFormat with three Romanian forms (one/few/other) -- verified with values 0, 1, 2, 5, 19, 20, 21,100
   3. All Romanian text uses correct comma-below diacritics (U+0219/U+021B), never cedilla variants -- and no UI element overflows or truncates when displaying Romanian text
   4. CI pipeline fails if `en.json` and `ro.json` have different sets of translation keys
   5. A code audit confirms no hardcoded English strings remain in user-facing components -- all strings go through `t()` or formatter APIs
@@ -159,7 +159,16 @@ Plans:
   2. The generated template draft appears in a preview showing name, section count, and question type breakdown before any data is saved -- user can accept, discard, or open the template builder to edit before saving
   3. The AI generation prompt includes the JSON schema spec, methodology principles, and weight system documentation as structured context so that generated templates conform to the schema and follow 1:1 best practices
   4. A user accesses the DIY prompt kit page, sees the full copyable block (JSON schema + methodology principles + worked example), and the narrative and example content render in the company's content language (the JSON schema block itself remains in English)
-**Plans**: TBD
+**Plans**: 7 plans
+
+Plans:
+- [ ] 17-01-PLAN.md — Wave 0 TDD: failing test stubs for templateChatResponseSchema, buildTemplateEditorSystemPrompt, withLanguageInstruction, DIY kit worked example
+- [ ] 17-02-PLAN.md — AI contracts: templateChatResponseSchema, template-editor system prompt, models.templateEditor, generateTemplateChatTurn service function
+- [ ] 17-03-PLAN.md — Translation keys: spec.promptKit.* (EN + RO) and templates.aiEditor.* (EN + RO)
+- [ ] 17-04-PLAN.md — POST /api/templates/ai-chat route: RBAC, Zod validation, tenant language resolution, AI service call
+- [ ] 17-05-PLAN.md — AI editor UI: split-screen shell + preview panel + chat panel + chat input + server pages for new and existing templates
+- [ ] 17-06-PLAN.md — Wire entry points: Generate with AI button in template-list, Edit with AI button in template-editor, DIY Prompt Kit 4th tab on schema page
+- [ ] 17-07-PLAN.md — Manual verification: all 7 scenarios (AIGEN-01 through DIY-02 confirmed in browser)
 
 ## Progress
 
@@ -192,4 +201,4 @@ Phase 15 (schema + export)
 | 14. Romanian & Quality | v1.1 | 2/2 | Complete | 2026-03-07 |
 | 15. Schema, Spec & Export | v1.2 | 4/4 | Complete | 2026-03-07 |
 | 16. Template Import | 5/5 | Complete    | 2026-03-07 | - |
-| 17. AI Generator & DIY Kit | v1.2 | 0/? | Not started | - |
+| 17. AI Generator & DIY Kit | v1.2 | 0/7 | Not started | - |

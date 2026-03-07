@@ -50,12 +50,12 @@ Requirements for internationalization milestone. Each maps to roadmap phases.
 - [x] **ROLN-01**: Complete Romanian translations for all ~650-800 keys with natural phrasing
 - [x] **ROLN-02**: Romanian plural forms use correct ICU MessageFormat (one/few/other)
 - [x] **ROLN-03**: Romanian text uses correct diacritics (comma-below U+0219/U+021B)
-- [ ] **ROLN-04**: UI layouts handle 15-30% longer Romanian text without overflow or truncation
+- [x] **ROLN-04**: UI layouts handle 15-30% longer Romanian text without overflow or truncation
 
 ### Quality
 
-- [ ] **QUAL-01**: CI check enforces key parity between en.json and ro.json
-- [ ] **QUAL-02**: No hardcoded English strings remain in user-facing components
+- [x] **QUAL-01**: CI check enforces key parity between en.json and ro.json
+- [x] **QUAL-02**: No hardcoded English strings remain in user-facing components
 
 ## Future Requirements
 
@@ -113,9 +113,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | ROLN-01 | Phase 14 | Complete |
 | ROLN-02 | Phase 14 | Complete |
 | ROLN-03 | Phase 14 | Complete |
-| ROLN-04 | Phase 14 | Pending |
-| QUAL-01 | Phase 14 | Pending |
-| QUAL-02 | Phase 14 | Pending |
+| ROLN-04 | Phase 14 | Complete |
+| QUAL-01 | Phase 14 | Complete |
+| QUAL-02 | Phase 14 | Complete |
 
 **Coverage:**
 - v1.1 requirements: 29 total

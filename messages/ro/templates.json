@@ -117,6 +117,56 @@
       "failed": "Export eșuat",
       "schemaLink": "Documentație schemă"
     },
+    "import": {
+      "button": "Importă",
+      "dialogTitle": "Importă Șablon",
+      "step1": {
+        "title": "Selectează Fișier",
+        "description": "Încarcă un fișier .json exportat din această aplicație.",
+        "browse": "Răsfoiește",
+        "fileSelected": "Selectat: {name}",
+        "parseButton": "Analizează & Previzualizează",
+        "parsing": "Se analizează..."
+      },
+      "step2": {
+        "title": "Previzualizare",
+        "templateName": "Nume Șablon",
+        "sections": "{count, plural, one {# secțiune} few {# secțiuni} other {# de secțiuni}}",
+        "questions": "{count, plural, one {# întrebare} few {# întrebări} other {# de întrebări}}",
+        "types": "Tipuri de Întrebări",
+        "importButton": "Importă",
+        "importing": "Se importă...",
+        "cancel": "Anulează"
+      },
+      "languageMismatch": {
+        "title": "Nepotrivire de Limbă",
+        "message": "Acest șablon este în {fileLanguage}, dar compania ta folosește {companyLanguage}.",
+        "proceed": "Continuă oricum",
+        "cancel": "Anulează"
+      },
+      "step3": {
+        "title": "Șablonul Există Deja",
+        "message": "Un șablon numit \"{name}\" există deja.",
+        "renameLabel": "Nume nou",
+        "renameButton": "Importă ca \"{name}\"",
+        "copyButton": "Creează ca copie",
+        "cancel": "Anulează"
+      },
+      "step4": {
+        "title": "Șablon Importat",
+        "message": "\"{name}\" a fost importat cu succes.",
+        "viewTemplate": "Vezi Șablonul",
+        "close": "Închide"
+      },
+      "error": {
+        "title": "Fișier Invalid",
+        "notJson": "Fișierul nu este JSON valid.",
+        "tooManyErrors": "...și {count} {count, plural, one {eroare} few {erori} other {de erori}} în plus",
+        "close": "Închide"
+      },
+      "failed": "Importul a eșuat. Te rugăm să încerci din nou.",
+      "schemaVersionUnsupported": "Acest fișier folosește versiunea de schemă {version}, dar doar versiunea 1 este acceptată."
+    },
     "conditionalLogic": {
       "title": "Afișează această întrebare condiționat",
       "description": "Afișează doar când un răspuns anterior se potrivește unei condiții",

@@ -117,6 +117,56 @@
       "failed": "Export failed",
       "schemaLink": "Schema Docs"
     },
+    "import": {
+      "button": "Import",
+      "dialogTitle": "Import Template",
+      "step1": {
+        "title": "Select File",
+        "description": "Upload a .json template file exported from this app.",
+        "browse": "Browse",
+        "fileSelected": "Selected: {name}",
+        "parseButton": "Parse & Preview",
+        "parsing": "Parsing..."
+      },
+      "step2": {
+        "title": "Preview",
+        "templateName": "Template Name",
+        "sections": "{count, plural, one {# section} other {# sections}}",
+        "questions": "{count, plural, one {# question} other {# questions}}",
+        "types": "Question Types",
+        "importButton": "Import",
+        "importing": "Importing...",
+        "cancel": "Cancel"
+      },
+      "languageMismatch": {
+        "title": "Language Mismatch",
+        "message": "This template is in {fileLanguage} but your company uses {companyLanguage}.",
+        "proceed": "Proceed anyway",
+        "cancel": "Cancel"
+      },
+      "step3": {
+        "title": "Template Already Exists",
+        "message": "A template named \"{name}\" already exists.",
+        "renameLabel": "New name",
+        "renameButton": "Import as \"{name}\"",
+        "copyButton": "Create as copy",
+        "cancel": "Cancel"
+      },
+      "step4": {
+        "title": "Template Imported",
+        "message": "\"{name}\" has been imported successfully.",
+        "viewTemplate": "View Template",
+        "close": "Close"
+      },
+      "error": {
+        "title": "Invalid File",
+        "notJson": "File is not valid JSON.",
+        "tooManyErrors": "...and {count} more {count, plural, one {error} other {errors}}",
+        "close": "Close"
+      },
+      "failed": "Import failed. Please try again.",
+      "schemaVersionUnsupported": "This file uses schema version {version}, but only version 1 is supported."
+    },
     "conditionalLogic": {
       "title": "Show this question conditionally",
       "description": "Only show when a previous answer matches a condition",

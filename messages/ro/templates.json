@@ -189,6 +189,49 @@
       "operatorGt": "mai mare decât",
       "operatorLte": "cel mult",
       "operatorGte": "cel puțin"
+    },
+    "aiEditor": {
+      "pageTitle": "Editor AI de Șabloane",
+      "header": {
+        "newTemplate": "Șablon Nou",
+        "editTemplate": "Editează Șablonul",
+        "save": "Salvează Șablonul",
+        "reset": "Resetează",
+        "back": "Înapoi la Șabloane",
+        "backToBuilder": "Înapoi la Constructor"
+      },
+      "resetConfirm": {
+        "title": "Începi de la capăt?",
+        "description": "Aceasta va șterge șablonul și conversația. Nu poate fi anulat.",
+        "confirm": "Începe de la Capăt",
+        "cancel": "Anulează"
+      },
+      "preview": {
+        "title": "Previzualizare Șablon",
+        "empty": "Șablonul tău va apărea aici pe măsură ce conversezi",
+        "sectionCount": "{count, plural, one {# secțiune} few {# secțiuni} other {# secțiuni}}",
+        "questionCount": "{count, plural, one {# întrebare} few {# întrebări} other {# întrebări}}",
+        "answerTypeLabel": {
+          "text": "Text",
+          "rating_1_5": "Evaluare 1–5",
+          "rating_1_10": "Evaluare 1–10",
+          "yes_no": "Da / Nu",
+          "multiple_choice": "Alegere Multiplă",
+          "mood": "Stare",
+          "scale_custom": "Scară Personalizată"
+        }
+      },
+      "chat": {
+        "placeholder": "Descrie echipa ta, obiectivele sau cere modificări...",
+        "send": "Trimite",
+        "thinking": "Se gândește...",
+        "errorToast": "Generarea AI a eșuat. Încearcă din nou."
+      },
+      "saveSuccess": "Șablon salvat",
+      "entryPoints": {
+        "generateWithAI": "Generează cu AI",
+        "editWithAI": "Editează cu AI"
+      }
     }
   }
 }

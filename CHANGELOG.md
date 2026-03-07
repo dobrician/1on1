@@ -9,10 +9,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Added
 - `messages/en/spec.json` — added `spec.tabs.promptKit` and `spec.promptKit.*` keys (title, intro, copy, copied, sections.schema/methodology/weights/example) for DIY Prompt Kit tab
 - `messages/ro/spec.json` — Romanian translations of all `spec.promptKit.*` keys with correct diacritics; key parity with EN maintained
+- `messages/en/templates.json` — added `templates.aiEditor.*` keys covering page title, header actions, reset confirm dialog, preview panel, chat UI, save success toast, and entry point labels
+- `messages/ro/templates.json` — Romanian translations of all `templates.aiEditor.*` keys; ICU three-form plurals (one/few/other) for sectionCount and questionCount; key parity with EN maintained
 - `src/lib/ai/schemas/__tests__/template-chat.test.ts` — Wave 0 RED test stub for `templateChatResponseSchema` and `ChatTurnResponse` type; 5 tests covering valid/invalid parse cases; fails with module-not-found until Wave 1 (17-02) creates the implementation
 - `src/lib/ai/prompts/__tests__/template-editor.test.ts` — Wave 0 RED test stub for `buildTemplateEditorSystemPrompt`; 5 tests covering schema spec, methodology, scoreWeight sections, and optional existingTemplate embedding; fails with module-not-found until Wave 1
 - `src/lib/ai/__tests__/service.test.ts` — Wave 0 RED test stub for `withLanguageInstruction`; 4 tests covering ro/de language injection and en/undefined passthrough; fails because function is not yet exported from service.ts
-- `src/lib/templates/__tests__/import-schema.test.ts` — extended with `DIY kit worked example` describe block (2 tests); 9-question realistic Engineering 1:1 template covering 3 sections, mixed answer types, and scoreWeight variety; validates against existing `templateImportSchema` (GREEN from Wave 0)
+- `src/lib/templates/__tests__/import-schema.test.ts` — extended with `DIY kit worked example` describe block (4 tests); 9-question realistic Engineering 1:1 template covering 3 sections, mixed answer types (text, rating_1_5, yes_no), and scoreWeight variety (0,1,2,3); validates against existing `templateImportSchema` (GREEN from Wave 0)
 - `src/lib/auth/__tests__/rbac.test.ts` — 5 Vitest unit tests for `canManageTemplates`; all pass GREEN (rbac.ts already implemented)
 - `src/global.d.ts` — added `spec.json` to Messages type union for next-intl type safety
 - `src/lib/templates/export-schema.ts` — `TemplateExport` interface, `SCHEMA_VERSION` constant, and `buildExportPayload()` function; converts Drizzle decimal scoreWeight to JS number, strips all UUIDs, remaps conditional references to sortOrder integers

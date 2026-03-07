@@ -189,6 +189,49 @@
       "operatorGt": "greater than",
       "operatorLte": "at most",
       "operatorGte": "at least"
+    },
+    "aiEditor": {
+      "pageTitle": "AI Template Editor",
+      "header": {
+        "newTemplate": "New Template",
+        "editTemplate": "Edit Template",
+        "save": "Save Template",
+        "reset": "Reset",
+        "back": "Back to Templates",
+        "backToBuilder": "Back to Builder"
+      },
+      "resetConfirm": {
+        "title": "Start over?",
+        "description": "This will clear the template and conversation. This cannot be undone.",
+        "confirm": "Start Over",
+        "cancel": "Cancel"
+      },
+      "preview": {
+        "title": "Template Preview",
+        "empty": "Your template will appear here as you chat",
+        "sectionCount": "{count, plural, one {# section} other {# sections}}",
+        "questionCount": "{count, plural, one {# question} other {# questions}}",
+        "answerTypeLabel": {
+          "text": "Text",
+          "rating_1_5": "Rating 1–5",
+          "rating_1_10": "Rating 1–10",
+          "yes_no": "Yes / No",
+          "multiple_choice": "Multiple Choice",
+          "mood": "Mood",
+          "scale_custom": "Custom Scale"
+        }
+      },
+      "chat": {
+        "placeholder": "Describe your team, goals, or ask for changes...",
+        "send": "Send",
+        "thinking": "Thinking...",
+        "errorToast": "AI generation failed. Please try again."
+      },
+      "saveSuccess": "Template saved",
+      "entryPoints": {
+        "generateWithAI": "Generate with AI",
+        "editWithAI": "Edit with AI"
+      }
     }
   }
 }

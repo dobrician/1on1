@@ -3,7 +3,8 @@
 ## Milestones
 
 - v1.0 MVP -- Phases 1-10 (shipped 2026-03-05)
-- v1.1 Internationalization -- Phases 11-14 (in progress)
+- v1.1 Internationalization -- Phases 11-14 (complete 2026-03-07)
+- v1.2 AI-Ready Templates -- Phases 15-17 (in progress)
 
 ## Phases
 
@@ -25,7 +26,8 @@ Full details: `.planning/milestones/v1.0-ROADMAP.md`
 
 </details>
 
-### v1.1 Internationalization (In Progress)
+<details>
+<summary>v1.1 Internationalization (Phases 11-14) -- COMPLETE 2026-03-07</summary>
 
 **Milestone Goal:** Add i18n support with two language layers -- UI language (per-user, browser locale default) and content language (per-company, admin setting) -- starting with English and Romanian.
 
@@ -33,6 +35,16 @@ Full details: `.planning/milestones/v1.0-ROADMAP.md`
 - [x] **Phase 12: UI Translation** - Language switcher, ALL string extraction, locale-aware formatting, validation error translation (completed 2026-03-06)
 - [x] **Phase 13: Email Translation** - All email templates in correct language, standalone translator for background jobs (completed 2026-03-06)
 - [x] **Phase 14: Romanian & Quality** - Complete Romanian translations, plural forms, diacritics, layout verification, CI key parity, hardcoded string audit (completed 2026-03-07)
+
+</details>
+
+### v1.2 AI-Ready Templates (In Progress)
+
+**Milestone Goal:** Give every user the tools to leverage AI as a template co-author -- in-app generator, portable JSON export/import, and a DIY prompt kit for external AI tools. All content in the company's language.
+
+- [ ] **Phase 15: Schema, Spec & Export** - JSON schema spec with methodology and weight docs, single-template portable JSON export
+- [ ] **Phase 16: Template Import** - JSON upload with preview, language mismatch warning, conflict resolution, field-specific validation errors
+- [ ] **Phase 17: AI Generator & DIY Kit** - In-app AI template generation in company language, copyable prompt kit for external AI tools
 
 ## Phase Details
 
@@ -100,20 +112,53 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 14-01-PLAN.md — Diacritic fixes (~100 corrections across 6 ro.json files) and ICU plural three-form fixes (add `few` to 6 keys in analytics.json + sessions.json)
-- [ ] 14-02-PLAN.md — CI key parity Vitest test, hardcoded English string elimination in 3 components, layout overflow verification
+- [x] 14-01-PLAN.md — Diacritic fixes (~100 corrections across 6 ro.json files) and ICU plural three-form fixes (add `few` to 6 keys in analytics.json + sessions.json)
+- [x] 14-02-PLAN.md — CI key parity Vitest test, hardcoded English string elimination in 3 components, layout overflow verification
+
+### Phase 15: Schema, Spec & Export
+**Goal**: Users can access the canonical JSON schema spec with methodology and weight system documentation, and export any template as a portable, tenant-neutral JSON file that any organization can import
+**Depends on**: Phase 14 (v1.1 complete)
+**Requirements**: SPEC-01, SPEC-02, SPEC-03, EXP-01, EXP-02, EXP-03, EXP-04, EXP-05
+**Success Criteria** (what must be TRUE):
+  1. An admin can open the template schema documentation page, view the full JSON schema (all fields, types, and constraints), and download or copy it -- the schema itself is always in English as a technical standard
+  2. An admin reading the methodology docs sees the core 1:1 principles and question-quality guidance rendered in the company's content language (not hardcoded English)
+  3. An admin reading the weight system docs sees how `scoreWeight` affects analytics, valid value ranges, and worked examples -- all rendered in the company's content language
+  4. An admin or manager clicks "Export" on any template in the template list or builder, and a `.json` file downloads with `schemaVersion`, `language`, all question metadata (`scoreWeight`, `answerConfig`, conditional logic, section structure), and no internal tenant IDs or per-org UUIDs
+**Plans**: TBD
+
+### Phase 16: Template Import
+**Goal**: Users can import a template from a portable JSON file with full visibility into what they are importing, warnings about mismatches, and actionable error messages if the file is invalid
+**Depends on**: Phase 15
+**Requirements**: IMP-01, IMP-02, IMP-03, IMP-04, IMP-05
+**Success Criteria** (what must be TRUE):
+  1. An admin or manager uploads a `.json` file from the template list and sees a preview -- template name, section count, question count, and question type breakdown -- before any data is written
+  2. When the imported file's `language` field does not match the company's content language, the user sees a warning (naming both languages) and must explicitly confirm before proceeding
+  3. When a template with the same name already exists, the user is offered three choices -- rename, create as copy, or cancel -- and the import only proceeds after an explicit choice
+  4. When the uploaded file fails validation, the user sees field-specific error messages (e.g., "Question 3, field `answerType`: invalid value `checkbox`") rather than a generic failure toast
+**Plans**: TBD
+
+### Phase 17: AI Generator & DIY Kit
+**Goal**: Users can generate a complete, ready-to-use template draft through an in-app AI flow, and can access a copyable prompt kit to build templates with external AI tools on their own
+**Depends on**: Phase 15
+**Requirements**: AIGEN-01, AIGEN-02, AIGEN-03, AIGEN-04, DIY-01, DIY-02
+**Success Criteria** (what must be TRUE):
+  1. An admin or manager opens "Generate with AI", describes their team and meeting goals in plain text, and receives a complete template draft (name, sections, questions with help text) within the generation flow -- all question text is in the company's content language
+  2. The generated template draft appears in a preview showing name, section count, and question type breakdown before any data is saved -- user can accept, discard, or open the template builder to edit before saving
+  3. The AI generation prompt includes the JSON schema spec, methodology principles, and weight system documentation as structured context so that generated templates conform to the schema and follow 1:1 best practices
+  4. A user accesses the DIY prompt kit page, sees the full copyable block (JSON schema + methodology principles + worked example), and the narrative and example content render in the company's content language (the JSON schema block itself remains in English)
+**Plans**: TBD
 
 ## Progress
 
 **Execution Order:**
-Phase 11 first (foundation). Then Phases 12 and 13 are parallelizable. Phase 14 gates on both 12 and 13 (all English keys must be locked).
+Phase 15 first (schema is prerequisite for export format, import validation, and AI context). Phase 16 and 17 are parallelizable after Phase 15.
 
 ```
-Phase 11 (foundation)
+Phase 15 (schema + export)
   |
-  +---> Phase 12 (UI translation)  ---+
-  |                                    +---> Phase 14 (Romanian & QA)
-  +---> Phase 13 (email translation) -+
+  +---> Phase 16 (import)         ---+
+  |                                   +--> v1.2 complete
+  +---> Phase 17 (AI gen + DIY)  ---+
 ```
 
 | Phase | Milestone | Plans Complete | Status | Completed |
@@ -128,7 +173,10 @@ Phase 11 (foundation)
 | 8. Manager Dashboard & Analytics | v1.0 | 7/7 | Complete | 2026-03-04 |
 | 9. Email Notifications | v1.0 | 2/2 | Complete | 2026-03-05 |
 | 10. Integration & Polish | v1.0 | 5/5 | Complete | 2026-03-05 |
-| 11. i18n Foundation | 2/2 | Complete    | 2026-03-05 | - |
-| 12. UI Translation | 6/6 | Complete    | 2026-03-06 | - |
-| 13. Email Translation | 3/3 | Complete    | 2026-03-06 | - |
-| 14. Romanian & Quality | 2/2 | Complete   | 2026-03-07 | - |
+| 11. i18n Foundation | v1.1 | 2/2 | Complete | 2026-03-05 |
+| 12. UI Translation | v1.1 | 6/6 | Complete | 2026-03-06 |
+| 13. Email Translation | v1.1 | 3/3 | Complete | 2026-03-06 |
+| 14. Romanian & Quality | v1.1 | 2/2 | Complete | 2026-03-07 |
+| 15. Schema, Spec & Export | v1.2 | 0/? | Not started | - |
+| 16. Template Import | v1.2 | 0/? | Not started | - |
+| 17. AI Generator & DIY Kit | v1.2 | 0/? | Not started | - |

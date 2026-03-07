@@ -5,9 +5,9 @@ milestone_name: AI-Ready Templates
 status: planning
 stopped_at: ""
 last_updated: "2026-03-07T00:00:00.000Z"
-last_activity: "2026-03-07 -- Milestone v1.2 started, requirements defined"
+last_activity: "2026-03-07 -- Roadmap created: 3 phases (15-17), 19 requirements mapped"
 progress:
-  total_phases: 0
+  total_phases: 3
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -21,39 +21,34 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-07)
 
 **Core value:** The AI context layer that makes every meeting smarter than the last
-**Current focus:** v1.2 AI-Ready Templates -- Requirements defined, roadmap pending
+**Current focus:** v1.2 AI-Ready Templates -- Roadmap defined, Phase 15 next
 
 ## Current Position
 
-Phase: Not started (roadmap pending)
+Phase: Phase 15 (Schema, Spec & Export) -- not started
 Plan: —
-Status: Defining roadmap
-Last activity: 2026-03-07 -- Milestone v1.2 started, requirements defined (19 requirements across SPEC/EXP/IMP/AIGEN/DIY)
+Status: Ready for planning
+Last activity: 2026-03-07 -- Roadmap created for v1.2 (3 phases, 19 requirements, 100% coverage)
 
 Progress: [░░░░░░░░░░] 0%
 
 ## Performance Metrics
 
-**Velocity:**
-- Total plans completed: 6 (v1.1)
-- Average duration: 6.7min
-- Total execution time: 40min
+**Velocity (v1.1 reference):**
+- Total plans completed: 13 (v1.1 complete)
+- Average duration: ~6-8min per plan
+- Total execution time: ~90min (v1.1)
 
-**By Phase:**
+**By Phase (v1.1):**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 11-i18n-foundation | 2/2 | 9min | 4.5min |
 | 12-ui-translation | 6/6 | 31min | 5.2min |
+| 13-email-translation | 3/3 | 15min | 5.0min |
+| 14-romanian-quality | 2/2 | 12min | 6.0min |
 
 *Updated after each plan completion*
-| Phase 12 P03 | 15min | 2 tasks | 14 files |
-| Phase 12 P06 | 3min | 2 tasks | 7 files |
-| Phase 13-email-translation P01 | 2 | 2 tasks | 4 files |
-| Phase 13-email-translation P02 | 5min | 2 tasks | 13 files |
-| Phase 13-email-translation P03 | 8 | 2 tasks | 7 files |
-| Phase 14-romanian-quality P01 | 8 | 2 tasks | 6 files |
-| Phase 14-romanian-quality P02 | 4 | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -61,7 +56,7 @@ Progress: [░░░░░░░░░░] 0%
 
 Archived to PROJECT.md Key Decisions table. Full v1.0 decisions in `.planning/milestones/v1.0-ROADMAP.md`.
 
-Recent decisions affecting current work:
+v1.1 decisions archived below for reference:
 - [v1.1 roadmap revised]: Consolidated 8 phases into 4 -- Phase 12 is the big phase (16 requirements: all UI strings + formatting + validation errors)
 - [v1.1 roadmap revised]: Phases 12 and 13 parallelizable after Phase 11; Phase 14 gates on both
 - [v1.1 roadmap]: Single dependency: next-intl v4 (no date-fns, no translation platform)
@@ -83,19 +78,30 @@ Recent decisions affecting current work:
 - [12-04]: Mood emoji placeholders kept as English defaults (user-customizable, not UI chrome)
 - [Phase 12]: Session components use nested translation namespaces and inline format.dateTime() for all dates
 - [Phase 12]: sessionStarted key in sessions.detail namespace, corrected from plan
-- [Phase 13-email-translation]: use-intl/core createTranslator chosen for email translation — works outside Next.js request lifecycle unlike next-intl/server
-- [Phase 13-email-translation]: Messages loaded via fs/promises readFile at call time — no module caching issues in background jobs
-- [Phase 13-email-translation]: Locale fallback to en for unsupported locales — prevents crashes when future locales added before translations exist
+- [Phase 13-email-translation]: use-intl/core createTranslator chosen for email translation -- works outside Next.js request lifecycle unlike next-intl/server
+- [Phase 13-email-translation]: Messages loaded via fs/promises readFile at call time -- no module caching issues in background jobs
+- [Phase 13-email-translation]: Locale fallback to en for unsupported locales -- prevents crashes when future locales added before translations exist
 - [Phase 13-email-translation]: Style constants renamed with *Style suffix at import to avoid collision with translated string props of same name (heading, paragraph, button)
-- [Phase 13-email-translation]: Call sites updated with English placeholder strings + TODO(13-03) markers — codebase stays TypeScript-clean between plans
-- [Phase 13-email-translation]: SessionSummaryLabels typed interface used as labels prop bag — cleaner API than 13 individual top-level props
+- [Phase 13-email-translation]: Call sites updated with English placeholder strings + TODO(13-03) markers -- codebase stays TypeScript-clean between plans
+- [Phase 13-email-translation]: SessionSummaryLabels typed interface used as labels prop bag -- cleaner API than 13 individual top-level props
 - [Phase 13-email-translation]: translator.ts messages typed as Record<string, any> so TypeScript can traverse nested use-intl/core key paths without resolving to never
-- [Phase 13-email-translation]: Per-recipient labels bags (labelsReport/labelsManager) in summary-email.ts differ only in greeting — spread baseLabels and override greeting
-- [Phase 13-email-translation]: Date formatting stays as toLocaleDateString('en-US') in sender.ts — locale-aware email date formatting deferred to future phase
-- [Phase 14-01]: eliminat (past participle) correctly has no diacritic — word-boundary regex needed to distinguish from verb elimina; audit confirmed 0 true bad forms
-- [Phase 14-01]: few and other ICU plural forms use identical surface text per CLDR spec — correct duplication for Romanian
-- [Phase 14-02]: queryFn throws HTTP status code string instead of English message — keeps all user-visible text in translation layer
-- [Phase 14-02]: exitWizard key is sr-only but still translated — screen reader users in Romanian locale deserve native language labels
+- [Phase 13-email-translation]: Per-recipient labels bags (labelsReport/labelsManager) in summary-email.ts differ only in greeting -- spread baseLabels and override greeting
+- [Phase 13-email-translation]: Date formatting stays as toLocaleDateString('en-US') in sender.ts -- locale-aware email date formatting deferred to future phase
+- [Phase 14-01]: eliminat (past participle) correctly has no diacritic -- word-boundary regex needed to distinguish from verb elimina; audit confirmed 0 true bad forms
+- [Phase 14-01]: few and other ICU plural forms use identical surface text per CLDR spec -- correct duplication for Romanian
+- [Phase 14-02]: queryFn throws HTTP status code string instead of English message -- keeps all user-visible text in translation layer
+- [Phase 14-02]: exitWizard key is sr-only but still translated -- screen reader users in Romanian locale deserve native language labels
+
+### v1.2 Roadmap Decisions
+
+- [v1.2 roadmap]: 3 phases -- Phase 15 (SPEC+EXP), Phase 16 (IMP), Phase 17 (AIGEN+DIY)
+- [v1.2 roadmap]: SPEC bundled with EXP in Phase 15 -- schema definition and export are the same delivery unit (define the format, then produce it)
+- [v1.2 roadmap]: DIY bundled with AIGEN in Phase 17 -- both are AI-facing authoring surfaces; DIY content is a subset of AIGEN context; no benefit to a separate micro-phase
+- [v1.2 roadmap]: Phase 16 (IMP) depends on Phase 15 (imports must validate against the schema EXP produces)
+- [v1.2 roadmap]: Phase 17 (AIGEN+DIY) depends on Phase 15 (AI generation uses schema + methodology as prompt context); parallelizable with Phase 16
+- [v1.2 roadmap]: i18n is a cross-cutting constraint -- all UI, docs, and AI-generated content must use company content language; not a separate phase
+- [v1.2 roadmap]: scoreWeight is already in DB schema (decimal 4,2 default 1) and template builder UI -- no DB migration needed for Phase 15
+- [v1.2 roadmap]: AI SDK already wired (session summaries, nudges, action items) -- Phase 17 extends existing pipeline
 
 ### Blockers/Concerns
 
@@ -103,6 +109,6 @@ None active.
 
 ## Session Continuity
 
-Last session: 2026-03-07T06:14:44.119Z
-Stopped at: Checkpoint: 14-02 Task 3 human-verify — awaiting visual confirmation of Romanian strings and layout
+Last session: 2026-03-07
+Stopped at: Roadmap creation -- v1.2 phases 15-17 defined, ready for Phase 15 planning
 Resume file: None

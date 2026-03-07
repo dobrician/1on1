@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.2.1] - 2026-03-07
+
+### Added
+- Layered sparklines on series cards: overlay one faded `<Area>` per numeric question with `scoreWeight > 0.5` on top of the main AI assessment sparkline; colors deterministically assigned by hashing question text against a 10-color palette; opacity scales with weight via `((w-0.5)/1.5)*0.18+0.02`
+- `backfill-card-blurb.ts` script: generates missing `cardBlurb` for sessions where AI summary predates the field, using existing `keyTakeaways` + `discussionHighlights`
+
+### Fixed
+- Numeric question answers (rating_1_5, mood) now normalized to 1–100 scale (×20) before rendering in sparkline, matching the AI assessment axis; `rating_1_10` uses ×10
+- Session cards for Catalin Prodan (SoftexCo) now display AI summary blurbs — backfilled 7 sessions on stable DB
+
 ## [1.2.0] - 2026-03-07
 
 ### Added

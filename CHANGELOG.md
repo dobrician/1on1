@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Fixed
+- `src/components/series/session-timeline.tsx` — fix badge variant semantics (DES-02): `in_progress` → `"default"` (active/high-weight), `completed` → `"outline"` (receded/done); export `statusVariant` for unit tests
+
 ### Added
 - `src/components/ui/__tests__/empty-state.test.tsx` — failing tests (RED/Wave 0) for DES-04 EmptyState component: heading, description, icon, action slot, and no-crash with optional props absent
 - `src/components/session/__tests__/section-label.test.tsx` — failing tests (RED/Wave 0) for DES-03 SectionLabel: asserts className does not contain 'uppercase' or 'tracking-wide'

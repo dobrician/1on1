@@ -21,12 +21,12 @@ interface SessionTimelineProps {
   sessions: SessionEntry[];
 }
 
-const statusVariant: Record<
+export const statusVariant: Record<
   string,
   "default" | "secondary" | "outline" | "destructive"
 > = {
-  completed: "secondary",
-  in_progress: "outline",
+  completed: "outline",
+  in_progress: "default",
   scheduled: "outline",
   cancelled: "destructive",
   missed: "destructive",

@@ -5,6 +5,7 @@ import { contentToHtml } from "@/lib/session/tiptap-render";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar, CheckCircle2, Circle, Clock } from "lucide-react";
+import { StarRating } from "@/components/ui/star-rating";
 
 interface PreviousSession {
   id: string;
@@ -83,11 +84,7 @@ export function RecapScreen({
                       Session #{lastSession.sessionNumber}
                     </CardTitle>
                     <div className="flex items-center gap-2">
-                      {lastSession.sessionScore != null && (
-                        <Badge variant="secondary">
-                          {t("score", { score: format.number(lastSession.sessionScore, { maximumFractionDigits: 1, minimumFractionDigits: 1 }) })}
-                        </Badge>
-                      )}
+                      <StarRating score={lastSession.sessionScore} size="sm" />
                       <span className="flex items-center gap-1 text-xs text-muted-foreground">
                         <Clock className="h-3 w-3" />
                         {lastSession.completedAt

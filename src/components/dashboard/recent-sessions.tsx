@@ -1,21 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
 import { Clock, FileText } from "lucide-react";
-import { cn } from "@/lib/utils";
 import type { RecentSession } from "@/lib/queries/dashboard";
 import { useTranslations, useFormatter } from "next-intl";
 import { EmptyState } from "@/components/ui/empty-state";
+import { StarRating } from "@/components/ui/star-rating";
 
 interface RecentSessionsProps {
   sessions: RecentSession[];
-}
-
-function scoreBadgeVariant(score: number): string {
-  if (score >= 4) return "bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300";
-  if (score >= 3) return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-300";
-  return "bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300";
 }
 
 export function RecentSessions({ sessions }: RecentSessionsProps) {
@@ -56,17 +49,7 @@ export function RecentSessions({ sessions }: RecentSessionsProps) {
               </p>
             )}
           </div>
-          {s.sessionScore !== null && (
-            <Badge
-              variant="secondary"
-              className={cn(
-                "shrink-0 tabular-nums",
-                scoreBadgeVariant(s.sessionScore)
-              )}
-            >
-              {format.number(s.sessionScore, { maximumFractionDigits: 1, minimumFractionDigits: 1 })}
-            </Badge>
-          )}
+          <StarRating score={s.sessionScore} size="sm" className="shrink-0" />
         </Link>
       ))}
     </div>

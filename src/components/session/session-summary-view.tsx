@@ -10,6 +10,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import { StarRating } from "@/components/ui/star-rating";
 import {
   ChevronDown,
   ChevronRight,
@@ -286,31 +287,16 @@ export function SessionSummaryView({
       </div>
 
       {/* Score card */}
-      <div
-        className={`mb-8 rounded-lg border p-6 text-center ${
-          sessionScore !== null
-            ? getScoreBgColor(sessionScore)
-            : "bg-muted/30"
-        }`}
-      >
+      <div className="mb-8 rounded-lg border p-6 text-center bg-muted/30">
+        <div className="flex justify-center">
+          <StarRating score={sessionScore} size="lg" />
+        </div>
         {sessionScore !== null ? (
-          <>
-            <p
-              className={`text-4xl font-bold tabular-nums ${getScoreColor(sessionScore)}`}
-            >
-              {format.number(sessionScore, { maximumFractionDigits: 1, minimumFractionDigits: 1 })}
-            </p>
-            <p className="mt-1 text-sm text-muted-foreground">{t("summary.outOf")}</p>
-          </>
+          <p className="mt-2 text-sm tabular-nums text-muted-foreground">
+            {format.number(sessionScore, { maximumFractionDigits: 1, minimumFractionDigits: 1 })} {t("summary.outOf")}
+          </p>
         ) : (
-          <>
-            <p className="text-lg font-medium text-muted-foreground">
-              {t("summary.noScore")}
-            </p>
-            <p className="mt-1 text-sm text-muted-foreground">
-              {t("summary.noScoreDesc")}
-            </p>
-          </>
+          <p className="mt-2 text-sm text-muted-foreground">{t("summary.noScore")}</p>
         )}
       </div>
 

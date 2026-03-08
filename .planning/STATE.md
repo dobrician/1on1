@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: UI/UX Improvements
 status: planning
-stopped_at: "Completed 20-01-PLAN.md (3 RED tests: MOB-03 nudge touch target, MOB-04 people column meta, MOB-05 audit log target header)"
-last_updated: "2026-03-08T08:15:59.640Z"
+stopped_at: Completed 20-03-PLAN.md (MOB-04 people table meta.className, MOB-05 audit log target hidden)
+last_updated: "2026-03-08T08:20:51.296Z"
 last_activity: 2026-03-08 — v1.3 roadmap created (6 phases, 31 requirements mapped)
 progress:
   total_phases: 6
   completed_phases: 2
   total_plans: 10
-  completed_plans: 7
+  completed_plans: 8
   percent: 61
 ---
 
@@ -55,6 +55,7 @@ Progress: [████████████████░░░░░░░
 | Phase 19-design-system P03 | 3 | 2 tasks | 4 files |
 | Phase 19-design-system P02 | 5 | 2 tasks | 11 files |
 | Phase 20-mobile-responsiveness P01 | 525553 | 3 tasks | 6 files |
+| Phase 20-mobile-responsiveness P03 | 3 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -78,6 +79,7 @@ Recent decisions affecting current work:
 - [Phase 19-design-system]: EmptyState action prop accepts undefined — conditional CTAs use canCreate ? <CTA /> : undefined pattern
 - [Phase 20-mobile-responsiveness]: jest-dom setupFiles added globally to vitest.config.ts to ensure consistent DOM matcher availability across all test files
 - [Phase 20-mobile-responsiveness]: AuditLogClient test requires one mock entry because table only renders when entries.length > 0
+- [Phase 20-mobile-responsiveness]: Secondary people columns (email, teams, manager, status) hidden on mobile via TanStack Table meta.className pattern; audit log Target column hidden on mobile with direct className
 
 ### Pending Todos
 
@@ -89,6 +91,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-08T08:15:59.637Z
-Stopped at: Completed 20-01-PLAN.md (3 RED tests: MOB-03 nudge touch target, MOB-04 people column meta, MOB-05 audit log target header)
+Last session: 2026-03-08T08:20:51.293Z
+Stopped at: Completed 20-03-PLAN.md (MOB-04 people table meta.className, MOB-05 audit log target hidden)
 Resume file: None

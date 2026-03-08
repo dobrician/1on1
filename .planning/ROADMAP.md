@@ -160,7 +160,7 @@ Plans:
 | 15. Schema, Spec & Export | v1.2 | 4/4 | Complete | 2026-03-07 |
 | 16. Template Import | v1.2 | 5/5 | Complete | 2026-03-07 |
 | 17. AI Generator & DIY Kit | v1.2 | 7/7 | Complete | 2026-03-07 |
-| 18. Critical Bugs | 1/3 | In Progress|  | — |
+| 18. Critical Bugs | 2/3 | In Progress|  | — |
 | 19. Design System | v1.3 | 0/? | Not started | — |
 | 20. Mobile Responsiveness | v1.3 | 0/? | Not started | — |
 | 21. Content & Data Display | v1.3 | 0/? | Not started | — |

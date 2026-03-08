@@ -41,6 +41,7 @@ import {
   ChevronDown,
   ChevronRight,
   Wand2,
+  MoreHorizontal,
 } from "lucide-react";
 import {
   createTemplateSchema,
@@ -79,6 +80,13 @@ import { QuestionCard } from "./question-card";
 import { QuestionForm } from "./question-form";
 import { ExportButton } from "@/components/templates/export-button";
 import { canManageTemplates } from "@/lib/auth/rbac";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 type TemplateFormValues = z.infer<typeof createTemplateSchema>;
 
@@ -245,6 +253,9 @@ export function TemplateEditor({ template, userRole }: TemplateEditorProps) {
   const [expandedSections, setExpandedSections] = useState<Set<number>>(
     new Set(sections.map((_, i) => i))
   );
+
+  // Controlled archive dialog state (used by mobile overflow menu to avoid Radix focus-trap conflict)
+  const [archiveDialogOpen, setArchiveDialogOpen] = useState(false);
 
   // DnD sensors
   const sensors = useSensors(
@@ -562,85 +573,170 @@ export function TemplateEditor({ template, userRole }: TemplateEditorProps) {
         </Button>
 
         {!isCreateMode && canEdit && (
-          <div className="flex items-center gap-2">
-            {canManageTemplates(userRole) && (
-              <Button variant="outline" size="sm" asChild>
-                <Link href={`/templates/${template!.id}/ai-editor`}>
-                  <Wand2 className="mr-2 h-4 w-4" />
-                  {t("aiEditor.entryPoints.editWithAI")}
-                </Link>
-              </Button>
-            )}
-            {canManageTemplates(userRole) && (
-              <ExportButton templateId={template!.id} variant="full" />
-            )}
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => publishMutation.mutate()}
-              disabled={publishMutation.isPending}
-            >
-              {template.isPublished ? (
-                <>
-                  <GlobeLock className="mr-2 h-4 w-4" />
-                  {t("editor.unpublish")}
-                </>
-              ) : (
-                <>
-                  <Globe className="mr-2 h-4 w-4" />
-                  {t("editor.publish")}
-                </>
+          <>
+            {/* DESKTOP layout: full button row (hidden on mobile) */}
+            <div className="hidden md:flex items-center gap-2">
+              {canManageTemplates(userRole) && (
+                <Button variant="outline" size="sm" asChild>
+                  <Link href={`/templates/${template!.id}/ai-editor`}>
+                    <Wand2 className="mr-2 h-4 w-4" />
+                    {t("aiEditor.entryPoints.editWithAI")}
+                  </Link>
+                </Button>
               )}
-            </Button>
-
-            {isAdminUser && !template.isDefault && (
+              {canManageTemplates(userRole) && (
+                <ExportButton templateId={template!.id} variant="full" />
+              )}
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => setDefaultMutation.mutate()}
-                disabled={setDefaultMutation.isPending}
+                onClick={() => publishMutation.mutate()}
+                disabled={publishMutation.isPending}
               >
-                <Star className="mr-2 h-4 w-4" />
-                {t("editor.setDefault")}
+                {template.isPublished ? (
+                  <>
+                    <GlobeLock className="mr-2 h-4 w-4" />
+                    {t("editor.unpublish")}
+                  </>
+                ) : (
+                  <>
+                    <Globe className="mr-2 h-4 w-4" />
+                    {t("editor.publish")}
+                  </>
+                )}
               </Button>
-            )}
-
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => duplicateMutation.mutate()}
-              disabled={duplicateMutation.isPending}
-            >
-              <Copy className="mr-2 h-4 w-4" />
-              {t("editor.duplicate")}
-            </Button>
-
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button variant="outline" size="sm">
-                  <Archive className="mr-2 h-4 w-4" />
-                  {t("editor.archive")}
+              {isAdminUser && !template.isDefault && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setDefaultMutation.mutate()}
+                  disabled={setDefaultMutation.isPending}
+                >
+                  <Star className="mr-2 h-4 w-4" />
+                  {t("editor.setDefault")}
                 </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>{t("editor.archiveTitle")}</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    {t("editor.archiveDesc", { name: template.name })}
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>{t("editor.archiveCancel")}</AlertDialogCancel>
-                  <AlertDialogAction
-                    onClick={() => archiveMutation.mutate()}
-                    disabled={archiveMutation.isPending}
+              )}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => duplicateMutation.mutate()}
+                disabled={duplicateMutation.isPending}
+              >
+                <Copy className="mr-2 h-4 w-4" />
+                {t("editor.duplicate")}
+              </Button>
+              {/* Desktop: AlertDialog with inline trigger (unchanged) */}
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="outline" size="sm">
+                    <Archive className="mr-2 h-4 w-4" />
+                    {t("editor.archive")}
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>{t("editor.archiveTitle")}</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      {t("editor.archiveDesc", { name: template.name })}
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>{t("editor.archiveCancel")}</AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={() => archiveMutation.mutate()}
+                      disabled={archiveMutation.isPending}
+                    >
+                      {archiveMutation.isPending ? t("editor.archiving") : t("editor.archiveConfirm")}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </div>
+
+            {/* MOBILE layout: overflow menu (visible only below md) */}
+            <div className="flex md:hidden items-center gap-2">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="icon">
+                    <MoreHorizontal className="h-4 w-4" />
+                    <span className="sr-only">More actions</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  {canManageTemplates(userRole) && (
+                    <DropdownMenuItem asChild>
+                      <Link href={`/templates/${template!.id}/ai-editor`}>
+                        <Wand2 className="mr-2 h-4 w-4" />
+                        {t("aiEditor.entryPoints.editWithAI")}
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
+                  <DropdownMenuItem
+                    onSelect={() => publishMutation.mutate()}
+                    disabled={publishMutation.isPending}
                   >
-                    {archiveMutation.isPending ? t("editor.archiving") : t("editor.archiveConfirm")}
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-          </div>
+                    {template.isPublished ? (
+                      <>
+                        <GlobeLock className="mr-2 h-4 w-4" />
+                        {t("editor.unpublish")}
+                      </>
+                    ) : (
+                      <>
+                        <Globe className="mr-2 h-4 w-4" />
+                        {t("editor.publish")}
+                      </>
+                    )}
+                  </DropdownMenuItem>
+                  {isAdminUser && !template.isDefault && (
+                    <DropdownMenuItem
+                      onSelect={() => setDefaultMutation.mutate()}
+                      disabled={setDefaultMutation.isPending}
+                    >
+                      <Star className="mr-2 h-4 w-4" />
+                      {t("editor.setDefault")}
+                    </DropdownMenuItem>
+                  )}
+                  <DropdownMenuItem
+                    onSelect={() => duplicateMutation.mutate()}
+                    disabled={duplicateMutation.isPending}
+                  >
+                    <Copy className="mr-2 h-4 w-4" />
+                    {t("editor.duplicate")}
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  {/* Archive: opens controlled AlertDialog — does NOT nest AlertDialogTrigger inside DropdownMenuItem */}
+                  <DropdownMenuItem
+                    className="text-destructive focus:text-destructive"
+                    onSelect={() => setArchiveDialogOpen(true)}
+                  >
+                    <Archive className="mr-2 h-4 w-4" />
+                    {t("editor.archive")}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              {/* Controlled AlertDialog — opened by mobile dropdown menu item */}
+              <AlertDialog open={archiveDialogOpen} onOpenChange={setArchiveDialogOpen}>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>{t("editor.archiveTitle")}</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      {t("editor.archiveDesc", { name: template.name })}
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>{t("editor.archiveCancel")}</AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={() => archiveMutation.mutate()}
+                      disabled={archiveMutation.isPending}
+                    >
+                      {archiveMutation.isPending ? t("editor.archiving") : t("editor.archiveConfirm")}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </div>
+          </>
         )}
       </div>
 

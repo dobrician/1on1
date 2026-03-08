@@ -18,6 +18,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `src/app/(dashboard)/settings/audit-log/audit-log-client.tsx` — Target column (TableHead + TableCell) hidden on mobile with `hidden md:table-cell`; actor email sub-line hidden on mobile with `hidden md:block` (MOB-05)
 
 ### Changed
+- `src/components/series/series-card.tsx` — replaced hollow-star rating row with conditional numeric score Badge; no stars render for any case; Badge (variant=secondary) shows numeric score (e.g. "4.2") only for completed sessions with a score (CON-02, CON-03)
 - `src/components/series/series-list.tsx` — replaced inline `border-dashed` empty-state with `<EmptyState>` (DES-04)
 - `src/components/dashboard/recent-sessions.tsx` — replaced inline empty-state with `<EmptyState>` (DES-04)
 - `src/components/dashboard/upcoming-series-cards.tsx` — replaced inline empty-state with `<EmptyState>` (DES-04)

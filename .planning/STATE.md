@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: UI/UX Improvements
 status: planning
-stopped_at: Completed 21-01-PLAN.md (CON-02/CON-03 numeric score badge on series card)
-last_updated: "2026-03-08T09:01:05.966Z"
+stopped_at: Completed 21-02-PLAN.md (CON-04 collapsible CategoryStep sections with count badges)
+last_updated: "2026-03-08T09:04:39.917Z"
 last_activity: 2026-03-08 — v1.3 roadmap created (6 phases, 31 requirements mapped)
 progress:
   total_phases: 6
   completed_phases: 3
   total_plans: 14
-  completed_plans: 11
+  completed_plans: 12
   percent: 61
 ---
 
@@ -59,6 +59,7 @@ Progress: [████████████████░░░░░░░
 | Phase 20-mobile-responsiveness P02 | 10 | 3 tasks | 4 files |
 | Phase 20-mobile-responsiveness P04 | 8 | 1 tasks | 2 files |
 | Phase 21-content-data-display P01 | 5 | 1 tasks | 2 files |
+| Phase 21-content-data-display P02 | 5 | 1 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -87,6 +88,7 @@ Recent decisions affecting current work:
 - [Phase 20-mobile-responsiveness]: AlertDialogTrigger NOT nested inside DropdownMenuItem — controlled archiveDialogOpen state pattern used instead to avoid Radix focus-trap conflict
 - [Phase 20-mobile-responsiveness]: Template editor mobile overflow: ExportButton omitted from mobile dropdown (renders own dialog); available from template list card
 - [Phase 21-content-data-display]: Score shown as numeric Badge not stars on series cards — CON-02/CON-03 satisfied
+- [Phase 21-content-data-display]: Count Badge omitted when count = 0 in CategoryStep sections — cleaner UI for empty Talking Points/Action Items
 
 ### Pending Todos
 
@@ -98,6 +100,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-08T09:01:05.964Z
-Stopped at: Completed 21-01-PLAN.md (CON-02/CON-03 numeric score badge on series card)
+Last session: 2026-03-08T09:04:39.914Z
+Stopped at: Completed 21-02-PLAN.md (CON-04 collapsible CategoryStep sections with count badges)
 Resume file: None

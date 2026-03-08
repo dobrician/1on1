@@ -13,6 +13,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 - `src/lib/session/__tests__/tiptap-render.test.ts` — added `@vitest-environment happy-dom` annotation so `generateHTML` (which requires DOM APIs) works correctly in the test environment (BUG-01)
+- `src/components/session/recap-screen.tsx` — replaced raw `__html: content` with `__html: contentToHtml(content)` to fix [object Object] display for Tiptap JSON notes (BUG-01); removed dashed-border sparkline placeholder div (BUG-04)
 
 ## [1.2.1] - 2026-03-07
 

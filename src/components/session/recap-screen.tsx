@@ -1,6 +1,7 @@
 "use client";
 
 import { useTranslations, useFormatter } from "next-intl";
+import { contentToHtml } from "@/lib/session/tiptap-render";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar, CheckCircle2, Circle, Clock } from "lucide-react";
@@ -116,7 +117,7 @@ export function RecapScreen({
                               </p>
                               <div
                                 className="prose prose-sm max-w-none dark:prose-invert"
-                                dangerouslySetInnerHTML={{ __html: content }}
+                                dangerouslySetInnerHTML={{ __html: contentToHtml(content) }}
                               />
                             </div>
                           )
@@ -135,9 +136,6 @@ export function RecapScreen({
                     </div>
                   )}
 
-                  <div className="rounded-md border border-dashed p-3 text-center text-xs text-muted-foreground">
-                    Score trend sparkline (Plan 03)
-                  </div>
                 </CardContent>
               </Card>
             )}

@@ -8,6 +8,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 - `src/components/people/people-table-columns.tsx` — add `meta: { className: "hidden md:table-cell" }` to email, teams, manager, status columns; add ColumnMeta module augmentation (MOB-04)
+
+### Fixed
+- `src/components/dashboard/nudge-card.tsx` — dismiss button touch target raised to 44×44px (`size-11`) on mobile; always visible (`opacity-100`); desktop reverts to 28px hover-only (`md:size-7 md:opacity-0 md:group-hover:opacity-100`) (MOB-03)
 - `src/components/people/people-table.tsx` — TableHead and TableCell read `meta?.className` from column definition for responsive column visibility (MOB-04)
 
 ### Changed

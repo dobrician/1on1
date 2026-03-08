@@ -108,7 +108,7 @@ export function NudgeCard({ nudge, onDismissed }: NudgeCardProps) {
         <Button
           variant="ghost"
           size="icon"
-          className="size-7 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
+          className="size-11 shrink-0 opacity-100 md:size-7 md:opacity-0 md:group-hover:opacity-100 transition-opacity"
           onClick={() => dismissMutation.mutate()}
           disabled={dismissMutation.isPending}
           title={t("dismiss")}

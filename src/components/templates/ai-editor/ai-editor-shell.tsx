@@ -10,6 +10,7 @@ import type { TemplateExport } from "@/lib/templates/export-schema";
 import type { ChatTurnResponse } from "@/lib/ai/schemas/template-chat";
 import type { AiChatMessage, AiVersionSnapshot } from "@/lib/ai/editor-types";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -300,8 +301,8 @@ export function AiEditorShell({
         </div>
       </header>
 
-      {/* Main split-screen */}
-      <div className="flex flex-1 overflow-hidden">
+      {/* Desktop layout: side-by-side panels with drag resize (lg and above) */}
+      <div className="hidden lg:flex flex-1 overflow-hidden">
         {/* Left: Template Preview */}
         <div className="flex-1 overflow-y-auto p-6">
           <div className="flex items-center justify-between mb-4">
@@ -331,13 +332,49 @@ export function AiEditorShell({
           onMouseDown={handleDragStart}
         />
 
-        {/* Right: Chat — resizable column */}
+        {/* Right: Chat */}
         <div className="shrink-0 flex flex-col overflow-hidden" style={{ width: chatWidth }}>
           <ChatPanel messages={messages} isLoading={isLoading} />
           <div className="border-t p-4 shrink-0">
             <ChatInput onSend={handleSend} disabled={isLoading} />
           </div>
         </div>
+      </div>
+
+      {/* Mobile layout: tab-based toggle between Preview and Chat (below lg) */}
+      <div className="flex flex-col flex-1 overflow-hidden lg:hidden">
+        <Tabs defaultValue="preview" className="flex flex-col flex-1 overflow-hidden">
+          <TabsList className="mx-4 mt-3 shrink-0">
+            <TabsTrigger value="preview" className="flex-1">
+              {t("aiEditor.preview.title")}
+            </TabsTrigger>
+            <TabsTrigger value="chat" className="flex-1">
+              Chat
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent value="preview" className="flex-1 overflow-y-auto p-4 mt-0">
+            {versions.length > 0 && (
+              <select
+                value={selectedVersionIdx ?? versions.length - 1}
+                onChange={(e) => handleVersionSelect(Number(e.target.value))}
+                className="mb-3 text-xs border rounded px-2 py-1 bg-background text-foreground cursor-pointer w-full"
+              >
+                {versions.map((v, i) => (
+                  <option key={i} value={i}>
+                    {formatVersionTimestamp(v.timestamp)}
+                  </option>
+                ))}
+              </select>
+            )}
+            <TemplatePreviewPanel template={currentTemplate} />
+          </TabsContent>
+          <TabsContent value="chat" className="flex flex-col flex-1 overflow-hidden mt-0">
+            <ChatPanel messages={messages} isLoading={isLoading} />
+            <div className="border-t p-4 shrink-0">
+              <ChatInput onSend={handleSend} disabled={isLoading} />
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
 
       {/* Reset confirmation */}

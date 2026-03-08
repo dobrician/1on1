@@ -43,11 +43,12 @@ The AI context layer that makes every meeting smarter than the last — knowing 
 
 ### Active
 
-- [ ] Playwright E2E testing suite with GitHub Actions CI, SMTP mocking, role-switching helpers (v1.3)
+- [ ] UI/UX audit closure: 3 critical bugs + 5 high + 8 medium + 10 low + 4 design system items (v1.3)
+- [ ] Playwright E2E testing suite with GitHub Actions CI, SMTP mocking, role-switching helpers (v1.4)
 
 ### Future
 
-- **v1.3 planned:** Playwright E2E testing suite with CI integration (GitHub Actions), SMTP mocking, role-switching helpers, full edge case + regression coverage, designed for maintainability and future-proof expansion
+- **v1.4 planned:** Playwright E2E testing suite with CI integration (GitHub Actions), SMTP mocking, role-switching helpers, full edge case + regression coverage, designed for maintainability and future-proof expansion
 - AI personal profiles built from accumulated session data (pgvector embeddings)
 - AI live suggestions during active sessions (streaming, low latency)
 - AI-generated growth narratives ("Over Q1, Alex improved communication by 23%...")
@@ -74,16 +75,18 @@ The AI context layer that makes every meeting smarter than the last — knowing 
 - Manager scoring / ranking — creates perverse incentives
 - Multi-language template translations — questionnaires defined in one language per company, no per-template multi-language support yet
 
-## Current Milestone: v1.3 Playwright Testing Suite (Planning)
+## Current Milestone: v1.3 UI/UX Improvements
 
-**Goal:** Comprehensive E2E testing suite that covers all critical user flows, CI-integrated via GitHub Actions, with SMTP mocking, role-switching helpers, full edge cases and regression coverage — maintainable and expandable with every new feature going forward.
+**Goal:** Systematically close all findings from the March 2026 UX audit — fix 3 critical bugs, resolve 5 high-priority structural issues, address 8 medium polish items, clear 10 low-priority items, and establish 4 design-system conventions — elevating the app from 6.5/10 to 8.5/10.
 
 **Target features:**
-- Playwright test suite with GitHub Actions CI integration
-- SMTP mocking (no real email in CI)
-- Role-switching test helpers (admin/manager/member flows)
-- Full edge case and regression coverage for all existing features
-- Designed for future maintainability and expansion
+- Fix rendering bugs: Tiptap [object Object] in recap, AI editor mobile layout, spec i18n keys
+- Standardize design system: single primary button color, badge severity scale, section header casing, reusable empty-state component
+- Mobile responsiveness: AI editor responsive layout, template action bars, touch targets
+- Content density: analytics overview aggregate metrics, star rating removal, empty states
+- Low-priority polish: placeholders, casing, card borders, mobile table layouts
+
+**Note:** v1.4 will be the Playwright Testing Suite (previously planned as v1.3).
 
 ## Context
 
@@ -132,4 +135,4 @@ The AI context layer that makes every meeting smarter than the last — knowing 
 | Nodemailer over Resend | Works with any SMTP provider | ✓ Good — provider flexibility |
 
 ---
-*Last updated: 2026-03-07 after v1.2 milestone (AI-Ready Templates)*
+*Last updated: 2026-03-08 after v1.3 milestone start (UI/UX Improvements from UX audit)*

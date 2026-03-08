@@ -8,6 +8,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 - `src/components/series/session-timeline.tsx` — fix badge variant semantics (DES-02): `in_progress` → `"default"` (active/high-weight), `completed` → `"outline"` (receded/done); export `statusVariant` for unit tests
+- `src/components/session/category-step.tsx` — remove `uppercase` and `tracking-wide` from `SectionLabel` className (DES-03)
+- `src/components/session/summary-screen.tsx` — remove `uppercase` and `tracking-wider` from all 3 section header `<p>` elements (DES-03)
+- `src/components/session/session-summary-view.tsx` — remove `uppercase` and `tracking-wider` from all 4 section header `<p>` elements (DES-03; includes private-notes header with flex layout)
+- DES-01 verified: no hardcoded color overrides on auth page buttons; all auth `<Button>` elements resolve to `--primary` via default variant
 
 ### Added
 - `src/components/ui/empty-state.tsx` — shared EmptyState component (DES-04): typed props (icon, heading, description, action, className), renders centered dashed-border container; replaces inline empty-state patterns across 10 call sites

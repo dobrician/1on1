@@ -304,7 +304,7 @@ export function SummaryScreen({
 
               {/* Notes */}
               <div className="mt-4">
-                <p className="mb-1 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                <p className="mb-1 text-xs font-medium text-muted-foreground">
                   {t("notes")}
                 </p>
                 {catNotes && catNotes !== "<p></p>" ? (
@@ -322,7 +322,7 @@ export function SummaryScreen({
               {/* Talking points */}
               {catTalkingPoints.length > 0 && (
                 <div className="mt-4">
-                  <p className="mb-1 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                  <p className="mb-1 text-xs font-medium text-muted-foreground">
                     {t("talkingPoints")}
                   </p>
                   <div className="space-y-1">
@@ -356,7 +356,7 @@ export function SummaryScreen({
               {/* Action items */}
               {catActionItems.length > 0 && (
                 <div className="mt-4">
-                  <p className="mb-1 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                  <p className="mb-1 text-xs font-medium text-muted-foreground">
                     {t("actionItemsLabel")}
                   </p>
                   <div className="space-y-1">

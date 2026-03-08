@@ -55,12 +55,18 @@ function SectionLabel({
   label: string;
 }) {
   return (
-    <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground uppercase tracking-wide">
+    <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
       <Icon className="size-3.5" />
       {label}
     </div>
   );
 }
+
+/** Test helpers — exported for unit tests only, not for use in application code. */
+export const categoryStepTestHelpers = {
+  getSectionLabelClassName: () =>
+    "flex items-center gap-1.5 text-xs font-medium text-muted-foreground",
+};
 
 export function CategoryStep({
   sessionId,

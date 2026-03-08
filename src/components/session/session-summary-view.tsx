@@ -377,7 +377,7 @@ export function SessionSummaryView({
 
                 {/* Shared notes */}
                 <div className="mt-4">
-                  <p className="mb-1 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                  <p className="mb-1 text-xs font-medium text-muted-foreground">
                     {t("summary.notes")}
                   </p>
                   {category.sharedNotes &&
@@ -398,7 +398,7 @@ export function SessionSummaryView({
                 {/* Talking points */}
                 {category.talkingPoints.length > 0 && (
                   <div className="mt-4">
-                    <p className="mb-1 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                    <p className="mb-1 text-xs font-medium text-muted-foreground">
                       {t("summary.talkingPoints")}
                     </p>
                     <div className="space-y-1">
@@ -432,7 +432,7 @@ export function SessionSummaryView({
                 {/* Action items */}
                 {category.actionItems.length > 0 && (
                   <div className="mt-4">
-                    <p className="mb-1 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                    <p className="mb-1 text-xs font-medium text-muted-foreground">
                       {t("summary.actionItemsLabel")}
                     </p>
                     <div className="space-y-1">
@@ -478,7 +478,7 @@ export function SessionSummaryView({
                 {/* Private notes */}
                 {category.privateNotes.length > 0 && (
                   <div className="mt-4">
-                    <p className="mb-1 text-xs font-medium uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+                    <p className="mb-1 text-xs font-medium text-muted-foreground flex items-center gap-1.5">
                       <Lock className="h-3 w-3" />
                       {t("summary.privateNotes")}
                     </p>

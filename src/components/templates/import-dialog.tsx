@@ -37,17 +37,25 @@ interface ImportDialogProps {
   currentUserRole: string;
   contentLanguage: string;
   onImportSuccess?: () => void;
+  // Optional controlled state — when provided, parent controls open/close
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
 export function ImportDialog({
   currentUserRole: _currentUserRole,
   contentLanguage,
   onImportSuccess,
+  open: controlledOpen,
+  onOpenChange,
 }: ImportDialogProps) {
   const t = useTranslations("templates");
   const queryClient = useQueryClient();
 
-  const [open, setOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
+  const isControlled = controlledOpen !== undefined;
+  const open = isControlled ? controlledOpen : internalOpen;
+  const setOpen = isControlled ? (onOpenChange ?? (() => {})) : setInternalOpen;
   const [step, setStep] = useState<ImportStep>("select");
   const [fileName, setFileName] = useState<string | null>(null);
   const [parsedPayload, setParsedPayload] = useState<TemplateImportPayload | null>(null);

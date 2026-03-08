@@ -9,7 +9,7 @@ import { z } from "zod";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { useApiErrorToast } from "@/lib/i18n/api-error-toast";
-import { Plus, FileText, Hash, BookOpen, Wand2 } from "lucide-react";
+import { Plus, FileText, Hash, BookOpen, Wand2, MoreHorizontal, Upload } from "lucide-react";
 import { EmptyState } from "@/components/ui/empty-state";
 import { canManageTemplates } from "@/lib/auth/rbac";
 import { ExportButton } from "@/components/templates/export-button";
@@ -31,6 +31,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -70,6 +76,7 @@ export function TemplateList({
   const t = useTranslations("templates");
   const { showApiError } = useApiErrorToast();
   const [createOpen, setCreateOpen] = useState(false);
+  const [importOpen, setImportOpen] = useState(false);
   const canCreate =
     currentUserRole === "admin" || currentUserRole === "manager";
 
@@ -129,32 +136,75 @@ export function TemplateList({
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between gap-2">
+        {/* Schema link — always visible */}
         <Link href="/templates/schema">
           <Button variant="ghost" size="sm">
             <BookOpen className="mr-2 h-4 w-4" />
             {t("export.schemaLink")}
           </Button>
         </Link>
+
         {canCreate && (
-          <div className="flex items-center gap-2">
-            {canManageTemplates(currentUserRole) && (
-              <Button variant="outline" size="sm" asChild>
-                <Link href="/templates/ai-editor">
-                  <Wand2 className="mr-2 h-4 w-4" />
-                  {t("aiEditor.entryPoints.generateWithAI")}
-                </Link>
+          <>
+            {/* DESKTOP layout: full button row (hidden on mobile) */}
+            <div className="hidden md:flex items-center gap-2">
+              {canManageTemplates(currentUserRole) && (
+                <Button variant="outline" size="sm" asChild>
+                  <Link href="/templates/ai-editor">
+                    <Wand2 className="mr-2 h-4 w-4" />
+                    {t("aiEditor.entryPoints.generateWithAI")}
+                  </Link>
+                </Button>
+              )}
+              <ImportDialog
+                currentUserRole={currentUserRole}
+                contentLanguage={contentLanguage}
+                onImportSuccess={() => queryClient.invalidateQueries({ queryKey: ["templates"] })}
+              />
+              <Button onClick={() => setCreateOpen(true)} size="sm">
+                <Plus className="mr-2 h-4 w-4" />
+                {t("createTemplate")}
               </Button>
-            )}
-            <ImportDialog
-              currentUserRole={currentUserRole}
-              contentLanguage={contentLanguage}
-              onImportSuccess={() => queryClient.invalidateQueries({ queryKey: ["templates"] })}
-            />
-            <Button onClick={() => setCreateOpen(true)} size="sm">
-              <Plus className="mr-2 h-4 w-4" />
-              {t("createTemplate")}
-            </Button>
-          </div>
+            </div>
+
+            {/* MOBILE layout: primary action + overflow menu (visible only below md) */}
+            <div className="flex md:hidden items-center gap-2">
+              <Button onClick={() => setCreateOpen(true)} size="sm">
+                <Plus className="mr-2 h-4 w-4" />
+                {t("createTemplate")}
+              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="icon">
+                    <MoreHorizontal className="h-4 w-4" />
+                    <span className="sr-only">More actions</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  {canManageTemplates(currentUserRole) && (
+                    <DropdownMenuItem asChild>
+                      <Link href="/templates/ai-editor">
+                        <Wand2 className="mr-2 h-4 w-4" />
+                        {t("aiEditor.entryPoints.generateWithAI")}
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
+                  <DropdownMenuItem onSelect={() => setImportOpen(true)}>
+                    <Upload className="mr-2 h-4 w-4" />
+                    {t("import.button")}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              {/* Controlled ImportDialog opened from mobile overflow menu */}
+              <ImportDialog
+                currentUserRole={currentUserRole}
+                contentLanguage={contentLanguage}
+                onImportSuccess={() => queryClient.invalidateQueries({ queryKey: ["templates"] })}
+                open={importOpen}
+                onOpenChange={setImportOpen}
+              />
+            </div>
+          </>
         )}
       </div>
 

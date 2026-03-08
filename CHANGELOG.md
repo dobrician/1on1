@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 - `src/components/people/people-table-columns.tsx` — add `meta: { className: "hidden md:table-cell" }` to email, teams, manager, status columns; add ColumnMeta module augmentation (MOB-04)
+- `src/components/templates/template-list.tsx` — mobile overflow menu (`DropdownMenu` with `MoreHorizontal` trigger) collapses secondary actions on screens below md; desktop full button row preserved with `hidden md:flex` / `flex md:hidden` dual-layout (MOB-01)
+- `src/components/templates/import-dialog.tsx` — optional `open`/`onOpenChange` controlled props; parent can open dialog from external trigger (e.g. mobile overflow menu)
 
 ### Fixed
 - `src/components/dashboard/nudge-card.tsx` — dismiss button touch target raised to 44×44px (`size-11`) on mobile; always visible (`opacity-100`); desktop reverts to 28px hover-only (`md:size-7 md:opacity-0 md:group-hover:opacity-100`) (MOB-03)

@@ -85,48 +85,46 @@
 
 ## Traceability
 
-Populated during roadmap creation.
-
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| BUG-01 | — | Pending |
-| BUG-02 | — | Pending |
-| BUG-03 | — | Pending |
-| BUG-04 | — | Pending |
-| DES-01 | — | Pending |
-| DES-02 | — | Pending |
-| DES-03 | — | Pending |
-| DES-04 | — | Pending |
-| MOB-01 | — | Pending |
-| MOB-02 | — | Pending |
-| MOB-03 | — | Pending |
-| MOB-04 | — | Pending |
-| MOB-05 | — | Pending |
-| CON-01 | — | Pending |
-| CON-02 | — | Pending |
-| CON-03 | — | Pending |
-| CON-04 | — | Pending |
-| CON-05 | — | Pending |
-| SAFE-01 | — | Pending |
-| ERR-01 | — | Pending |
-| INP-01 | — | Pending |
-| SCORE-01 | — | Pending |
-| POL-01 | — | Pending |
-| POL-02 | — | Pending |
-| POL-03 | — | Pending |
-| POL-04 | — | Pending |
-| POL-05 | — | Pending |
-| POL-06 | — | Pending |
-| POL-07 | — | Pending |
-| POL-08 | — | Pending |
-| POL-09 | — | Pending |
+| BUG-01 | Phase 18 | Pending |
+| BUG-02 | Phase 18 | Pending |
+| BUG-03 | Phase 18 | Pending |
+| BUG-04 | Phase 18 | Pending |
+| DES-01 | Phase 19 | Pending |
+| DES-02 | Phase 19 | Pending |
+| DES-03 | Phase 19 | Pending |
+| DES-04 | Phase 19 | Pending |
+| MOB-01 | Phase 20 | Pending |
+| MOB-02 | Phase 20 | Pending |
+| MOB-03 | Phase 20 | Pending |
+| MOB-04 | Phase 20 | Pending |
+| MOB-05 | Phase 20 | Pending |
+| CON-01 | Phase 21 | Pending |
+| CON-02 | Phase 21 | Pending |
+| CON-03 | Phase 21 | Pending |
+| CON-04 | Phase 21 | Pending |
+| CON-05 | Phase 21 | Pending |
+| SCORE-01 | Phase 21 | Pending |
+| SAFE-01 | Phase 22 | Pending |
+| ERR-01 | Phase 22 | Pending |
+| INP-01 | Phase 22 | Pending |
+| POL-01 | Phase 23 | Pending |
+| POL-02 | Phase 23 | Pending |
+| POL-03 | Phase 23 | Pending |
+| POL-04 | Phase 23 | Pending |
+| POL-05 | Phase 23 | Pending |
+| POL-06 | Phase 23 | Pending |
+| POL-07 | Phase 23 | Pending |
+| POL-08 | Phase 23 | Pending |
+| POL-09 | Phase 23 | Pending |
 
 **Coverage:**
 - v1.3 requirements: 31 total
-- Mapped to phases: 0 (pending roadmap)
-- Unmapped: 31 ⚠️
+- Mapped to phases: 31 ✓
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-03-08*
 *Source: UX audit of 35 screens × 4 configurations (desktop-light, desktop-dark, mobile-light, mobile-dark)*
-*Last updated: 2026-03-08 after initial definition*
+*Last updated: 2026-03-08 — traceability populated (phases 18-23)*

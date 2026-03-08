@@ -3,11 +3,11 @@ gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: UI/UX Improvements
 status: planning
-stopped_at: Defining requirements — v1.3 UI/UX milestone started
+stopped_at: Roadmap created — 6 phases (18-23), 31/31 requirements mapped
 last_updated: "2026-03-08T00:00:00.000Z"
-last_activity: 2026-03-08 -- Milestone v1.3 UI/UX Improvements started (from UX audit)
+last_activity: 2026-03-08 -- v1.3 roadmap created (phases 18-23, critical bugs through low-priority polish)
 progress:
-  total_phases: 0
+  total_phases: 6
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -18,146 +18,58 @@ progress:
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-03-07)
+See: .planning/PROJECT.md (updated 2026-03-08)
 
 **Core value:** The AI context layer that makes every meeting smarter than the last
-**Current focus:** v1.3 UI/UX Improvements — defining requirements from UX audit (March 2026)
+**Current focus:** Phase 18 — Critical Bugs (v1.3 UI/UX Improvements)
 
 ## Current Position
 
-Phase: Not started (defining requirements)
-Plan: —
-Status: Defining requirements
-Last activity: 2026-03-08 — Milestone v1.3 UI/UX Improvements started
+Phase: 18 of 23 (Critical Bugs)
+Plan: 0 of ? in current phase
+Status: Ready to plan
+Last activity: 2026-03-08 — v1.3 roadmap created (6 phases, 31 requirements mapped)
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [████████████████░░░░░░░░░░] 61% (phases 1-17 complete, 18-23 pending)
 
 ## Performance Metrics
 
-**Velocity (v1.1 reference):**
-- Total plans completed: 13 (v1.1 complete)
-- Average duration: ~6-8min per plan
-- Total execution time: ~90min (v1.1)
+**Velocity (v1.2 reference):**
+- Total plans completed: 69 (v1.0: 40 + v1.1: 13 + v1.2: 16)
+- Average duration: ~6-8 min per plan (v1.1/v1.2 reference)
+- Total execution time: ~7h (v1.2)
 
-**By Phase (v1.1):**
+**By Phase (v1.2):**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 11-i18n-foundation | 2/2 | 9min | 4.5min |
-| 12-ui-translation | 6/6 | 31min | 5.2min |
-| 13-email-translation | 3/3 | 15min | 5.0min |
-| 14-romanian-quality | 2/2 | 12min | 6.0min |
+| 15-schema-spec-export | 4/4 | ~2h | ~30min |
+| 16-template-import | 5/5 | ~2.5h | ~30min |
+| 17-ai-generator-diy-kit | 7/7 | ~2.5h | ~21min |
 
 *Updated after each plan completion*
-| Phase 15-schema-spec-export P01 | 3 | 2 tasks | 3 files |
-| Phase 15-schema-spec-export P02 | 20 | 2 tasks | 7 files |
-| Phase 15-schema-spec-export P03 | 5 | 2 tasks | 5 files |
-| Phase 15-schema-spec-export P04 | checkpoint | 1 tasks | 0 files |
-| Phase 16-template-import P01 | 5 | 2 tasks | 3 files |
-| Phase 16-template-import P02 | 14 | 2 tasks | 4 files |
-| Phase 16-template-import P03 | 8 | 1 tasks | 1 files |
-| Phase 16-template-import P04 | 8 | 2 tasks | 3 files |
-| Phase 17-ai-generator-diy-kit P03 | 3 | 2 tasks | 4 files |
-| Phase 17-ai-generator-diy-kit P01 | 4 | 3 tasks | 4 files |
-| Phase 17-ai-generator-diy-kit P02 | 8 | 2 tasks | 4 files |
-| Phase 17-ai-generator-diy-kit P04 | 3 | 1 tasks | 2 files |
-| Phase 17 P06 | 3 | 2 tasks | 4 files |
-| Phase 17-ai-generator-diy-kit P05 | 286 | 2 tasks | 6 files |
-| Phase 17-ai-generator-diy-kit P07 | 2 | 1 tasks | 0 files |
 
 ## Accumulated Context
 
 ### Decisions
 
-Archived to PROJECT.md Key Decisions table. Full v1.0 decisions in `.planning/milestones/v1.0-ROADMAP.md`.
+Decisions archived to PROJECT.md Key Decisions table and STATE.md history below.
+Recent decisions affecting current work:
 
-v1.1 decisions archived below for reference:
-- [v1.1 roadmap revised]: Consolidated 8 phases into 4 -- Phase 12 is the big phase (16 requirements: all UI strings + formatting + validation errors)
-- [v1.1 roadmap revised]: Phases 12 and 13 parallelizable after Phase 11; Phase 14 gates on both
-- [v1.1 roadmap]: Single dependency: next-intl v4 (no date-fns, no translation platform)
-- [11-01]: Manual migration SQL instead of drizzle-kit generate (interactive prompts incompatible with automation)
-- [11-01]: Accept-Language parsing uses 2-char extraction for simplicity
-- [11-01]: NEXT_LOCALE cookie maxAge set to 1 year
-- [11-02]: Hidden <data> element for formatting proof (no visual impact on login page)
-- [11-02]: Language names as proper nouns (English, Romana) not translated -- standard i18n convention
-- [11-02]: Full page reload after language switch (server-side message loading requires fresh request)
-- [12-01]: Zod v4 error map adapted -- single-arg signature, 'origin' not 'type', 'invalid_format' not 'invalid_string'
-- [12-01]: Zod schema .refine() messages remain English (schemas language-agnostic per design)
-- [12-01]: Server components use getTranslations, client components use useTranslations
-- [12-02]: nudge-card.tsx already locale-aware via t() keys -- no changes needed
-- [12-02]: useFormatter passed as parameter to helpers outside component scope
-- [12-05]: useFormatter() called at component level, captured in closures for Recharts callbacks
-- [12-05]: format.number() replaces all .toFixed() for locale-aware decimal display
-- [12-05]: Session component en-US references deferred -- out of scope for analytics/settings plan
-- [12-04]: Dynamic translation key lookup uses `as any` cast for TypeScript strict mode compatibility
-- [12-04]: Mood emoji placeholders kept as English defaults (user-customizable, not UI chrome)
-- [Phase 12]: Session components use nested translation namespaces and inline format.dateTime() for all dates
-- [Phase 12]: sessionStarted key in sessions.detail namespace, corrected from plan
-- [Phase 13-email-translation]: use-intl/core createTranslator chosen for email translation -- works outside Next.js request lifecycle unlike next-intl/server
-- [Phase 13-email-translation]: Messages loaded via fs/promises readFile at call time -- no module caching issues in background jobs
-- [Phase 13-email-translation]: Locale fallback to en for unsupported locales -- prevents crashes when future locales added before translations exist
-- [Phase 13-email-translation]: Style constants renamed with *Style suffix at import to avoid collision with translated string props of same name (heading, paragraph, button)
-- [Phase 13-email-translation]: Call sites updated with English placeholder strings + TODO(13-03) markers -- codebase stays TypeScript-clean between plans
-- [Phase 13-email-translation]: SessionSummaryLabels typed interface used as labels prop bag -- cleaner API than 13 individual top-level props
-- [Phase 13-email-translation]: translator.ts messages typed as Record<string, any> so TypeScript can traverse nested use-intl/core key paths without resolving to never
-- [Phase 13-email-translation]: Per-recipient labels bags (labelsReport/labelsManager) in summary-email.ts differ only in greeting -- spread baseLabels and override greeting
-- [Phase 13-email-translation]: Date formatting stays as toLocaleDateString('en-US') in sender.ts -- locale-aware email date formatting deferred to future phase
-- [Phase 14-01]: eliminat (past participle) correctly has no diacritic -- word-boundary regex needed to distinguish from verb elimina; audit confirmed 0 true bad forms
-- [Phase 14-01]: few and other ICU plural forms use identical surface text per CLDR spec -- correct duplication for Romanian
-- [Phase 14-02]: queryFn throws HTTP status code string instead of English message -- keeps all user-visible text in translation layer
-- [Phase 14-02]: exitWizard key is sr-only but still translated -- screen reader users in Romanian locale deserve native language labels
-- [Phase 15-01]: parseFloat(scoreWeight ?? '1') converts Drizzle decimal string to JS number at export boundary
-- [Phase 15-01]: conditionalOnQuestionId UUID remapped to sortOrder integer via pre-built Map; named conditionalOnQuestionSortOrder in export
-- [Phase 15-01]: RawTemplate internal types accept any superset -- allows export route to pass DB rows directly without explicit cast
-- [Phase 15-02]: bare Response (not NextResponse) for export route — consistent with analytics/export pattern, simpler for file downloads
-- [Phase 15-02]: getTranslations() without namespace + as any cast for spec namespace — TypeScript NamespaceKeys union exceeds complexity limit at 16+ namespaces
-- [Phase 15-02]: Romanian curly quotes replaced with angle quotes in spec.json — U+201D right double quote breaks JSON string parsing
-- [Phase 15-03]: ExportButton variant=icon placed in relative wrapper div alongside Link-wrapped Card to avoid nested interactive elements
-- [Phase 15-03]: Schema Docs link visible to all roles — documentation is universally useful regardless of role
-- [Phase 15-schema-spec-export]: Phase 15 (Schema, Spec & Export) verified complete via manual browser walkthrough of role-gating, download, and schema docs tabs
-- [Phase 16-template-import]: Fixture helpers copied inline (not imported across test files) — Vitest test files are not modules for cross-import
-- [Phase 16-template-import]: TDD Wave 0: test contracts written before implementation; module-not-found errors are the expected RED signal
-- [Phase 16-template-import]: zod CJS alias in vitest.config.ts — zod v4 ESM namespace binding breaks Vite SSR; CJS build resolves correctly
-- [Phase 16-template-import]: import-schema.ts uses import { z } from 'zod' consistent with all other validation files; zod alias routes to CJS
-- [Phase 16-03]: logAuditEvent called inside withTenantContext callback -- audit entry rolls back if insert fails
-- [Phase 16-03]: templateQuestions has no tenantId column -- omitted from insert values
-- [Phase 16-04]: Alert component absent from shadcn/ui install -- used inline div with Tailwind yellow classes for language mismatch warning
-- [Phase 16-04]: ImportDialog uses controlled open state (setOpen) + sibling file input -- avoids nested interactive element pitfall from DialogTrigger wrapping
-- [Phase 16-template-import]: Phase 16 (Template Import) verified complete via manual browser walkthrough of all 6 test scenarios — RBAC, happy path, language mismatch, conflict resolution, invalid file errors, dialog reset
-- [Phase 17-ai-generator-diy-kit]: RO preview uses ICU three-form plurals (one/few/other) for sectionCount and questionCount in aiEditor — matches CLDR spec for Romanian
-- [Phase 17-ai-generator-diy-kit]: aiEditor keys placed at same level as editor/import/export in templates namespace; spec.promptKit at same level as spec.schema/methodology/weights — mirrors page tab structure
-- [Phase 17-ai-generator-diy-kit]: Wave 0 (RED) test stubs import from modules that don't exist yet; module-not-found error is the expected CI failure
-- [Phase 17-ai-generator-diy-kit]: DIY_WORKED_EXAMPLE uses scoreWeight 0/1/2/3 variety and text/rating_1_5/yes_no/mood answer types — living spec for AI generator output
-- [Phase 17-ai-generator-diy-kit]: withLanguageInstruction tests import from '../service' directly; Wave 1 exports the private function
-- [Phase 17-ai-generator-diy-kit]: ModelMessage (not CoreMessage) is the AI SDK v4 type for messages — CoreMessage is not exported from 'ai'
-- [Phase 17-ai-generator-diy-kit]: z.record requires 2 args in zod v4: z.record(z.string(), z.unknown()) not z.record(z.unknown())
-- [Phase 17-ai-generator-diy-kit]: generateTemplateChatTurn uses ModelMessage[] for chat history; wraps errors with 'AI generation failed:' prefix
-- [Phase 17-ai-generator-diy-kit]: Used session.user.contentLanguage instead of DB query in ai-chat route — session already carries content language, no DB transaction needed, consistent with export route pattern
-- [Phase 17-ai-generator-diy-kit]: No withTenantContext in ai-chat route — AI call-only route needs no DB transaction context, avoids unnecessary overhead
-- [Phase 17-ai-generator-diy-kit]: No audit log for AI chat turns — template audited on explicit Save only (separate API call to existing endpoint)
-- [Phase 17]: Prompt kit block assembled server-side: translated section headers, English JSON content (technical standard not UI chrome)
-- [Phase 17]: PROMPT_KIT_EXAMPLE defined inline in schema page, not imported from test files — avoids test/production coupling
-- [Phase 17-05]: ScrollArea (shadcn/ui) not installed — replaced with overflow-y-auto div in ChatPanel and TemplatePreviewPanel for identical scroll behavior
-- [Phase 17-05]: Save for both new and existing templates uses POST /api/templates/import — avoids complexity of PATCH batch-save UUID tracking; clean import creates fresh copy with AI-generated content
-- [Phase 17-ai-generator-diy-kit]: Auto-advance config auto-approves human-verify checkpoint — pre-flight (vitest/tsc/build) all exit 0; Phase 17 verification complete
+- [v1.3 roadmap]: v1.3 is UI/UX Improvements (not Playwright Testing) — Playwright deferred to v1.4
+- [v1.3 roadmap]: Phase 22 (Safety/Errors/Inputs) depends on Phase 19 (Design System) — DES-04 empty-state component consumed by ERR-01 (404 page)
+- [v1.3 roadmap]: POL-02 (seed data fix "1:1 Structurat" → "1:1 Structured") affects seeded data only, not schema or migrations
 
-### v1.2 Roadmap Decisions
+### Pending Todos
 
-- [v1.2 roadmap]: 3 phases -- Phase 15 (SPEC+EXP), Phase 16 (IMP), Phase 17 (AIGEN+DIY)
-- [v1.2 roadmap]: SPEC bundled with EXP in Phase 15 -- schema definition and export are the same delivery unit (define the format, then produce it)
-- [v1.2 roadmap]: DIY bundled with AIGEN in Phase 17 -- both are AI-facing authoring surfaces; DIY content is a subset of AIGEN context; no benefit to a separate micro-phase
-- [v1.2 roadmap]: Phase 16 (IMP) depends on Phase 15 (imports must validate against the schema EXP produces)
-- [v1.2 roadmap]: Phase 17 (AIGEN+DIY) depends on Phase 15 (AI generation uses schema + methodology as prompt context); parallelizable with Phase 16
-- [v1.2 roadmap]: i18n is a cross-cutting constraint -- all UI, docs, and AI-generated content must use company content language; not a separate phase
-- [v1.2 roadmap]: scoreWeight is already in DB schema (decimal 4,2 default 1) and template builder UI -- no DB migration needed for Phase 15
-- [v1.2 roadmap]: AI SDK already wired (session summaries, nudges, action items) -- Phase 17 extends existing pipeline
+None yet.
 
 ### Blockers/Concerns
 
-None active.
+- Phase 22 depends on Phase 19 completing first — ERR-01 (404 page) should use DES-04 empty-state component; plan Phase 22 after Phase 19 is verified
 
 ## Session Continuity
 
-Last session: 2026-03-07T16:25:22.680Z
-Stopped at: Completed 17-07-PLAN.md (Phase 17 verification — v1.2 milestone complete)
+Last session: 2026-03-08
+Stopped at: Roadmap created — 6 phases (18-23), 31/31 requirements mapped, ROADMAP.md + STATE.md written
 Resume file: None

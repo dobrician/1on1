@@ -12,9 +12,9 @@
 ### Critical Bugs (BUG)
 
 - [x] **BUG-01**: User sees formatted rich-text content in wizard recap notes (not `[object Object]`) — fix `generateHTML()` conversion of Tiptap JSON before `dangerouslySetInnerHTML`
-- [ ] **BUG-02**: AI template editor is usable on mobile — responsive layout (stack panels vertically on <1024px or tab-based toggle)
-- [ ] **BUG-03**: Templates schema page displays translated UI text (not raw `spec.*` i18n keys) — add missing keys to `en.json` / `ro.json`
-- [ ] **BUG-04**: Sparkline placeholder dev artifact removed from recap screen — delete the dashed-border "Score trend sparkline (Plan 03)" div or replace with real component
+- [x] **BUG-02**: AI template editor is usable on mobile — responsive layout (stack panels vertically on <1024px or tab-based toggle)
+- [x] **BUG-03**: Templates schema page displays translated UI text (not raw `spec.*` i18n keys) — add missing keys to `en.json` / `ro.json`
+- [x] **BUG-04**: Sparkline placeholder dev artifact removed from recap screen — delete the dashed-border "Score trend sparkline (Plan 03)" div or replace with real component
 
 ### Design System (DES)
 
@@ -88,9 +88,9 @@
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | BUG-01 | Phase 18 | Complete |
-| BUG-02 | Phase 18 | Pending |
-| BUG-03 | Phase 18 | Pending |
-| BUG-04 | Phase 18 | Pending |
+| BUG-02 | Phase 18 | Complete |
+| BUG-03 | Phase 18 | Complete |
+| BUG-04 | Phase 18 | Complete |
 | DES-01 | Phase 19 | Pending |
 | DES-02 | Phase 19 | Pending |
 | DES-03 | Phase 19 | Pending |

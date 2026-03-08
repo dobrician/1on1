@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: UI/UX Improvements
 status: planning
-stopped_at: Completed 18-02-PLAN.md (GREEN phase — contentToHtml implemented, recap-screen fixed)
-last_updated: "2026-03-08T07:07:03.861Z"
+stopped_at: Completed 18-03-PLAN.md (spec.json i18n fix + AI editor mobile tab layout)
+last_updated: "2026-03-08T07:10:56.346Z"
 last_activity: 2026-03-08 — v1.3 roadmap created (6 phases, 31 requirements mapped)
 progress:
   total_phases: 6
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 3
-  completed_plans: 2
+  completed_plans: 3
   percent: 61
 ---
 
@@ -50,6 +50,7 @@ Progress: [████████████████░░░░░░░
 *Updated after each plan completion*
 | Phase 18-critical-bugs P01 | 3 | 1 tasks | 2 files |
 | Phase 18-critical-bugs P02 | 4 | 2 tasks | 4 files |
+| Phase 18-critical-bugs P03 | 3 | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -63,6 +64,7 @@ Recent decisions affecting current work:
 - [v1.3 roadmap]: POL-02 (seed data fix "1:1 Structurat" → "1:1 Structured") affects seeded data only, not schema or migrations
 - [Phase 18-critical-bugs]: contentToHtml Test 2 asserts result contains text 'Hello' rather than exact HTML — avoids fragility from Tiptap extension config differences
 - [Phase 18-critical-bugs]: contentToHtml uses generateHTML from @tiptap/core; happy-dom installed for Vitest DOM environment; extensions [StarterKit, Link] match notes-editor.tsx exactly
+- [Phase 18-critical-bugs]: aiEditor.chat.title key missing — used hardcoded 'Chat' string as fallback per plan instructions
 
 ### Pending Todos
 
@@ -74,6 +76,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-08T07:07:03.859Z
-Stopped at: Completed 18-02-PLAN.md (GREEN phase — contentToHtml implemented, recap-screen fixed)
+Last session: 2026-03-08T07:10:56.343Z
+Stopped at: Completed 18-03-PLAN.md (spec.json i18n fix + AI editor mobile tab layout)
 Resume file: None

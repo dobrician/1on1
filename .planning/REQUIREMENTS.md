@@ -26,7 +26,7 @@
 ### Mobile Responsiveness (MOB)
 
 - [x] **MOB-01**: Template list action bar fits within mobile viewport — overflow menu (`...`) collapses secondary actions below 768px
-- [ ] **MOB-02**: Template detail action bar fits within mobile viewport — overflow menu for secondary actions
+- [x] **MOB-02**: Template detail action bar fits within mobile viewport — overflow menu for secondary actions
 - [x] **MOB-03**: AI nudge dismiss button meets 44×44px minimum touch target (WCAG 2.5.5)
 - [x] **MOB-04**: People list is readable on mobile — card layout or priority columns visible (Name, Role)
 - [x] **MOB-05**: Audit log table is readable on mobile — card-based row layout or priority columns
@@ -96,7 +96,7 @@
 | DES-03 | Phase 19 | Complete |
 | DES-04 | Phase 19 | Complete |
 | MOB-01 | Phase 20 | Complete |
-| MOB-02 | Phase 20 | Pending |
+| MOB-02 | Phase 20 | Complete |
 | MOB-03 | Phase 20 | Complete |
 | MOB-04 | Phase 20 | Complete |
 | MOB-05 | Phase 20 | Complete |

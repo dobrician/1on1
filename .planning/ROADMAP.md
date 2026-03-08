@@ -57,7 +57,7 @@ Full details: `.planning/milestones/v1.2-ROADMAP.md`
 
 - [x] **Phase 18: Critical Bugs** — Fix 4 rendering bugs breaking content and layout (completed 2026-03-08)
 - [x] **Phase 19: Design System** — Establish consistent button colors, badge weights, casing, and empty-state component (completed 2026-03-08)
-- [ ] **Phase 20: Mobile Responsiveness** — Fix action bars, touch targets, and table layouts on mobile
+- [x] **Phase 20: Mobile Responsiveness** — Fix action bars, touch targets, and table layouts on mobile (completed 2026-03-08)
 - [ ] **Phase 21: Content & Data Display** — Analytics aggregate metrics, score display, session card data density
 - [ ] **Phase 22: Safety, Errors & Inputs** — Danger zones, 404 pages, date picker consistency
 - [ ] **Phase 23: Low-Priority Polish** — 9 small text, visual, and layout tweaks
@@ -171,7 +171,7 @@ Plans:
 | 17. AI Generator & DIY Kit | v1.2 | 7/7 | Complete | 2026-03-07 |
 | 18. Critical Bugs | 3/3 | Complete    | 2026-03-08 | — |
 | 19. Design System | 3/3 | Complete    | 2026-03-08 | — |
-| 20. Mobile Responsiveness | 3/4 | In Progress|  | — |
+| 20. Mobile Responsiveness | 4/4 | Complete   | 2026-03-08 | — |
 | 21. Content & Data Display | v1.3 | 0/? | Not started | — |
 | 22. Safety, Errors & Inputs | v1.3 | 0/? | Not started | — |
 | 23. Low-Priority Polish | v1.3 | 0/? | Not started | — |

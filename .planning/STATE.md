@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: UI/UX Improvements
 status: planning
-stopped_at: Completed 20-02-PLAN.md (MOB-03 nudge touch target fix, MOB-01 template list mobile overflow menu)
-last_updated: "2026-03-08T08:21:58.920Z"
+stopped_at: Completed 20-04-PLAN.md (MOB-02 template editor mobile overflow menu)
+last_updated: "2026-03-08T08:26:39.267Z"
 last_activity: 2026-03-08 — v1.3 roadmap created (6 phases, 31 requirements mapped)
 progress:
   total_phases: 6
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 10
-  completed_plans: 9
+  completed_plans: 10
   percent: 61
 ---
 
@@ -57,6 +57,7 @@ Progress: [████████████████░░░░░░░
 | Phase 20-mobile-responsiveness P01 | 525553 | 3 tasks | 6 files |
 | Phase 20-mobile-responsiveness P03 | 3 | 2 tasks | 3 files |
 | Phase 20-mobile-responsiveness P02 | 10 | 3 tasks | 4 files |
+| Phase 20-mobile-responsiveness P04 | 8 | 1 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -82,6 +83,8 @@ Recent decisions affecting current work:
 - [Phase 20-mobile-responsiveness]: AuditLogClient test requires one mock entry because table only renders when entries.length > 0
 - [Phase 20-mobile-responsiveness]: Secondary people columns (email, teams, manager, status) hidden on mobile via TanStack Table meta.className pattern; audit log Target column hidden on mobile with direct className
 - [Phase 20-mobile-responsiveness]: ImportDialog controlled props are optional; uncontrolled desktop trigger unchanged; mobile overflow uses onSelect+state to avoid portal conflicts
+- [Phase 20-mobile-responsiveness]: AlertDialogTrigger NOT nested inside DropdownMenuItem — controlled archiveDialogOpen state pattern used instead to avoid Radix focus-trap conflict
+- [Phase 20-mobile-responsiveness]: Template editor mobile overflow: ExportButton omitted from mobile dropdown (renders own dialog); available from template list card
 
 ### Pending Todos
 
@@ -93,6 +96,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-08T08:21:58.917Z
-Stopped at: Completed 20-02-PLAN.md (MOB-03 nudge touch target fix, MOB-01 template list mobile overflow menu)
+Last session: 2026-03-08T08:26:39.264Z
+Stopped at: Completed 20-04-PLAN.md (MOB-02 template editor mobile overflow menu)
 Resume file: None

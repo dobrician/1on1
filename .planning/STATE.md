@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: UI/UX Improvements
 status: planning
-stopped_at: Completed 20-04-PLAN.md (MOB-02 template editor mobile overflow menu)
-last_updated: "2026-03-08T08:30:17.357Z"
+stopped_at: Completed 21-01-PLAN.md (CON-02/CON-03 numeric score badge on series card)
+last_updated: "2026-03-08T09:01:05.966Z"
 last_activity: 2026-03-08 — v1.3 roadmap created (6 phases, 31 requirements mapped)
 progress:
   total_phases: 6
   completed_phases: 3
-  total_plans: 10
-  completed_plans: 10
+  total_plans: 14
+  completed_plans: 11
   percent: 61
 ---
 
@@ -58,6 +58,7 @@ Progress: [████████████████░░░░░░░
 | Phase 20-mobile-responsiveness P03 | 3 | 2 tasks | 3 files |
 | Phase 20-mobile-responsiveness P02 | 10 | 3 tasks | 4 files |
 | Phase 20-mobile-responsiveness P04 | 8 | 1 tasks | 2 files |
+| Phase 21-content-data-display P01 | 5 | 1 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -85,6 +86,7 @@ Recent decisions affecting current work:
 - [Phase 20-mobile-responsiveness]: ImportDialog controlled props are optional; uncontrolled desktop trigger unchanged; mobile overflow uses onSelect+state to avoid portal conflicts
 - [Phase 20-mobile-responsiveness]: AlertDialogTrigger NOT nested inside DropdownMenuItem — controlled archiveDialogOpen state pattern used instead to avoid Radix focus-trap conflict
 - [Phase 20-mobile-responsiveness]: Template editor mobile overflow: ExportButton omitted from mobile dropdown (renders own dialog); available from template list card
+- [Phase 21-content-data-display]: Score shown as numeric Badge not stars on series cards — CON-02/CON-03 satisfied
 
 ### Pending Todos
 
@@ -96,6 +98,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-08T08:26:39.264Z
-Stopped at: Completed 20-04-PLAN.md (MOB-02 template editor mobile overflow menu)
+Last session: 2026-03-08T09:01:05.964Z
+Stopped at: Completed 21-01-PLAN.md (CON-02/CON-03 numeric score badge on series card)
 Resume file: None

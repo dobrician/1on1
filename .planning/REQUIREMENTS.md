@@ -34,8 +34,8 @@
 ### Content Density & Empty States (CON)
 
 - [ ] **CON-01**: Analytics overview page shows aggregate company-wide metrics (score trend, sessions completed, action item rate) above the Teams/Individuals directory
-- [ ] **CON-02**: Session list cards with no completed sessions hide the star rating row
-- [ ] **CON-03**: Session list cards with sessions show numeric score badge (not hollow stars)
+- [x] **CON-02**: Session list cards with no completed sessions hide the star rating row
+- [x] **CON-03**: Session list cards with sessions show numeric score badge (not hollow stars)
 - [ ] **CON-04**: Talking Points and Action Items sections in wizard show item count badge and expand/collapse chevron
 - [ ] **CON-05**: Team heatmap shows a threshold message ("requires ≥3 contributors") when fewer than 3 contributors have session data
 
@@ -101,8 +101,8 @@
 | MOB-04 | Phase 20 | Complete |
 | MOB-05 | Phase 20 | Complete |
 | CON-01 | Phase 21 | Pending |
-| CON-02 | Phase 21 | Pending |
-| CON-03 | Phase 21 | Pending |
+| CON-02 | Phase 21 | Complete |
+| CON-03 | Phase 21 | Complete |
 | CON-04 | Phase 21 | Pending |
 | CON-05 | Phase 21 | Pending |
 | SCORE-01 | Phase 21 | Pending |

@@ -205,7 +205,7 @@
       "backToSeries": "Înapoi la serie",
       "sessionNumber": "Sesiunea #{number}",
       "duration": "{count} min",
-      "outOf": "din 5.0",
+      "outOf": "din 5",
       "noScore": "Fără scor",
       "noScoreDesc": "Nu există răspunsuri numerice pentru a calcula un scor",
       "notes": "Note",

@@ -205,7 +205,7 @@
       "backToSeries": "Back to series",
       "sessionNumber": "Session #{number}",
       "duration": "{count} min",
-      "outOf": "out of 5.0",
+      "outOf": "out of 5",
       "noScore": "No score",
       "noScoreDesc": "No numeric answers to compute a score",
       "notes": "Notes",

@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 - `src/components/analytics/team-heatmap.tsx` — contributor threshold guard: shows "Requires ≥3 contributors" message when 1-2 unique users have heatmap data (CON-05); i18n keys added to en/ro analytics.json
+- `messages/en/sessions.json`, `messages/ro/sessions.json` — fix session summary score label from "out of 5.0" to "out of 5" (SCORE-01)
 - `src/components/templates/template-editor.tsx` — dual-layout header: desktop full button row (`hidden md:flex`) and mobile overflow `DropdownMenu` (`flex md:hidden`) with controlled `AlertDialog` for archive action (MOB-02)
 - `src/components/people/people-table-columns.tsx` — add `meta: { className: "hidden md:table-cell" }` to email, teams, manager, status columns; add ColumnMeta module augmentation (MOB-04)
 - `src/components/templates/template-list.tsx` — mobile overflow menu (`DropdownMenu` with `MoreHorizontal` trigger) collapses secondary actions on screens below md; desktop full button row preserved with `hidden md:flex` / `flex md:hidden` dual-layout (MOB-01)

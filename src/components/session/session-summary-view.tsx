@@ -94,6 +94,8 @@ interface SessionSummaryViewProps {
   reportId: string;
   managerName: string;
   reportName: string;
+  managerTeam: string | null;
+  reportTeam: string | null;
 }
 
 // --- Helpers ---
@@ -230,6 +232,8 @@ export function SessionSummaryView({
   reportId,
   managerName,
   reportName,
+  managerTeam,
+  reportTeam,
 }: SessionSummaryViewProps) {
   const t = useTranslations("sessions");
   const format = useFormatter();
@@ -263,10 +267,12 @@ export function SessionSummaryView({
             {t("summary.sessionNumber", { number: sessionNumber })}{" "}
             <span className="font-bold">
               {isManager ? reportName : managerName}
-            </span>{" "}
-            <span className="font-normal text-muted-foreground text-lg">
-              ({isManager ? t("summary.roleReport") : t("summary.roleManager")})
             </span>
+            {(isManager ? reportTeam : managerTeam) && (
+              <span className="font-normal text-muted-foreground text-lg">
+                {" "}({isManager ? reportTeam : managerTeam})
+              </span>
+            )}
           </h1>
           <div className="shrink-0 text-right">
             <StarRating score={sessionScore} size="md" className="justify-end" />

@@ -12,6 +12,8 @@ import {
   talkingPoints,
   privateNotes,
   actionItems,
+  teams,
+  teamMembers,
 } from "@/lib/db/schema";
 import { eq, and, asc, inArray, sql } from "drizzle-orm";
 import { decryptNote, type EncryptedPayload } from "@/lib/encryption/private-notes";
@@ -73,8 +75,8 @@ export default async function SessionSummaryPage({
 
       const isManager = session.user.id === series.managerId;
 
-      // Fetch manager and report names for AI suggestions display
-      const [managerUser, reportUser] = await Promise.all([
+      // Fetch manager and report names + their first team
+      const [managerUser, reportUser, managerTeamRow, reportTeamRow] = await Promise.all([
         tx
           .select({ firstName: users.firstName, lastName: users.lastName })
           .from(users)
@@ -87,6 +89,20 @@ export default async function SessionSummaryPage({
           .where(eq(users.id, series.reportId))
           .limit(1)
           .then((rows) => rows[0]),
+        tx
+          .select({ name: teams.name })
+          .from(teamMembers)
+          .innerJoin(teams, eq(teamMembers.teamId, teams.id))
+          .where(eq(teamMembers.userId, series.managerId))
+          .limit(1)
+          .then((rows) => rows[0] ?? null),
+        tx
+          .select({ name: teams.name })
+          .from(teamMembers)
+          .innerJoin(teams, eq(teamMembers.teamId, teams.id))
+          .where(eq(teamMembers.userId, series.reportId))
+          .limit(1)
+          .then((rows) => rows[0] ?? null),
       ]);
 
       // Fetch all data in parallel
@@ -339,6 +355,8 @@ export default async function SessionSummaryPage({
         reportName: reportUser
           ? `${reportUser.firstName} ${reportUser.lastName}`
           : "Report",
+        managerTeam: managerTeamRow?.name ?? null,
+        reportTeam: reportTeamRow?.name ?? null,
       };
     }
   );
@@ -369,6 +387,8 @@ export default async function SessionSummaryPage({
       reportId={data.reportId}
       managerName={data.managerName}
       reportName={data.reportName}
+      managerTeam={data.managerTeam}
+      reportTeam={data.reportTeam}
     />
   );
 }

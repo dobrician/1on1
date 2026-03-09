@@ -9,7 +9,6 @@ import {
   FileText,
   History,
   ListChecks,
-  Sparkles,
   TrendingUp,
   Layers,
 } from "lucide-react";
@@ -29,7 +28,6 @@ import {
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import { ScoreSparkline } from "./score-sparkline";
-import { NudgeList } from "./nudge-list";
 import type { PreviousSession } from "./question-history-dialog";
 
 // Re-export for convenience
@@ -51,9 +49,6 @@ export interface FloatingContextWidgetsProps {
   }>;
   sessionScores: number[];
   onQuestionHistoryOpen: (questionId: string) => void;
-  seriesId?: string;
-  sessionId?: string;
-  isManager?: boolean;
 }
 
 // --- Helpers (moved from context-panel.tsx) ---
@@ -425,16 +420,13 @@ function WidgetContent(props: FloatingContextWidgetsProps) {
     openActionItems,
     sessionScores,
     onQuestionHistoryOpen,
-    seriesId,
-    sessionId,
-    isManager,
   } = props;
 
   const isRecap = currentStep === 0 || currentCategory === null;
 
   const hasNoHistory = previousSessions.length === 0 && openActionItems.length === 0;
 
-  if (hasNoHistory && !(isManager && seriesId && sessionId)) {
+  if (hasNoHistory) {
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center">
         <History className="size-8 text-muted-foreground/40 mb-2" />
@@ -453,11 +445,6 @@ function WidgetContent(props: FloatingContextWidgetsProps) {
         openActionItems={openActionItems}
         currentCategory={isRecap ? null : currentCategory}
       />
-
-      {/* AI Nudges -- manager only */}
-      {isManager && seriesId && sessionId && (
-        <NudgeList seriesId={seriesId} sessionId={sessionId} />
-      )}
 
       {/* Score Trend (only when enough data) */}
       {sessionScores.length >= 2 && (

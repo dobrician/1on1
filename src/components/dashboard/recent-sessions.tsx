@@ -35,10 +35,13 @@ export function RecentSessions({ sessions }: RecentSessionsProps) {
         >
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
+              <span className="text-xs text-muted-foreground shrink-0">
+                #{s.sessionNumber}
+              </span>
               <span className="text-sm font-medium truncate">
                 {s.reportName}
               </span>
-              <span className="flex items-center gap-1 text-xs text-muted-foreground">
+              <span className="flex items-center gap-1 text-xs text-muted-foreground shrink-0">
                 <Clock className="size-3" />
                 {format.dateTime(new Date(s.completedAt), { month: "short", day: "numeric" })}
               </span>

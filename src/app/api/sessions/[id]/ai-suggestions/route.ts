@@ -11,6 +11,8 @@ import {
 import { eq, and } from "drizzle-orm";
 import type { AIActionSuggestions } from "@/lib/ai/schemas/action-items";
 
+const STUCK_GENERATING_MS = 5 * 60 * 1000;
+
 const suggestionActionSchema = z.object({
   suggestionIndex: z.number().int().min(0),
   action: z.enum(["accept", "skip"]),
@@ -50,6 +52,7 @@ export async function GET(
             seriesId: sessions.seriesId,
             aiSuggestions: sessions.aiSuggestions,
             aiStatus: sessions.aiStatus,
+            updatedAt: sessions.updatedAt,
           })
           .from(sessions)
           .where(
@@ -86,8 +89,21 @@ export async function GET(
           return { error: "FORBIDDEN" as const };
         }
 
+        // Detect stuck "generating" sessions and auto-reset to "failed"
+        let effectiveStatus = sessionRecord.aiStatus;
+        if (effectiveStatus === "generating") {
+          const elapsed = Date.now() - sessionRecord.updatedAt.getTime();
+          if (elapsed > STUCK_GENERATING_MS) {
+            await tx
+              .update(sessions)
+              .set({ aiStatus: "failed", updatedAt: new Date() })
+              .where(eq(sessions.id, sessionId));
+            effectiveStatus = "failed";
+          }
+        }
+
         return {
-          status: sessionRecord.aiStatus,
+          status: effectiveStatus,
           suggestions: sessionRecord.aiSuggestions ?? null,
         };
       }

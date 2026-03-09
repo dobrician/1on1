@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useApiErrorToast } from "@/lib/i18n/api-error-toast";
 import { useTranslations } from "next-intl";
@@ -74,6 +74,7 @@ export function SeriesForm({ userGroups, templates }: SeriesFormProps) {
   const t = useTranslations("sessions");
   const { showApiError } = useApiErrorToast();
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const cadenceOptions = [
     { value: "weekly", label: t("form.weekly") },
@@ -136,7 +137,7 @@ export function SeriesForm({ userGroups, templates }: SeriesFormProps) {
     },
     onSuccess: () => {
       toast.success(t("form.created"));
-      router.refresh();
+      queryClient.invalidateQueries({ queryKey: ["series"] });
       router.push("/sessions");
     },
     onError: (error: Error) => {

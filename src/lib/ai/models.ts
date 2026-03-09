@@ -17,8 +17,6 @@ export const models = {
   summary: anthropic("claude-sonnet-4-5"),
   /** Manager addendum — short structured output, Haiku is sufficient. */
   managerAddendum: anthropic("claude-haiku-4-5"),
-  /** Nudges — simple, short output. */
-  nudges: anthropic("claude-haiku-4-5"),
   /** Action suggestions — input is already-generated summary, simple list task. */
   actionSuggestions: anthropic("claude-haiku-4-5"),
   /** Template AI editor — latest Sonnet for best domain reasoning quality. */

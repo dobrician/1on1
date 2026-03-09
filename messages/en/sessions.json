@@ -10,6 +10,8 @@
       "empty": "No meeting series yet",
       "emptyDesc": "Create your first 1:1 series to start scheduling sessions.",
       "create": "Create Series",
+      "showArchived": "Show archived ({count})",
+      "hideArchived": "Hide archived",
       "today": "Today",
       "tomorrow": "Tomorrow",
       "yesterday": "Yesterday",
@@ -160,10 +162,6 @@
       "cancel": "Cancel",
       "add": "Add",
       "addActionItem": "Add action item"
-    },
-    "nudges": {
-      "title": "AI Nudges",
-      "dismiss": "Dismiss"
     },
     "aiSuggestions": {
       "title": "AI Suggestions",

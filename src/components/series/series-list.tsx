@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { SeriesCard } from "./series-card";
 import { Button } from "@/components/ui/button";
-import { Plus, CalendarDays } from "lucide-react";
+import { Plus, CalendarDays, ChevronDown, ChevronRight, Archive } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { EmptyState } from "@/components/ui/empty-state";
 
@@ -38,8 +39,22 @@ interface SeriesListProps {
   currentUserId: string;
 }
 
+function SeriesGrid({ items, currentUserId, muted = false }: { items: Series[]; currentUserId: string; muted?: boolean }) {
+  return (
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 items-stretch">
+      {items.map((s) => (
+        <div key={s.id} className={muted ? "opacity-50" : undefined}>
+          <SeriesCard series={s} currentUserId={currentUserId} />
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export function SeriesList({ initialSeries, currentUserId }: SeriesListProps) {
   const t = useTranslations("sessions");
+  const [archivedOpen, setArchivedOpen] = useState(false);
+
   const { data: series } = useQuery<Series[]>({
     queryKey: ["series"],
     queryFn: async () => {
@@ -49,6 +64,9 @@ export function SeriesList({ initialSeries, currentUserId }: SeriesListProps) {
     },
     initialData: initialSeries,
   });
+
+  const activeSeries = series.filter((s) => s.status !== "archived");
+  const archivedSeries = series.filter((s) => s.status === "archived");
 
   if (series.length === 0) {
     return (
@@ -69,14 +87,32 @@ export function SeriesList({ initialSeries, currentUserId }: SeriesListProps) {
   }
 
   return (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-      {series.map((s) => (
-        <SeriesCard
-          key={s.id}
-          series={s}
-          currentUserId={currentUserId}
-        />
-      ))}
+    <div className="space-y-6">
+      {activeSeries.length > 0 && (
+        <SeriesGrid items={activeSeries} currentUserId={currentUserId} />
+      )}
+
+      {archivedSeries.length > 0 && (
+        <div>
+          <button
+            type="button"
+            onClick={() => setArchivedOpen((v) => !v)}
+            className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-3"
+          >
+            {archivedOpen ? (
+              <ChevronDown className="size-4" />
+            ) : (
+              <ChevronRight className="size-4" />
+            )}
+            <Archive className="size-3.5" />
+            {t("series.showArchived", { count: archivedSeries.length })}
+          </button>
+
+          {archivedOpen && (
+            <SeriesGrid items={archivedSeries} currentUserId={currentUserId} muted />
+          )}
+        </div>
+      )}
     </div>
   );
 }

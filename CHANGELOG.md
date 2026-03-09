@@ -6,6 +6,31 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Fixed
+- AI summary/suggestions polling now auto-detects sessions stuck in "generating" status (e.g. after server restart) and resets them to "failed" after 5 minutes, preventing infinite polling loops
+- Series creation page now invalidates the `["series"]` query cache before navigating back, so the new series appears immediately on the sessions page without requiring a manual refresh
+- Partial unique index on `meeting_series` now correctly allows creating a new series when a previous series for the same manager-report pair is archived
+
+## [1.3.5] - 2026-03-09
+
+### Changed
+- `src/components/series/series-list.tsx` — archived series are now hidden by default; a "Show archived (N)" ghost button at the bottom reveals them; active and paused series always shown
+
+### Added
+- `messages/en/sessions.json` + `messages/ro/sessions.json` — added `series.showArchived` and `series.hideArchived` translation keys
+
+## [1.3.4] - 2026-03-09
+
+### Removed
+- AI nudges feature entirely: deleted schema (`src/lib/db/schema/nudges.ts`), AI service functions (`generateNudges`), prompts, API routes (`/api/nudges`), dashboard components (`nudge-card`, `nudge-cards-grid`, `nudges-modal`), session components (`nudge-list`), email template nudge section, and all nudge i18n keys from `en/dashboard.json`, `ro/dashboard.json`, `en/sessions.json`, `ro/sessions.json`
+- DB migration `0016_drop_ai_nudge.sql` — drops `ai_nudge` table
+
+### Changed
+- `src/lib/ai/prompts/summary.ts` — added `## Previous Sessions` section with full per-answer detail from up to 3 prior sessions, giving the summary model cross-session trend context
+- `src/lib/ai/prompts/action-items.ts` — added previous session answers and full series action item history to prompt; AI now avoids duplicating items from all past sessions, not just the current one
+- `src/lib/ai/service.ts` `generateManagerAddendum` — expanded previous sessions block from scores-only to full answer detail per session
+- `src/lib/ai/context.ts` — added `allSeriesActionItems` field to `SessionContext` with a new query that fetches all action items across all sessions for the series
+
 ## [1.3.3] - 2026-03-09
 
 ### Changed

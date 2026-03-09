@@ -39,6 +39,24 @@ export function buildSummaryUserPrompt(context: SessionContext): string {
     }
   }
 
+  if (context.previousSessions.length > 0) {
+    parts.push(`\n## Previous Sessions (for trend context)`);
+    for (const prev of context.previousSessions) {
+      const score = prev.sessionScore ? ` — score: ${prev.sessionScore}` : "";
+      parts.push(`Session #${prev.sessionNumber} (${prev.scheduledAt.toISOString().split("T")[0]})${score}`);
+      for (const answer of prev.answers) {
+        if (answer.skipped) continue;
+        const value =
+          answer.answerNumeric ??
+          answer.answerText ??
+          (answer.answerJson ? JSON.stringify(answer.answerJson) : null);
+        if (value) {
+          parts.push(`  - [${answer.sectionName}] ${answer.questionText}: ${value}`);
+        }
+      }
+    }
+  }
+
   return parts.join("\n");
 }
 

@@ -1,4 +1,4 @@
-import { eq, and, desc, lt, sql } from "drizzle-orm";
+import { eq, and, desc, lt } from "drizzle-orm";
 import { withTenantContext } from "@/lib/db/tenant-context";
 import {
   sessions,
@@ -71,6 +71,16 @@ export interface SessionContext {
     title: string;
     description: string | null;
     status: string;
+    assigneeName: string | null;
+  }>;
+
+  /** All action items for this series (all sessions) — for duplicate-avoidance context */
+  allSeriesActionItems: Array<{
+    title: string;
+    description: string | null;
+    status: string;
+    completedAt: string | null;
+    sessionNumber: number | null;
     assigneeName: string | null;
   }>;
 
@@ -215,6 +225,32 @@ export async function gatherSessionContext(params: {
       assigneeName: `${ai.assigneeFirstName} ${ai.assigneeLastName}`,
     }));
 
+    // Fetch ALL action items for this series (all sessions) — for duplicate-avoidance context
+    const allSeriesItemsRaw = await tx
+      .select({
+        title: actionItems.title,
+        description: actionItems.description,
+        status: actionItems.status,
+        completedAt: actionItems.completedAt,
+        sessionNumber: sessions.sessionNumber,
+        assigneeFirstName: users.firstName,
+        assigneeLastName: users.lastName,
+      })
+      .from(actionItems)
+      .innerJoin(sessions, eq(actionItems.sessionId, sessions.id))
+      .innerJoin(users, eq(actionItems.assigneeId, users.id))
+      .where(eq(sessions.seriesId, seriesId))
+      .orderBy(desc(sessions.sessionNumber));
+
+    const allSeriesActionItems = allSeriesItemsRaw.map((ai) => ({
+      title: ai.title,
+      description: truncate(ai.description, MAX_ANSWER_TEXT_LENGTH),
+      status: ai.status,
+      completedAt: ai.completedAt ? ai.completedAt.toISOString() : null,
+      sessionNumber: ai.sessionNumber,
+      assigneeName: `${ai.assigneeFirstName} ${ai.assigneeLastName}`,
+    }));
+
     // Fetch previous sessions for cross-session trends
     const prevSessionsRaw = await tx
       .select({
@@ -286,6 +322,7 @@ export async function gatherSessionContext(params: {
       privateNoteTexts,
       talkingPointTexts,
       actionItemTexts,
+      allSeriesActionItems,
       previousSessions,
     };
   });

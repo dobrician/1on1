@@ -10,6 +10,8 @@
       "empty": "Nicio serie de întâlniri",
       "emptyDesc": "Creează prima serie 1:1 pentru a programa sesiuni.",
       "create": "Creează serie",
+      "showArchived": "Arată arhivate ({count})",
+      "hideArchived": "Ascunde arhivate",
       "today": "Astăzi",
       "tomorrow": "Mâine",
       "yesterday": "Ieri",
@@ -160,10 +162,6 @@
       "cancel": "Anulează",
       "add": "Adaugă",
       "addActionItem": "Adaugă acțiune"
-    },
-    "nudges": {
-      "title": "Sugestii AI",
-      "dismiss": "Închide"
     },
     "aiSuggestions": {
       "title": "Sugestii AI",

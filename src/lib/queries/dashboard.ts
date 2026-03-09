@@ -18,11 +18,9 @@ import {
   sessions,
   meetingSeries,
   users,
-  aiNudges,
   actionItems,
   questionnaireTemplates,
 } from "@/lib/db/schema";
-import type { NudgeData } from "@/components/dashboard/nudge-card";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -35,7 +33,6 @@ export interface UpcomingSession {
   scheduledAt: string;
   status: string;
   templateName: string | null;
-  nudges: NudgeData[];
   isToday: boolean;
   /** Present when there's an active in_progress session the user can resume */
   activeSessionId?: string;
@@ -69,6 +66,7 @@ export interface RecentSession {
   seriesId: string;
   reportName: string;
   completedAt: string;
+  sessionNumber: number;
   sessionScore: number | null;
   aiSummarySnippet: string | null;
 }
@@ -182,47 +180,6 @@ export async function getUpcomingSessions(
     templateMap = new Map(tplRows.map((t) => [t.id, t.name]));
   }
 
-  // Batch-fetch nudges
-  const nudgeRows = await tx
-    .select({
-      id: aiNudges.id,
-      content: aiNudges.content,
-      reason: aiNudges.reason,
-      priority: aiNudges.priority,
-      seriesId: aiNudges.seriesId,
-      targetSessionAt: aiNudges.targetSessionAt,
-      reportFirstName: reportUser.firstName,
-      reportLastName: reportUser.lastName,
-    })
-    .from(aiNudges)
-    .innerJoin(meetingSeries, eq(aiNudges.seriesId, meetingSeries.id))
-    .innerJoin(reportUser, eq(meetingSeries.reportId, reportUser.id))
-    .where(
-      and(
-        eq(aiNudges.isDismissed, false),
-        eq(aiNudges.tenantId, tenantId),
-        inArray(aiNudges.seriesId, seriesIds)
-      )
-    )
-    .orderBy(
-      sql`CASE ${aiNudges.priority} WHEN 'high' THEN 1 WHEN 'medium' THEN 2 WHEN 'low' THEN 3 ELSE 4 END`
-    );
-
-  const nudgesBySeries = new Map<string, NudgeData[]>();
-  for (const n of nudgeRows) {
-    const list = nudgesBySeries.get(n.seriesId) ?? [];
-    list.push({
-      id: n.id,
-      content: n.content,
-      reason: n.reason,
-      priority: n.priority ?? "medium",
-      seriesId: n.seriesId,
-      reportName: `${n.reportFirstName} ${n.reportLastName}`,
-      targetSessionAt: n.targetSessionAt?.toISOString() ?? null,
-    });
-    nudgesBySeries.set(n.seriesId, list);
-  }
-
   return rows.map((r) => {
     const scheduled = r.nextSessionAt!;
     const isToday = scheduled >= todayStart && scheduled <= todayEnd;
@@ -239,7 +196,6 @@ export async function getUpcomingSessions(
       scheduledAt: scheduled.toISOString(),
       status: activeId ? "in_progress" : "scheduled",
       templateName: r.templateId ? (templateMap.get(r.templateId) ?? null) : null,
-      nudges: nudgesBySeries.get(r.seriesId) ?? [],
       isToday,
       ...(activeId ? { activeSessionId: activeId } : {}),
     };
@@ -484,65 +440,7 @@ export async function getStatsTrends(
 }
 
 // ---------------------------------------------------------------------------
-// 4. Manager Nudges (standalone, no date filter)
-// ---------------------------------------------------------------------------
-
-export async function getManagerNudges(
-  tx: TransactionClient,
-  userId: string,
-  tenantId: string
-): Promise<NudgeData[]> {
-  const reportUser = alias(users, "reportUser");
-
-  // One nudge per report: highest priority, most recent — ordered by soonest meeting
-  const rows = await tx
-    .selectDistinctOn([meetingSeries.reportId], {
-      id: aiNudges.id,
-      content: aiNudges.content,
-      reason: aiNudges.reason,
-      priority: aiNudges.priority,
-      seriesId: aiNudges.seriesId,
-      targetSessionAt: aiNudges.targetSessionAt,
-      reportFirstName: reportUser.firstName,
-      reportLastName: reportUser.lastName,
-    })
-    .from(aiNudges)
-    .innerJoin(meetingSeries, eq(aiNudges.seriesId, meetingSeries.id))
-    .innerJoin(reportUser, eq(meetingSeries.reportId, reportUser.id))
-    .where(
-      and(
-        eq(aiNudges.isDismissed, false),
-        eq(aiNudges.tenantId, tenantId),
-        eq(meetingSeries.managerId, userId)
-      )
-    )
-    .orderBy(
-      meetingSeries.reportId,
-      sql`CASE ${aiNudges.priority} WHEN 'high' THEN 1 WHEN 'medium' THEN 2 WHEN 'low' THEN 3 ELSE 4 END`,
-      sql`${aiNudges.createdAt} DESC`
-    );
-
-  // Re-sort by soonest meeting first
-  rows.sort((a, b) => {
-    if (!a.targetSessionAt && !b.targetSessionAt) return 0;
-    if (!a.targetSessionAt) return 1;
-    if (!b.targetSessionAt) return -1;
-    return a.targetSessionAt.getTime() - b.targetSessionAt.getTime();
-  });
-
-  return rows.map((r) => ({
-    id: r.id,
-    content: r.content,
-    reason: r.reason,
-    priority: r.priority ?? "medium",
-    seriesId: r.seriesId,
-    reportName: `${r.reportFirstName} ${r.reportLastName}`,
-    targetSessionAt: r.targetSessionAt?.toISOString() ?? null,
-  }));
-}
-
-// ---------------------------------------------------------------------------
-// 5. Recent Sessions
+// 4. Recent Sessions
 // ---------------------------------------------------------------------------
 
 export async function getRecentSessions(
@@ -571,6 +469,7 @@ export async function getRecentSessions(
       id: sessions.id,
       seriesId: sessions.seriesId,
       completedAt: sessions.completedAt,
+      sessionNumber: sessions.sessionNumber,
       sessionScore: sessions.sessionScore,
       aiSummary: sessions.aiSummary,
       reportFirstName: reportUser.firstName,
@@ -606,6 +505,7 @@ export async function getRecentSessions(
       seriesId: r.seriesId,
       reportName: displayName,
       completedAt: r.completedAt!.toISOString(),
+      sessionNumber: r.sessionNumber,
       sessionScore: r.sessionScore ? parseFloat(r.sessionScore) : null,
       aiSummarySnippet,
     };

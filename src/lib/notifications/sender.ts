@@ -1,10 +1,9 @@
-import { eq, and } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { render } from "@react-email/render";
 import { adminDb } from "@/lib/db";
 import { meetingSeries } from "@/lib/db/schema/series";
 import { users } from "@/lib/db/schema/users";
 import { tenants } from "@/lib/db/schema/tenants";
-import { aiNudges } from "@/lib/db/schema/nudges";
 import { getTransport, getEmailFrom } from "@/lib/email/send";
 import { PreMeetingReminderEmail } from "@/lib/email/templates/pre-meeting-reminder";
 import { AgendaPrepEmail } from "@/lib/email/templates/agenda-prep";
@@ -193,24 +192,6 @@ async function processAgendaPrep(
       })
     : "your next session";
 
-  // Fetch AI nudges for manager variant only
-  let nudges: { content: string; reason: string }[] = [];
-  if (isManager) {
-    const nudgeRows = await adminDb
-      .select({ content: aiNudges.content, reason: aiNudges.reason })
-      .from(aiNudges)
-      .where(
-        and(
-          eq(aiNudges.seriesId, series.id),
-          eq(aiNudges.isDismissed, false)
-        )
-      );
-    nudges = nudgeRows.map((n) => ({
-      content: n.content,
-      reason: n.reason || "",
-    }));
-  }
-
   const baseUrl = getBaseUrl();
   const seriesUrl = `${baseUrl}/sessions/${series.id}`;
 
@@ -228,11 +209,9 @@ async function processAgendaPrep(
       otherPartyName,
       meetingDate,
       seriesUrl,
-      nudges: nudges.length > 0 ? nudges : undefined,
       heading: t("emails.agendaPrep.heading"),
       greeting: t("emails.agendaPrep.greeting", { recipientName }),
       body,
-      aiNudgesLabel: t("emails.agendaPrep.aiNudges"),
       buttonLabel,
       footer: t("emails.agendaPrep.footer"),
     })

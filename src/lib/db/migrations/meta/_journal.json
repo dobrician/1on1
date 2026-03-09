@@ -92,6 +92,41 @@
       "when": 1772745300000,
       "tag": "0012_i18n_language_columns",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1772800000000,
+      "tag": "0013_reminder_hours_before",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1772800100000,
+      "tag": "0014_ai_editor_history",
+      "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "7",
+      "when": 1772800200000,
+      "tag": "0015_ai_assessment_score",
+      "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1772800300000,
+      "tag": "0016_drop_ai_nudge",
+      "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1772800400000,
+      "tag": "0017_partial_series_unique",
+      "breakpoints": true
     }
   ]
 }

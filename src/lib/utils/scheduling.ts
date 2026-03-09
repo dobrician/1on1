@@ -31,8 +31,22 @@ export function computeNextSessionDate(
   lastDate: Date,
   cadence: string,
   cadenceCustomDays: number | null,
-  preferredDay: string | null
+  preferredDay: string | null,
+  /** When true, finds the nearest upcoming preferred day rather than lastDate + cadence */
+  firstSession = false
 ): Date {
+  // For the first session, return the nearest upcoming preferred day (could be days away)
+  if (firstSession && preferredDay && DAY_MAP[preferredDay] !== undefined) {
+    const targetDay = DAY_MAP[preferredDay];
+    const start = new Date(lastDate);
+    start.setDate(start.getDate() + 1); // start from tomorrow
+    const currentDay = start.getDay();
+    const adjustedCurrent = currentDay === 0 ? 7 : currentDay;
+    const diff = (targetDay - adjustedCurrent + 7) % 7;
+    start.setDate(start.getDate() + diff);
+    return start;
+  }
+
   let next: Date;
 
   if (cadence === "monthly") {

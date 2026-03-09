@@ -6,7 +6,7 @@ import { logAuditEvent } from "@/lib/audit/log";
 import { createSeriesSchema } from "@/lib/validations/series";
 import { scheduleSeriesNotifications } from "@/lib/notifications/scheduler";
 import { meetingSeries, sessions, users, sessionAnswers, templateQuestions } from "@/lib/db/schema";
-import { eq, and, asc, sql } from "drizzle-orm";
+import { eq, and, asc, sql, ne } from "drizzle-orm";
 import { computeNextSessionDate } from "@/lib/utils/scheduling";
 
 export async function GET(request: Request) {
@@ -244,7 +244,7 @@ export async function POST(request: Request) {
           throw new Error("REPORT_NOT_FOUND");
         }
 
-        // Check for existing active series for same manager+report pair
+        // Check for existing non-archived series for same manager+report pair
         const existing = await tx
           .select({ id: meetingSeries.id })
           .from(meetingSeries)
@@ -253,7 +253,7 @@ export async function POST(request: Request) {
               eq(meetingSeries.tenantId, session.user.tenantId),
               eq(meetingSeries.managerId, session.user.id),
               eq(meetingSeries.reportId, data.reportId),
-              eq(meetingSeries.status, "active")
+              ne(meetingSeries.status, "archived")
             )
           )
           .limit(1);
@@ -267,7 +267,8 @@ export async function POST(request: Request) {
           new Date(),
           data.cadence,
           data.cadenceCustomDays ?? null,
-          data.preferredDay ?? null
+          data.preferredDay ?? null,
+          true
         );
 
         const [series] = await tx
@@ -346,6 +347,13 @@ export async function POST(request: Request) {
         );
       }
       if (error.message === "DUPLICATE_SERIES") {
+        return NextResponse.json(
+          { error: "An active series already exists for this manager-report pair" },
+          { status: 409 }
+        );
+      }
+      // DB unique constraint violation (e.g. RLS hid the existing row from our check)
+      if ("code" in error && (error as Record<string, unknown>).code === "23505") {
         return NextResponse.json(
           { error: "An active series already exists for this manager-report pair" },
           { status: 409 }

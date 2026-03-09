@@ -7,7 +7,7 @@ export function buildActionSuggestionsSystemPrompt(language?: string): string {
 
 - Title: max 8 words. Description: 1 sentence.
 - Only suggest what's clearly warranted — 0 items is fine for routine sessions
-- Don't duplicate existing items`;
+- Don't duplicate existing or historical action items`;
 }
 
 export function buildActionSuggestionsUserPrompt(
@@ -34,7 +34,32 @@ export function buildActionSuggestionsUserPrompt(
     }
   }
 
-  if (context.actionItemTexts.length > 0) {
+  if (context.previousSessions.length > 0) {
+    parts.push(`\nPrevious session answers (for context):`);
+    for (const prev of context.previousSessions) {
+      const score = prev.sessionScore ? ` — score: ${prev.sessionScore}` : "";
+      parts.push(`Session #${prev.sessionNumber} (${prev.scheduledAt.toISOString().split("T")[0]})${score}`);
+      for (const answer of prev.answers) {
+        if (answer.skipped) continue;
+        const value =
+          answer.answerNumeric ??
+          answer.answerText ??
+          (answer.answerJson ? JSON.stringify(answer.answerJson) : null);
+        if (value) {
+          parts.push(`  - [${answer.sectionName}] ${answer.questionText}: ${value}`);
+        }
+      }
+    }
+  }
+
+  if (context.allSeriesActionItems.length > 0) {
+    parts.push(`\nAll action items from this relationship (don't duplicate):`);
+    for (const ai of context.allSeriesActionItems) {
+      const session = ai.sessionNumber ? `#${ai.sessionNumber}` : "?";
+      const assignee = ai.assigneeName ? ` — ${ai.assigneeName}` : "";
+      parts.push(`- [Session ${session}] ${ai.title} (${ai.status})${assignee}`);
+    }
+  } else if (context.actionItemTexts.length > 0) {
     parts.push(`\nExisting (don't duplicate):`);
     for (const ai of context.actionItemTexts) {
       parts.push(`- ${ai.title}`);

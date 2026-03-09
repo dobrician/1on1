@@ -2,14 +2,13 @@ import { gatherSessionContext } from "./context";
 import {
   generateSummary,
   generateManagerAddendum,
-  generateNudges,
   generateActionSuggestions,
 } from "./service";
 import { withTenantContext } from "@/lib/db/tenant-context";
 import { logAuditEvent } from "@/lib/audit/log";
 import { computeSessionSnapshot } from "@/lib/analytics/compute";
 import { sendPostSessionSummaryEmails } from "@/lib/notifications/summary-email";
-import { sessions, meetingSeries, aiNudges, tenants } from "@/lib/db/schema";
+import { sessions, tenants } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 
 interface PipelineInput {
@@ -89,37 +88,6 @@ export async function runAIPipelineDirect(input: PipelineInput): Promise<void> {
           updatedAt: new Date(),
         })
         .where(eq(sessions.id, sessionId));
-    });
-
-    // Generate nudges
-    const nudges = await generateNudges(context, language);
-
-    const seriesData = await withTenantContext(
-      tenantId,
-      managerId,
-      async (tx) => {
-        const [series] = await tx
-          .select({ nextSessionAt: meetingSeries.nextSessionAt })
-          .from(meetingSeries)
-          .where(eq(meetingSeries.id, seriesId))
-          .limit(1);
-        return series;
-      }
-    );
-
-    // Insert nudges
-    await withTenantContext(tenantId, managerId, async (tx) => {
-      for (const nudge of nudges.nudges) {
-        await tx.insert(aiNudges).values({
-          seriesId,
-          tenantId,
-          targetSessionAt: seriesData?.nextSessionAt ?? null,
-          content: nudge.content,
-          reason: nudge.reason,
-          priority: nudge.priority,
-          sourceSessionId: sessionId,
-        });
-      }
     });
 
     // Finalize

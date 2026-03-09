@@ -5,6 +5,9 @@ import { isSeriesParticipant, isAdmin } from "@/lib/auth/rbac";
 import { sessions, meetingSeries } from "@/lib/db/schema";
 import { eq, and } from "drizzle-orm";
 
+/** If a session has been in "generating" status for longer than this, it's stuck. */
+const STUCK_GENERATING_MS = 5 * 60 * 1000; // 5 minutes
+
 /**
  * GET /api/sessions/[id]/ai-summary
  *
@@ -39,6 +42,7 @@ export async function GET(
             aiManagerAddendum: sessions.aiManagerAddendum,
             aiStatus: sessions.aiStatus,
             aiCompletedAt: sessions.aiCompletedAt,
+            updatedAt: sessions.updatedAt,
           })
           .from(sessions)
           .where(
@@ -77,8 +81,22 @@ export async function GET(
 
         const isManager = session.user.id === series.managerId;
 
+        // Detect stuck "generating" sessions (e.g. server restart killed the pipeline)
+        // and auto-reset to "failed" so the UI shows the retry button.
+        let effectiveStatus = sessionRecord.aiStatus;
+        if (effectiveStatus === "generating") {
+          const elapsed = Date.now() - sessionRecord.updatedAt.getTime();
+          if (elapsed > STUCK_GENERATING_MS) {
+            await tx
+              .update(sessions)
+              .set({ aiStatus: "failed", updatedAt: new Date() })
+              .where(eq(sessions.id, sessionId));
+            effectiveStatus = "failed";
+          }
+        }
+
         return {
-          status: sessionRecord.aiStatus,
+          status: effectiveStatus,
           summary: sessionRecord.aiSummary ?? null,
           addendum: isManager ? (sessionRecord.aiManagerAddendum ?? null) : null,
           completedAt: sessionRecord.aiCompletedAt?.toISOString() ?? null,

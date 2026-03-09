@@ -135,10 +135,9 @@ function ScoreSparkline({ assessmentHistory, questionHistories, id }: SparklineP
   );
 }
 
-const statusVariant: Record<string, "default" | "secondary" | "outline"> = {
-  active: "secondary",
-  paused: "outline",
-  archived: "outline",
+const statusClass: Record<string, string> = {
+  paused: "border-amber-400/60 text-amber-700 bg-amber-50 dark:border-amber-500/40 dark:text-amber-400 dark:bg-amber-950/30",
+  archived: "border-muted-foreground/30 text-muted-foreground bg-muted/40",
 };
 
 const sentimentBorder: Record<string, string> = {
@@ -238,7 +237,7 @@ export function SeriesCard({ series, currentUserId }: SeriesCardProps) {
     (series.report.lastName?.[0] ?? "");
 
   return (
-    <Card className={`group relative flex flex-col overflow-hidden transition-all duration-200 hover:shadow-md ${sentimentBorder[series.latestSummary?.sentiment ?? ""] ?? ""}`}>
+    <Card className={`group relative flex h-full flex-col overflow-hidden transition-all duration-200 hover:shadow-md ${sentimentBorder[series.latestSummary?.sentiment ?? ""] ?? ""}`}>
       <Link href={`/sessions/${series.id}`} className="absolute inset-0 z-0" />
       <ScoreSparkline assessmentHistory={series.assessmentHistory} questionHistories={series.questionHistories} id={series.id} />
       <CardHeader className="flex flex-row items-center gap-3 pb-2">
@@ -283,13 +282,13 @@ export function SeriesCard({ series, currentUserId }: SeriesCardProps) {
             );
           })()}
         </div>
-        <Badge variant={statusVariant[series.status] ?? "outline"}>
-          {series.status === "active"
-            ? t("series.statusActive")
-            : series.status === "paused"
+        {series.status !== "active" && (
+          <Badge variant="outline" className={statusClass[series.status] ?? ""}>
+            {series.status === "paused"
               ? t("series.statusPaused")
               : t("series.statusArchived")}
-        </Badge>
+          </Badge>
+        )}
       </CardHeader>
       <CardContent className="flex flex-1 flex-col gap-2 pt-0">
         {series.latestSummary ? (

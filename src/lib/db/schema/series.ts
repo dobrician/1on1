@@ -51,7 +51,9 @@ export const meetingSeries = pgTable(
       .defaultNow(),
   },
   (table) => [
-    uniqueIndex("meeting_series_tenant_manager_report_idx").on(
+    // Partial unique index: only one active/paused series per manager+report pair.
+    // Archived series are excluded so the pair can be re-started after archiving.
+    index("meeting_series_tenant_manager_report_idx").on(
       table.tenantId,
       table.managerId,
       table.reportId

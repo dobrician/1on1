@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## [Unreleased]
 
 ### Added
+- `src/app/api/sessions/[id]/corrections/route.ts`: atomic POST endpoint — snapshots answer history, updates answer, recomputes score, nullifies `analyticsIngestedAt`, writes audit log — all in one `withTenantContext` transaction (phase 25-03)
 - `src/lib/ai/schemas/correction.ts`: `reasonValidationResultSchema` Zod schema + `ReasonValidationResult` type for AI output validation (phase 25-02)
 - `src/lib/ai/models.ts`: `correctionValidator` model entry pointing to `claude-haiku-4-5` (phase 25-02)
 - `src/lib/ai/service.ts`: `validateCorrectionReason` async function — calls `generateObject` with `reasonValidationResultSchema`; caller handles degraded response on error (phase 25-02)

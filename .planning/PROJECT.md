@@ -43,12 +43,14 @@ The AI context layer that makes every meeting smarter than the last — knowing 
 
 ### Active
 
-- [ ] UI/UX audit closure: 3 critical bugs + 5 high + 8 medium + 10 low + 4 design system items (v1.3)
-- [ ] Playwright E2E testing suite with GitHub Actions CI, SMTP mocking, role-switching helpers (v1.4)
+- [ ] Session correction: manager can edit answers in a completed session (v1.4)
+- [ ] Correction reason: explicit text explanation required, AI-validated in company language (v1.4)
+- [ ] Correction notification: email sent to report and admins with before/after context (v1.4)
+- [ ] Correction audit trail: stored with timestamp, actor, reason, and original values (v1.4)
 
 ### Future
 
-- **v1.4 planned:** Playwright E2E testing suite with CI integration (GitHub Actions), SMTP mocking, role-switching helpers, full edge case + regression coverage, designed for maintainability and future-proof expansion
+- **v1.5 planned:** Playwright E2E testing suite with CI integration (GitHub Actions), SMTP mocking, role-switching helpers, full edge case + regression coverage, designed for maintainability and future-proof expansion
 - AI personal profiles built from accumulated session data (pgvector embeddings)
 - AI live suggestions during active sessions (streaming, low latency)
 - AI-generated growth narratives ("Over Q1, Alex improved communication by 23%...")
@@ -75,18 +77,16 @@ The AI context layer that makes every meeting smarter than the last — knowing 
 - Manager scoring / ranking — creates perverse incentives
 - Multi-language template translations — questionnaires defined in one language per company, no per-template multi-language support yet
 
-## Current Milestone: v1.3 UI/UX Improvements
+## Current Milestone: v1.4 Session Corrections & Accountability
 
-**Goal:** Systematically close all findings from the March 2026 UX audit — fix 3 critical bugs, resolve 5 high-priority structural issues, address 8 medium polish items, clear 10 low-priority items, and establish 4 design-system conventions — elevating the app from 6.5/10 to 8.5/10.
+**Goal:** Allow managers to correct answers in past sessions with a mandatory explanation that is AI-validated in the company language, producing a full audit trail and email notification to all involved parties.
 
 **Target features:**
-- Fix rendering bugs: Tiptap [object Object] in recap, AI editor mobile layout, spec i18n keys
-- Standardize design system: single primary button color, badge severity scale, section header casing, reusable empty-state component
-- Mobile responsiveness: AI editor responsive layout, template action bars, touch targets
-- Content density: analytics overview aggregate metrics, star rating removal, empty states
-- Low-priority polish: placeholders, casing, card borders, mobile table layouts
-
-**Note:** v1.4 will be the Playwright Testing Suite (previously planned as v1.3).
+- Session correction: manager can edit answers in a completed session
+- Mandatory correction reason: explicit text explanation required before saving
+- AI validation: reason checked for quality, relevance, and company language compliance
+- Email notification: all involved parties (report, admins) notified of the correction with before/after context
+- Audit trail: correction stored with timestamp, actor, reason, and original values
 
 ## Context
 
@@ -135,4 +135,4 @@ The AI context layer that makes every meeting smarter than the last — knowing 
 | Nodemailer over Resend | Works with any SMTP provider | ✓ Good — provider flexibility |
 
 ---
-*Last updated: 2026-03-08 after v1.3 milestone start (UI/UX Improvements from UX audit)*
+*Last updated: 2026-03-10 after v1.4 milestone start (Session Corrections & Accountability)*

@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: UI/UX Improvements
 status: planning
-stopped_at: Completed 25-core-api-business-logic plan 02 — all RED tests GREEN, 5 files implemented
-last_updated: "2026-03-10T20:58:47.104Z"
+stopped_at: Completed 25-core-api-business-logic plan 03 — atomic correction route + validate-reason AI endpoint
+last_updated: "2026-03-10T21:08:36.360Z"
 last_activity: 2026-03-10 — Roadmap created for v1.4 (phases 24-27, 13 requirements)
 progress:
   total_phases: 10
-  completed_phases: 5
+  completed_phases: 6
   total_plans: 19
-  completed_plans: 18
+  completed_plans: 19
   percent: 62
 ---
 
@@ -55,6 +55,7 @@ Progress: [████████████████░░░░░░░
 | Phase 24-schema-foundation P02 | 12 | 2 tasks | 3 files |
 | Phase 25-core-api-business-logic P01 | 4m | 2 tasks | 5 files |
 | Phase 25-core-api-business-logic P02 | 4min | 2 tasks | 5 files |
+| Phase 25-core-api-business-logic P03 | 12 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -76,6 +77,8 @@ Recent decisions affecting current work:
 - [Phase 25-core-api-business-logic]: Zod schema tests (correctionInputSchema, validateReasonSchema, reasonValidationResultSchema) fail at import stage — correct RED behavior before plan 25-02/25-03 implementation
 - [Phase 25-core-api-business-logic]: validateCorrectionReason throws on error — caller returns degraded { pass: true, feedback: null } so AI outages never block the correction mutation
 - [Phase 25-core-api-business-logic]: correctionValidator uses claude-haiku-4-5 — short structured output, cost-effective tier
+- [Phase 25-core-api-business-logic]: Zod v4 uses .issues not .errors on ZodError — corrected in both route files
+- [Phase 25-core-api-business-logic]: validate-reason is auth-only (no series RBAC) — reason text advisory only, not sensitive; AI failures degrade to { pass: true, feedback: null }
 
 ### Pending Todos
 
@@ -88,6 +91,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-10T20:58:47.100Z
-Stopped at: Completed 25-core-api-business-logic plan 02 — all RED tests GREEN, 5 files implemented
+Last session: 2026-03-10T21:08:31.404Z
+Stopped at: Completed 25-core-api-business-logic plan 03 — atomic correction route + validate-reason AI endpoint
 Resume file: None

@@ -25,7 +25,7 @@
 
 - [ ] **NOTIF-01**: Report (employee) receives an email notification with a session link when any of their session answers is corrected
 - [ ] **NOTIF-02**: All active tenant admins receive an email notification when a session answer is corrected
-- [ ] **NOTIF-03**: A `session.answer_corrected` audit log event is written inside the same database transaction as the correction — no correction exists without an audit record
+- [x] **NOTIF-03**: A `session.answer_corrected` audit log event is written inside the same database transaction as the correction — no correction exists without an audit record
 - [ ] **NOTIF-04**: Multiple corrections to the same session within a 5-minute window result in a single email per recipient, not one email per answer
 
 ### Analytics Integrity (ANLT)
@@ -76,7 +76,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | WFLOW-05 | Phase 27 | Pending |
 | NOTIF-01 | Phase 26 | Pending |
 | NOTIF-02 | Phase 26 | Pending |
-| NOTIF-03 | Phase 25 | Pending |
+| NOTIF-03 | Phase 25 | Complete |
 | NOTIF-04 | Phase 26 | Pending |
 | ANLT-01 | Phase 25 | Complete |
 

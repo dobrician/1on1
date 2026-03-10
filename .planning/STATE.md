@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: UI/UX Improvements
 status: planning
-stopped_at: Completed 25-core-api-business-logic plan 01 — RED test scaffold written, 4 test files committed
-last_updated: "2026-03-10T20:54:26.636Z"
+stopped_at: Completed 25-core-api-business-logic plan 02 — all RED tests GREEN, 5 files implemented
+last_updated: "2026-03-10T20:58:47.104Z"
 last_activity: 2026-03-10 — Roadmap created for v1.4 (phases 24-27, 13 requirements)
 progress:
   total_phases: 10
   completed_phases: 5
   total_plans: 19
-  completed_plans: 17
+  completed_plans: 18
   percent: 62
 ---
 
@@ -54,6 +54,7 @@ Progress: [████████████████░░░░░░░
 | Phase 24-schema-foundation P01 | 2 | 2 tasks | 5 files |
 | Phase 24-schema-foundation P02 | 12 | 2 tasks | 3 files |
 | Phase 25-core-api-business-logic P01 | 4m | 2 tasks | 5 files |
+| Phase 25-core-api-business-logic P02 | 4min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -73,6 +74,8 @@ Recent decisions affecting current work:
 - [Phase 24-schema-foundation]: Hand-written ALTER TYPE migration required — drizzle-kit generate cannot handle enum extension without breaking FK references
 - [Phase 25-core-api-business-logic]: computeSessionScore already fully implemented — scoring tests discovered GREEN on first run, no implementation gap in plan 25-02
 - [Phase 25-core-api-business-logic]: Zod schema tests (correctionInputSchema, validateReasonSchema, reasonValidationResultSchema) fail at import stage — correct RED behavior before plan 25-02/25-03 implementation
+- [Phase 25-core-api-business-logic]: validateCorrectionReason throws on error — caller returns degraded { pass: true, feedback: null } so AI outages never block the correction mutation
+- [Phase 25-core-api-business-logic]: correctionValidator uses claude-haiku-4-5 — short structured output, cost-effective tier
 
 ### Pending Todos
 
@@ -85,6 +88,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-10T20:54:26.633Z
-Stopped at: Completed 25-core-api-business-logic plan 01 — RED test scaffold written, 4 test files committed
+Last session: 2026-03-10T20:58:47.100Z
+Stopped at: Completed 25-core-api-business-logic plan 02 — all RED tests GREEN, 5 files implemented
 Resume file: None

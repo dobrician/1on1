@@ -237,7 +237,7 @@ Plans:
 | 21. Content & Data Display | v1.3 | 4/4 | Complete | 2026-03-08 |
 | 22. Safety, Errors & Inputs | v1.3 | 0/? | Not started | — |
 | 23. Low-Priority Polish | v1.3 | 0/? | Not started | — |
-| 24. Schema Foundation | v1.4 | 0/2 | Not started | — |
+| 24. Schema Foundation | 1/2 | In Progress|  | — |
 | 25. Core API & Business Logic | v1.4 | 0/? | Not started | — |
 | 26. Email Notification & i18n | v1.4 | 0/? | Not started | — |
 | 27. UI Integration | v1.4 | 0/? | Not started | — |

@@ -1,17 +1,17 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.4
-milestone_name: Session Corrections & Accountability
-status: roadmap_created
-stopped_at: ""
-last_updated: "2026-03-10T00:00:00.000Z"
-last_activity: 2026-03-10 — Roadmap created for v1.4 (4 phases, 13 requirements mapped)
+milestone: v1.3
+milestone_name: UI/UX Improvements
+status: planning
+stopped_at: Completed 24-schema-foundation plan 01 — sessionAnswerHistory schema + enum extension
+last_updated: "2026-03-10T20:06:26.291Z"
+last_activity: 2026-03-10 — Roadmap created for v1.4 (phases 24-27, 13 requirements)
 progress:
-  total_phases: 4
-  completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
-  percent: 0
+  total_phases: 10
+  completed_phases: 4
+  total_plans: 16
+  completed_plans: 15
+  percent: 62
 ---
 
 # Project State
@@ -51,6 +51,7 @@ Progress: [████████████████░░░░░░░
 | 23-low-priority-polish | 0/? | Not started |
 
 *Updated after each plan completion*
+| Phase 24-schema-foundation P01 | 2 | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -63,6 +64,9 @@ Recent decisions affecting current work:
 - [v1.4 roadmap]: Email uses link-only format (no inline answer content) — privacy-safe per research finding
 - [v1.4 roadmap]: 5-minute session-level email deduplication — one email per session window, not per answer
 - [v1.3 roadmap]: Phase 22 depends on Phase 19 — ERR-01 (404 page) uses DES-04 empty-state component
+- [Phase 24-schema-foundation]: Direct tenant_id on history table (not join-based) required for FORCE ROW LEVEL SECURITY to block adminDb superuser bypass
+- [Phase 24-schema-foundation]: No many(sessionAnswerHistories) relation added to sessions.ts to avoid circular imports
+- [Phase 24-schema-foundation]: drizzle-kit generate NOT run after enums.ts update — hand-written ALTER TYPE migration required in plan 24-02
 
 ### Pending Todos
 
@@ -75,6 +79,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-10
-Stopped at: Roadmap created for v1.4 — phases 24-27 defined, requirements mapped
+Last session: 2026-03-10T20:06:26.288Z
+Stopped at: Completed 24-schema-foundation plan 01 — sessionAnswerHistory schema + enum extension
 Resume file: None

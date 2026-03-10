@@ -10,7 +10,7 @@
 ### Correction Data & Storage (CORR)
 
 - [ ] **CORR-01**: User can view which answers in a completed session have been corrected via an "Amended" badge on each modified answer row
-- [ ] **CORR-02**: System preserves the original answer value (text/numeric/json) in an append-only history table — original value is never overwritten or destroyed
+- [x] **CORR-02**: System preserves the original answer value (text/numeric/json) in an append-only history table — original value is never overwritten or destroyed
 - [ ] **CORR-03**: Manager (and admins) can view a correction history panel on a session detail page showing all amendments with timestamps, actor, and reason
 
 ### Correction Workflow (WFLOW)
@@ -67,7 +67,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | CORR-01 | Phase 27 | Pending |
-| CORR-02 | Phase 24 | Pending |
+| CORR-02 | Phase 24 | Complete |
 | CORR-03 | Phase 27 | Pending |
 | WFLOW-01 | Phase 25 | Pending |
 | WFLOW-02 | Phase 25 | Pending |

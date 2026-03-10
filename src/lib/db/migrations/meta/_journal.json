@@ -127,6 +127,13 @@
       "when": 1772800400000,
       "tag": "0017_partial_series_unique",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1773100000000,
+      "tag": "0018_session_answer_history",
+      "breakpoints": true
     }
   ]
 }

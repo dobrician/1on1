@@ -15,9 +15,9 @@
 
 ### Correction Workflow (WFLOW)
 
-- [ ] **WFLOW-01**: Manager can initiate a correction for any answer in a completed session they conducted; admins can correct any session in the tenant
-- [ ] **WFLOW-02**: Manager must provide an explicit correction reason (20–500 characters) before submitting — empty or too-short reasons are rejected
-- [ ] **WFLOW-03**: AI validates the correction reason for quality, relevance, and company language compliance before the correction can be submitted
+- [x] **WFLOW-01**: Manager can initiate a correction for any answer in a completed session they conducted; admins can correct any session in the tenant
+- [x] **WFLOW-02**: Manager must provide an explicit correction reason (20–500 characters) before submitting — empty or too-short reasons are rejected
+- [x] **WFLOW-03**: AI validates the correction reason for quality, relevance, and company language compliance before the correction can be submitted
 - [ ] **WFLOW-04**: Manager sees inline AI feedback on the reason field (pass/fail + one-sentence note) without navigating away from the session
 - [ ] **WFLOW-05**: Correction form shows the original and new answer values side by side inline on the session detail page — no separate page navigation required
 
@@ -30,7 +30,7 @@
 
 ### Analytics Integrity (ANLT)
 
-- [ ] **ANLT-01**: When a numeric answer is corrected, the session score is recalculated in-transaction and the analytics snapshot is refreshed asynchronously after commit
+- [x] **ANLT-01**: When a numeric answer is corrected, the session score is recalculated in-transaction and the analytics snapshot is refreshed asynchronously after commit
 
 ---
 
@@ -69,16 +69,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CORR-01 | Phase 27 | Pending |
 | CORR-02 | Phase 24 | Complete |
 | CORR-03 | Phase 27 | Pending |
-| WFLOW-01 | Phase 25 | Pending |
-| WFLOW-02 | Phase 25 | Pending |
-| WFLOW-03 | Phase 25 | Pending |
+| WFLOW-01 | Phase 25 | Complete |
+| WFLOW-02 | Phase 25 | Complete |
+| WFLOW-03 | Phase 25 | Complete |
 | WFLOW-04 | Phase 27 | Pending |
 | WFLOW-05 | Phase 27 | Pending |
 | NOTIF-01 | Phase 26 | Pending |
 | NOTIF-02 | Phase 26 | Pending |
 | NOTIF-03 | Phase 25 | Pending |
 | NOTIF-04 | Phase 26 | Pending |
-| ANLT-01 | Phase 25 | Pending |
+| ANLT-01 | Phase 25 | Complete |
 
 **Coverage:**
 - v1.4 requirements: 13 total

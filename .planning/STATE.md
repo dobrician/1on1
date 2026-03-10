@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: UI/UX Improvements
 status: planning
-stopped_at: Completed 24-schema-foundation plan 02 — migration applied, session_answer_history table live in local DB
-last_updated: "2026-03-10T20:15:21.866Z"
+stopped_at: Completed 25-core-api-business-logic plan 01 — RED test scaffold written, 4 test files committed
+last_updated: "2026-03-10T20:54:26.636Z"
 last_activity: 2026-03-10 — Roadmap created for v1.4 (phases 24-27, 13 requirements)
 progress:
   total_phases: 10
   completed_phases: 5
-  total_plans: 16
-  completed_plans: 16
+  total_plans: 19
+  completed_plans: 17
   percent: 62
 ---
 
@@ -53,6 +53,7 @@ Progress: [████████████████░░░░░░░
 *Updated after each plan completion*
 | Phase 24-schema-foundation P01 | 2 | 2 tasks | 5 files |
 | Phase 24-schema-foundation P02 | 12 | 2 tasks | 3 files |
+| Phase 25-core-api-business-logic P01 | 4m | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -70,6 +71,8 @@ Recent decisions affecting current work:
 - [Phase 24-schema-foundation]: drizzle-kit generate NOT run after enums.ts update — hand-written ALTER TYPE migration required in plan 24-02
 - [Phase 24-schema-foundation]: Drizzle migration tracking gap fixed: registered migrations 0012-0017 manually in drizzle.__drizzle_migrations
 - [Phase 24-schema-foundation]: Hand-written ALTER TYPE migration required — drizzle-kit generate cannot handle enum extension without breaking FK references
+- [Phase 25-core-api-business-logic]: computeSessionScore already fully implemented — scoring tests discovered GREEN on first run, no implementation gap in plan 25-02
+- [Phase 25-core-api-business-logic]: Zod schema tests (correctionInputSchema, validateReasonSchema, reasonValidationResultSchema) fail at import stage — correct RED behavior before plan 25-02/25-03 implementation
 
 ### Pending Todos
 
@@ -82,6 +85,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-10T20:12:37.570Z
-Stopped at: Completed 24-schema-foundation plan 02 — migration applied, session_answer_history table live in local DB
+Last session: 2026-03-10T20:54:26.633Z
+Stopped at: Completed 25-core-api-business-logic plan 01 — RED test scaffold written, 4 test files committed
 Resume file: None

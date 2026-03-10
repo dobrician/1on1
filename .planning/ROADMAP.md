@@ -66,7 +66,7 @@ Full details: `.planning/milestones/v1.2-ROADMAP.md`
 
 **Milestone Goal:** Allow managers to correct answers in past sessions with a mandatory AI-validated explanation, producing a full append-only audit trail and email notification to all involved parties — bringing EHR-grade amendment accountability to 1:1 meeting records.
 
-- [ ] **Phase 24: Schema Foundation** — Append-only history table with RLS, notificationTypeEnum extension, migration
+- [x] **Phase 24: Schema Foundation** — Append-only history table with RLS, notificationTypeEnum extension, migration (completed 2026-03-10)
 - [ ] **Phase 25: Core API & Business Logic** — RBAC helper, AI validation service, both API routes, in-transaction audit log, score recompute
 - [ ] **Phase 26: Email Notification & i18n** — Correction email template in EN+RO, session-level deduplication sender
 - [ ] **Phase 27: UI Integration** — Correction dialog, Amended badge, correction history panel wired into session detail
@@ -237,7 +237,7 @@ Plans:
 | 21. Content & Data Display | v1.3 | 4/4 | Complete | 2026-03-08 |
 | 22. Safety, Errors & Inputs | v1.3 | 0/? | Not started | — |
 | 23. Low-Priority Polish | v1.3 | 0/? | Not started | — |
-| 24. Schema Foundation | 1/2 | In Progress|  | — |
+| 24. Schema Foundation | 2/2 | Complete   | 2026-03-10 | — |
 | 25. Core API & Business Logic | v1.4 | 0/? | Not started | — |
 | 26. Email Notification & i18n | v1.4 | 0/? | Not started | — |
 | 27. UI Integration | v1.4 | 0/? | Not started | — |

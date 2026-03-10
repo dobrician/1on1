@@ -9,6 +9,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Added
 - TDD RED: failing tests for `correctionInputSchema` and `validateReasonSchema` Zod validation in `src/lib/validations/__tests__/correction.test.ts` (phase 25-01)
 - TDD RED: failing tests for `reasonValidationResultSchema` AI result schema shape in `src/lib/ai/schemas/__tests__/correction.test.ts` (phase 25-01)
+- TDD RED: `canCorrectSession` RBAC tests added to `src/lib/auth/__tests__/rbac.test.ts` — 4 tests fail (function does not exist yet), existing 5 tests remain passing (phase 25-01)
+- TDD GREEN: scoring tests in `src/lib/utils/__tests__/scoring.test.ts` — `computeSessionScore` implementation already complete; 10 tests pass (phase 25-01)
 - `src/lib/db/migrations/0018_session_answer_history.sql`: hand-written migration — ALTER TYPE notification_type ADD VALUE 'session_correction', CREATE TABLE session_answer_history (11 cols, 3 indexes), FORCE RLS with SELECT + INSERT policies, GRANT to app_user (phase 24-02)
 - TDD RED: failing schema shape tests for `sessionAnswerHistory` table and `notificationTypeEnum` enum extension (phase 24-01)
 - `src/lib/db/schema/answer-history.ts`: `sessionAnswerHistory` Drizzle table with 11 typed columns + 3 indexes + `sessionAnswerHistoryRelations` (4 FK relations)

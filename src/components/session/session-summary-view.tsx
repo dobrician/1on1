@@ -24,12 +24,15 @@ import {
 import { cn } from "@/lib/utils";
 import { AISummarySection } from "./ai-summary-section";
 import { AISuggestionsSection } from "./ai-suggestions-section";
+import { AmendedBadge } from "./amended-badge";
+import { CorrectionHistoryPanel, type CorrectionEntry } from "./correction-history-panel";
 import type { AISummary } from "@/lib/ai/schemas/summary";
 import type { AIManagerAddendum } from "@/lib/ai/schemas/addendum";
 
 // --- Types ---
 
 interface SummaryAnswer {
+  id: string;
   questionId: string;
   answerText: string | null;
   answerNumeric: number | null;
@@ -96,6 +99,8 @@ interface SessionSummaryViewProps {
   reportName: string;
   managerTeam: string | null;
   reportTeam: string | null;
+  correctionsByAnswerId: Record<string, CorrectionEntry[]>;
+  allCorrections: CorrectionEntry[];
 }
 
 // --- Helpers ---
@@ -234,6 +239,8 @@ export function SessionSummaryView({
   reportName,
   managerTeam,
   reportTeam,
+  correctionsByAnswerId,
+  allCorrections,
 }: SessionSummaryViewProps) {
   const t = useTranslations("sessions");
   const format = useFormatter();
@@ -352,15 +359,21 @@ export function SessionSummaryView({
                 <div className="space-y-3">
                   {category.questions.map((question) => {
                     const answer = category.answers[question.id];
+                    const isAmended = answer?.id
+                      ? (correctionsByAnswerId[answer.id]?.length ?? 0) > 0
+                      : false;
 
                     return (
                       <div
                         key={question.id}
                         className="rounded-md border px-4 py-3"
                       >
-                        <p className="text-sm font-medium">
-                          {question.questionText}
-                        </p>
+                        <div className="flex items-start justify-between gap-2">
+                          <p className="text-sm font-medium">
+                            {question.questionText}
+                          </p>
+                          <AmendedBadge isAmended={isAmended} />
+                        </div>
                         <div className="mt-1 text-sm text-muted-foreground">
                           {renderAnswerDisplay(question.answerType, answer, t)}
                         </div>
@@ -500,6 +513,14 @@ export function SessionSummaryView({
           </div>
         );
       })}
+
+      {/* Correction History Panel */}
+      {status === "completed" && (
+        <CorrectionHistoryPanel
+          corrections={allCorrections}
+          isManager={isManager}
+        />
+      )}
 
       {/* Footer */}
       <div className="mt-8 border-t pt-6">

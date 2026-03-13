@@ -14,8 +14,9 @@ import {
   actionItems,
   teams,
   teamMembers,
+  sessionAnswerHistory,
 } from "@/lib/db/schema";
-import { eq, and, asc, inArray, sql } from "drizzle-orm";
+import { eq, and, asc, inArray, sql, desc } from "drizzle-orm";
 import { decryptNote, type EncryptedPayload } from "@/lib/encryption/private-notes";
 import { SessionSummaryView } from "@/components/session/session-summary-view";
 
@@ -113,6 +114,7 @@ export default async function SessionSummaryPage({
         talkingPointRows,
         privateNoteRows,
         actionItemRows,
+        historyRows,
       ] = await Promise.all([
         sessionRecord.templateId
           ? tx
@@ -198,6 +200,24 @@ export default async function SessionSummaryPage({
           })
           .from(actionItems)
           .where(eq(actionItems.sessionId, sessionId)),
+        tx
+          .select({
+            id: sessionAnswerHistory.id,
+            sessionAnswerId: sessionAnswerHistory.sessionAnswerId,
+            correctedById: sessionAnswerHistory.correctedById,
+            correctorFirstName: users.firstName,
+            correctorLastName: users.lastName,
+            originalAnswerText: sessionAnswerHistory.originalAnswerText,
+            originalAnswerNumeric: sessionAnswerHistory.originalAnswerNumeric,
+            originalAnswerJson: sessionAnswerHistory.originalAnswerJson,
+            originalSkipped: sessionAnswerHistory.originalSkipped,
+            correctionReason: sessionAnswerHistory.correctionReason,
+            createdAt: sessionAnswerHistory.createdAt,
+          })
+          .from(sessionAnswerHistory)
+          .innerJoin(users, eq(users.id, sessionAnswerHistory.correctedById))
+          .where(eq(sessionAnswerHistory.sessionId, sessionId))
+          .orderBy(desc(sessionAnswerHistory.createdAt)),
       ]);
 
       // Fetch assignee names for action items
@@ -246,11 +266,40 @@ export default async function SessionSummaryPage({
         category: string | null;
       }>;
 
+      // Build correction maps
+      const correctionsByAnswerId: Record<string, Array<{
+        id: string;
+        sessionAnswerId: string;
+        correctedById: string;
+        correctorFirstName: string;
+        correctorLastName: string;
+        originalAnswerText: string | null;
+        originalAnswerNumeric: number | null;
+        originalAnswerJson: unknown;
+        originalSkipped: boolean;
+        correctionReason: string;
+        createdAt: string;
+      }>> = {};
+      const allCorrections = historyRows.map((row) => ({
+        ...row,
+        createdAt: row.createdAt.toISOString(),
+        originalAnswerNumeric: row.originalAnswerNumeric
+          ? Number(row.originalAnswerNumeric)
+          : null,
+      }));
+      for (const row of allCorrections) {
+        if (!correctionsByAnswerId[row.sessionAnswerId]) {
+          correctionsByAnswerId[row.sessionAnswerId] = [];
+        }
+        correctionsByAnswerId[row.sessionAnswerId].push(row);
+      }
+
       // Build answer map by questionId
       const answerMap = new Map(
         answers.map((a) => [
           a.questionId,
           {
+            id: a.id,
             questionId: a.questionId,
             answerText: a.answerText,
             answerNumeric: a.answerNumeric ? Number(a.answerNumeric) : null,
@@ -278,6 +327,7 @@ export default async function SessionSummaryPage({
         const sectionAnswers: Record<
           string,
           {
+            id: string;
             questionId: string;
             answerText: string | null;
             answerNumeric: number | null;
@@ -357,6 +407,8 @@ export default async function SessionSummaryPage({
           : "Report",
         managerTeam: managerTeamRow?.name ?? null,
         reportTeam: reportTeamRow?.name ?? null,
+        correctionsByAnswerId,
+        allCorrections,
       };
     }
   );
@@ -389,6 +441,8 @@ export default async function SessionSummaryPage({
       reportName={data.reportName}
       managerTeam={data.managerTeam}
       reportTeam={data.reportTeam}
+      correctionsByAnswerId={data.correctionsByAnswerId}
+      allCorrections={data.allCorrections}
     />
   );
 }

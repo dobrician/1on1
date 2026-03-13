@@ -7,6 +7,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## [Unreleased]
 
 ### Added
+- `src/components/session/answer-correction-form.tsx`: `AnswerCorrectionForm` — inline correction form with debounced AI reason validation, original answer display, and advisory-only AI feedback (phase 27-03)
+- `src/components/session/session-summary-view.tsx`: export `SummaryAnswer` type and `renderAnswerDisplay` function for reuse in `AnswerCorrectionForm` (phase 27-03)
+
+### Fixed
+- `src/components/session/__tests__/answer-correction-form.test.tsx`: add missing `next/navigation` mock and fix `getByText(/original/i)` ambiguity with `getAllByText` (phase 27-03)
+
+### Added
 - TDD RED: failing tests for `AmendedBadge` in `src/components/session/__tests__/amended-badge.test.tsx` — 3 tests fail (module not found: amended-badge.tsx does not exist yet) (phase 27-01)
 - TDD RED: failing tests for `CorrectionHistoryPanel` in `src/components/session/__tests__/correction-history-panel.test.tsx` — 5 tests fail (module not found: correction-history-panel.tsx does not exist yet) (phase 27-01)
 - TDD RED: failing tests for `AnswerCorrectionForm` in `src/components/session/__tests__/answer-correction-form.test.tsx` — 9 tests fail (module not found: answer-correction-form.tsx does not exist yet) (phase 27-01)

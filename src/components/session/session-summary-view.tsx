@@ -31,7 +31,7 @@ import type { AIManagerAddendum } from "@/lib/ai/schemas/addendum";
 
 // --- Types ---
 
-interface SummaryAnswer {
+export interface SummaryAnswer {
   id: string;
   questionId: string;
   answerText: string | null;
@@ -113,7 +113,7 @@ const MOOD_ENTRIES = [
   { emoji: "😄", key: "moodGreat" },
 ] as const;
 
-function renderAnswerDisplay(
+export function renderAnswerDisplay(
   answerType: string,
   answer: SummaryAnswer | undefined,
   t: ReturnType<typeof useTranslations<"sessions">>

@@ -19,6 +19,11 @@ vi.mock("next-intl", () => ({
   useTranslations: () => (key: string) => key,
 }));
 
+// Mock next/navigation — useRouter is called at component render time
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ refresh: vi.fn() }),
+}));
+
 const baseProps = {
   answerId: "answer-uuid-123",
   sessionId: "session-uuid-456",
@@ -37,7 +42,8 @@ const baseProps = {
 describe("AnswerCorrectionForm", () => {
   it("renders Original label", () => {
     render(<AnswerCorrectionForm {...baseProps} />);
-    expect(screen.getByText(/original/i)).toBeInTheDocument();
+    const matches = screen.getAllByText(/original/i);
+    expect(matches.length).toBeGreaterThanOrEqual(1);
   });
 
   it("renders original answer text value", () => {

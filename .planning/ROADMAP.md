@@ -240,12 +240,14 @@ Plans:
   3. RBAC is asserted: a manager can open and submit the correction form; a member does not see the edit icon or correction controls
   4. Correction UI flow is covered: Amended badge visible on corrected answers, inline form opens/closes, AI validation feedback appears after typing a reason
   5. The debug spec navigates to the session summary page, captures all console errors, page errors, and network failures, and writes a structured report — the [object ErrorEvent] crash is reproduced and diagnosed
-**Plans**: 4 plans
+**Plans**: 6 plans
 Plans:
 - [ ] 28-01-PLAN.md — Fix auth setup CallbackRouteError + scaffold test project structure (Wave 1)
 - [ ] 28-02-PLAN.md — Core flow specs: login/logout, dashboard, sessions list, wizard (Wave 2)
 - [ ] 28-03-PLAN.md — RBAC + corrections flow specs + debug spec for session summary crash (Wave 2)
-- [ ] 28-04-PLAN.md — Templates CRUD + people management specs + CI config (Wave 3)
+- [ ] 28-04-PLAN.md — Templates CRUD + people management specs (Wave 3)
+- [ ] 28-05-PLAN.md — Gap closure: CI pipeline integration — test:e2e script + GitHub Actions workflow (Wave 1)
+- [ ] 28-06-PLAN.md — Gap closure: Seed UUID fix + Amended badge test enabled + debug spec diagnosis conclusion (Wave 1)
 
 ## Progress
 
@@ -278,4 +280,4 @@ Plans:
 | 25. Core API & Business Logic | 3/3 | Complete    | 2026-03-10 | — |
 | 26. Email Notification & i18n | 3/3 | Complete    | 2026-03-13 | — |
 | 27. UI Integration | 4/4 | Complete   | 2026-03-13 | — |
-| 28. Playwright E2E Test Suite | 4/4 | Complete   | 2026-03-13 | — |
+| 28. Playwright E2E Test Suite | 4/6 | In Progress | — |

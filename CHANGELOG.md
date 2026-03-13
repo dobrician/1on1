@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+- TDD RED: failing tests for `AmendedBadge` in `src/components/session/__tests__/amended-badge.test.tsx` — 3 tests fail (module not found: amended-badge.tsx does not exist yet) (phase 27-01)
+
 ### Fixed
 - `messages/ro/analytics.json`: add missing `analytics.chart.sessionHistory` key — translation parity with EN (phase 26-03)
 - `src/components/layout/user-menu.tsx`: suppress `react-hooks/immutability` lint error on `document.cookie` assignment — intentional browser API usage (phase 26-03)

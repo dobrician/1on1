@@ -201,7 +201,11 @@ Plans:
   2. All active tenant admins receive the same correction notification email — admins added after the correction do not receive retroactive emails
   3. The correction email renders correctly in both English and Romanian using `createEmailTranslator` — no raw translation keys appear in either language
   4. Five corrections to the same session within a 5-minute window produce exactly one email per recipient, not five — the deduplication window resets on each new correction within the window
-**Plans**: TBD
+**Plans**: 3 plans
+Plans:
+- [ ] 26-01-PLAN.md — TDD Wave 0: RED tests for sendCorrectionEmails, React Email template, i18n keys EN+RO (Wave 1)
+- [ ] 26-02-PLAN.md — Implement correction-email.ts sender module — make Wave 0 tests GREEN (Wave 2)
+- [ ] 26-03-PLAN.md — Wire sendCorrectionEmails into corrections route as fire-and-forget + full phase gate (Wave 3)
 
 ### Phase 27: UI Integration
 **Goal**: Users can initiate, review, and track corrections entirely within the session detail page — inline before/after form, AI feedback on the reason field, Amended badges on modified answers, and a correction history panel accessible without navigation

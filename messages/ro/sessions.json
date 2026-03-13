@@ -294,6 +294,24 @@
       "weeksAgo": "acum {count} săptămâni",
       "monthAgo": "acum 1 lună",
       "monthsAgo": "acum {count} luni"
+    },
+    "corrections": {
+      "amendedBadge": "Modificat",
+      "historyTitle": "Istoric corecții",
+      "noHistory": "Nu s-au efectuat corecții pentru această sesiune.",
+      "historyEntryBy": "de",
+      "historyReasonLabel": "Motiv",
+      "correctionFormTitle": "Corectare răspuns",
+      "originalLabel": "Original",
+      "newAnswerLabel": "Răspuns nou",
+      "reasonLabel": "Motiv corecție",
+      "reasonPlaceholder": "Explicați de ce acest răspuns este corectat (20–500 caractere)...",
+      "reasonHint": "Oferiți un motiv clar și profesional pentru această corecție.",
+      "aiValidating": "Se validează motivul...",
+      "aiPassLabel": "Motiv aprobat",
+      "aiFailLabel": "Motivul necesită îmbunătățiri",
+      "submitButton": "Trimite corecția",
+      "cancelButton": "Anulează"
     }
   }
 }

@@ -294,6 +294,24 @@
       "weeksAgo": "{count} weeks ago",
       "monthAgo": "1 month ago",
       "monthsAgo": "{count} months ago"
+    },
+    "corrections": {
+      "amendedBadge": "Amended",
+      "historyTitle": "Correction History",
+      "noHistory": "No corrections have been made to this session.",
+      "historyEntryBy": "by",
+      "historyReasonLabel": "Reason",
+      "correctionFormTitle": "Correct Answer",
+      "originalLabel": "Original",
+      "newAnswerLabel": "New answer",
+      "reasonLabel": "Correction reason",
+      "reasonPlaceholder": "Explain why this answer is being corrected (20–500 characters)...",
+      "reasonHint": "Provide a clear, professional reason for this correction.",
+      "aiValidating": "Validating reason...",
+      "aiPassLabel": "Reason approved",
+      "aiFailLabel": "Reason needs improvement",
+      "submitButton": "Submit Correction",
+      "cancelButton": "Cancel"
     }
   }
 }

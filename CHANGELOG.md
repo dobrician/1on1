@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## [Unreleased]
 
 ### Added
+- TDD RED: failing tests for `sendCorrectionEmails` recipient assembly, `wasRecentlySent` deduplication, and i18n key resolution in `src/lib/notifications/__tests__/correction-email.test.ts` — 8 tests fail (module not found + missing i18n keys) (phase 26-01)
 - `src/app/api/sessions/[id]/corrections/validate-reason/route.ts`: AI-only POST endpoint — validates correction reason via `validateCorrectionReason`; graceful degradation returns `{ pass: true, feedback: null }` on AI outage (phase 25-03)
 - `src/app/api/sessions/[id]/corrections/route.ts`: atomic POST endpoint — snapshots answer history, updates answer, recomputes score, nullifies `analyticsIngestedAt`, writes audit log — all in one `withTenantContext` transaction (phase 25-03)
 - `src/lib/ai/schemas/correction.ts`: `reasonValidationResultSchema` Zod schema + `ReasonValidationResult` type for AI output validation (phase 25-02)

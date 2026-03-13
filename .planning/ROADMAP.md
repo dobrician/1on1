@@ -216,7 +216,12 @@ Plans:
   2. A manager (or admin) clicking the edit icon on an answer row sees the original and new answer values side by side inline on the same page — no separate page navigation occurs
   3. The correction reason field shows AI feedback (pass/fail + one-sentence note) after the manager stops typing, without leaving the session detail page
   4. A correction history panel at the bottom of the session detail page lists all amendments with timestamp, actor name, and reason — the panel is collapsed when no corrections exist and expanded by default when corrections are present
-**Plans**: TBD
+**Plans**: 4 plans
+Plans:
+- [ ] 27-01-PLAN.md — TDD: Write failing tests for AmendedBadge, CorrectionHistoryPanel, AnswerCorrectionForm (Wave 1)
+- [ ] 27-02-PLAN.md — Build AmendedBadge + CorrectionHistoryPanel + server data join + i18n keys (Wave 2)
+- [ ] 27-03-PLAN.md — Build AnswerCorrectionForm with debounced AI feedback + wire edit icons into SessionSummaryView (Wave 3)
+- [ ] 27-04-PLAN.md — Full quality gate + human verification checkpoint (Wave 4)
 
 ## Progress
 

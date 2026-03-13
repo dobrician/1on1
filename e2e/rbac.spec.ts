@@ -48,7 +48,7 @@ test.describe("RBAC - Admin Access", () => {
     await page.goto("/people");
     await expect(page.locator("table")).toBeVisible({ timeout: 10_000 });
     await expect(
-      page.getByRole("button", { name: /Invite people/i })
+      page.getByRole("button", { name: /^Invite$/i })
     ).toBeVisible();
   });
 
@@ -64,16 +64,19 @@ test.describe("RBAC - Admin Access", () => {
     page,
   }) => {
     await page.goto("/overview");
-    await expect(page.getByText("Settings")).toBeVisible();
+    // Settings is a top-nav dropdown — open it first so its links become visible
+    await page.getByRole("button", { name: /^Settings$/i }).click();
     await expect(
-      page.getByRole("link", { name: "Audit Log" })
+      page.getByRole("menuitem").filter({ hasText: "Audit Log" })
     ).toBeVisible();
   });
 
   test("admin sidebar shows Company settings", async ({ page }) => {
     await page.goto("/overview");
+    // Settings is a top-nav dropdown — open it first so its links become visible
+    await page.getByRole("button", { name: /^Settings$/i }).click();
     await expect(
-      page.getByRole("link", { name: "Company" })
+      page.getByRole("menuitem").filter({ hasText: "Company" })
     ).toBeVisible();
   });
 });

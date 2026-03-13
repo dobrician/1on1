@@ -272,16 +272,15 @@ test.describe("Team Detail Page", () => {
       page.getByRole("heading", { name: teamName })
     ).toBeVisible({ timeout: 10_000 });
 
-    // The pencil icon button should be visible next to the team name
-    // In the component, it uses <Pencil> icon inside a ghost button
-    // Look for buttons near the heading
-    const headingContainer = page.locator("div").filter({
-      has: page.getByRole("heading", { name: teamName }),
-    }).first();
+    // The pencil icon button should be visible next to the team name.
+    // The component renders an h1 + ghost Button with Pencil icon inside a flex container.
+    // Target the flex container that directly wraps the h1 heading.
+    const heading = page.getByRole("heading", { name: teamName, level: 1 });
+    await expect(heading).toBeVisible();
 
-    // There should be at least one button (the edit pencil) in the heading area
-    const buttons = headingContainer.locator("button");
-    await expect(buttons.first()).toBeVisible();
+    // The edit button is a sibling of the h1 inside a flex div
+    const editButton = heading.locator("~ button").first();
+    await expect(editButton).toBeVisible();
   });
 
   test("empty members state is shown for a new team", async ({ page }) => {

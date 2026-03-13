@@ -1,14 +1,14 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./fixtures";
 
 test.describe("Invite Flow", () => {
-  test.beforeEach(async ({ page }) => {
+  test.beforeEach(async ({ adminPage: page }) => {
     await page.goto("/people");
     await expect(page.getByRole("heading", { name: "People" })).toBeVisible();
     await expect(page.locator("table")).toBeVisible({ timeout: 10_000 });
   });
 
-  test("Invite people button opens the invite dialog", async ({ page }) => {
-    await page.getByRole("button", { name: /Invite people/i }).click();
+  test("Invite people button opens the invite dialog", async ({ adminPage: page }) => {
+    await page.getByRole("button", { name: /^Invite$/i }).click();
 
     const dialog = page.getByRole("dialog");
     await expect(dialog).toBeVisible({ timeout: 5_000 });
@@ -23,9 +23,9 @@ test.describe("Invite Flow", () => {
   });
 
   test("invite dialog has email textarea, role selector, and action buttons", async ({
-    page,
+    adminPage: page,
   }) => {
-    await page.getByRole("button", { name: /Invite people/i }).click();
+    await page.getByRole("button", { name: /^Invite$/i }).click();
     const dialog = page.getByRole("dialog");
     await expect(dialog).toBeVisible({ timeout: 5_000 });
 
@@ -52,8 +52,8 @@ test.describe("Invite Flow", () => {
     ).toBeVisible();
   });
 
-  test("invite dialog cancel button closes the dialog", async ({ page }) => {
-    await page.getByRole("button", { name: /Invite people/i }).click();
+  test("invite dialog cancel button closes the dialog", async ({ adminPage: page }) => {
+    await page.getByRole("button", { name: /^Invite$/i }).click();
     const dialog = page.getByRole("dialog");
     await expect(dialog).toBeVisible({ timeout: 5_000 });
 
@@ -62,9 +62,9 @@ test.describe("Invite Flow", () => {
   });
 
   test("invite dialog shows validation error for empty email", async ({
-    page,
+    adminPage: page,
   }) => {
-    await page.getByRole("button", { name: /Invite people/i }).click();
+    await page.getByRole("button", { name: /^Invite$/i }).click();
     const dialog = page.getByRole("dialog");
     await expect(dialog).toBeVisible({ timeout: 5_000 });
 
@@ -77,8 +77,8 @@ test.describe("Invite Flow", () => {
     ).toBeVisible();
   });
 
-  test("invite dialog role selector shows all roles", async ({ page }) => {
-    await page.getByRole("button", { name: /Invite people/i }).click();
+  test("invite dialog role selector shows all roles", async ({ adminPage: page }) => {
+    await page.getByRole("button", { name: /^Invite$/i }).click();
     const dialog = page.getByRole("dialog");
     await expect(dialog).toBeVisible({ timeout: 5_000 });
 
@@ -93,8 +93,8 @@ test.describe("Invite Flow", () => {
     await expect(page.getByRole("option", { name: "Admin" })).toBeVisible();
   });
 
-  test("invite dialog sends invite for valid email", async ({ page }) => {
-    await page.getByRole("button", { name: /Invite people/i }).click();
+  test("invite dialog sends invite for valid email", async ({ adminPage: page }) => {
+    await page.getByRole("button", { name: /^Invite$/i }).click();
     const dialog = page.getByRole("dialog");
     await expect(dialog).toBeVisible({ timeout: 5_000 });
 
@@ -114,8 +114,8 @@ test.describe("Invite Flow", () => {
     });
   });
 
-  test("invite dialog handles already-existing email", async ({ page }) => {
-    await page.getByRole("button", { name: /Invite people/i }).click();
+  test("invite dialog handles already-existing email", async ({ adminPage: page }) => {
+    await page.getByRole("button", { name: /^Invite$/i }).click();
     const dialog = page.getByRole("dialog");
     await expect(dialog).toBeVisible({ timeout: 5_000 });
 

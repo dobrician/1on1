@@ -16,10 +16,10 @@ test.describe("Audit Log Page", () => {
       page.getByRole("heading", { name: "Audit Log" })
     ).toBeVisible();
     await expect(
-      page.getByText("View all organizational changes and events")
+      page.getByText("View all administrative actions in your organization")
     ).toBeVisible();
     // Breadcrumb
-    await expect(page.getByText("Settings > Audit Log")).toBeVisible();
+    await expect(page.getByText("Organization Settings > Audit Log")).toBeVisible();
   });
 
   test("shows filter controls: search, action type, and date range", async ({

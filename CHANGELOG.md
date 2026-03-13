@@ -7,6 +7,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## [Unreleased]
 
 ### Fixed
+- `e2e/audit-log.spec.ts`: fix description and breadcrumb text to match actual UI strings — "View all administrative actions in your organization" and "Organization Settings > Audit Log"
+- `e2e/invite.spec.ts`: replace unauthenticated `page` fixture with `adminPage` from fixtures.ts; update all "Invite people" button selectors to match actual button text "Invite"
+- `e2e/rbac.spec.ts`: fix invite button selector from "Invite people" to "Invite"; fix admin Settings navigation tests to open the Settings dropdown before asserting on menu items
+- `e2e/teams.spec.ts`: fix edit pencil button test to target the heading sibling button directly (`h1 ~ button`) instead of broad `div.filter().button` which resolved to a hidden sheet trigger
+- `e2e/critical-path.spec.ts`: add `exact: true` to "Upcoming Sessions" heading assertion to avoid strict-mode violation with partial match on "No upcoming sessions this week"; replace hidden carousel heading check with a URL + body content assertion
+- `e2e/screenshot-tour.spec.ts`: use pre-built stored auth state files (admin.json, manager.json) instead of manual login to avoid login timeouts during 25-minute test run; restructure analytics-team fallback to avoid uncaught nav errors; add nav() retry logic with 45s timeout to handle dev server compilation delays on later config iterations
 - `src/lib/db/seed.ts`: fix all 45 ANSWER_* UUID constants to use RFC4122-compliant variant bits (`8000` instead of `6000`); add DELETE of old 6000-variant rows so re-seeding is idempotent (phase 28-06)
 - `e2e/corrections.spec.ts`: remove `test.skip` conditional from Amended badge test — seed UUID fix enables the correction API call to succeed so the test now runs end-to-end (phase 28-06)
 - `e2e/debug-session-summary.spec.ts`: add DIAGNOSIS CONCLUSION doc block documenting the confirmed root cause ([object ErrorEvent] UAT crash = Neon WebSocket vs local pg Pool) and the Plan 01 fix (phase 28-06)

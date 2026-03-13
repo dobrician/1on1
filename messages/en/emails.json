@@ -56,6 +56,14 @@
       "buttonManager": "Open Meeting Series",
       "buttonReport": "Add Talking Points",
       "footer": "This email was sent by 1on1"
+    },
+    "sessionCorrection": {
+      "subject": "A session answer has been corrected",
+      "heading": "Session Answer Corrected",
+      "greeting": "Hi {recipientName},",
+      "body": "An answer in your 1:1 session #{sessionNumber} with {otherPartyName} has been corrected. No answer content is included in this email for privacy — click below to view the session.",
+      "buttonLabel": "View Session",
+      "footer": "This email was sent by 1on1"
     }
   }
 }

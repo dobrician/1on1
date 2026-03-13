@@ -56,6 +56,14 @@
       "buttonManager": "Deschide seria de ședințe",
       "buttonReport": "Adaugă puncte pe agendă",
       "footer": "Acest email a fost trimis de 1on1"
+    },
+    "sessionCorrection": {
+      "subject": "Un răspuns din sesiune a fost corectat",
+      "heading": "Răspuns din sesiune corectat",
+      "greeting": "Salut {recipientName},",
+      "body": "Un răspuns din ședința ta 1:1 #{sessionNumber} cu {otherPartyName} a fost corectat. Conținutul răspunsului nu este inclus în acest email din motive de confidențialitate — apasă mai jos pentru a vizualiza sesiunea.",
+      "buttonLabel": "Vezi sesiunea",
+      "footer": "Acest email a fost trimis de 1on1"
     }
   }
 }

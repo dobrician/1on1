@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: UI/UX Improvements
 status: planning
-stopped_at: Completed 28-playwright-e2e-test-suite plan 02 — auth, dashboard, sessions specs all green (17 tests); session summary HTTP 200 confirmed
-last_updated: "2026-03-13T09:59:16.834Z"
+stopped_at: Completed 28-playwright-e2e-test-suite plan 03 — corrections RBAC spec (8 pass 1 skip), debug spec with JSON report, session summary clean locally
+last_updated: "2026-03-13T10:19:28.747Z"
 last_activity: 2026-03-10 — Roadmap created for v1.4 (phases 24-27, 13 requirements)
 progress:
   total_phases: 11
   completed_phases: 8
   total_plans: 30
-  completed_plans: 28
+  completed_plans: 29
   percent: 62
 ---
 
@@ -65,6 +65,7 @@ Progress: [████████████████░░░░░░░
 | Phase 27-ui-integration P04 | 10 | 2 tasks | 2 files |
 | Phase 28-playwright-e2e-test-suite P01 | 25 | 2 tasks | 7 files |
 | Phase 28-playwright-e2e-test-suite P02 | 16 | 2 tasks | 5 files |
+| Phase 28-playwright-e2e-test-suite P03 | 15 | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -111,6 +112,8 @@ Recent decisions affecting current work:
 - [Phase 28-playwright-e2e-test-suite]: Admin role sees series as informational links — no Start/Resume buttons; only owning manager sees action buttons on series cards
 - [Phase 28-playwright-e2e-test-suite]: Wizard spinner (.animate-spin) detection via waitForFunction required before asserting content — React Query async load pattern
 - [Phase 28-playwright-e2e-test-suite]: Session summary page is clean locally: HTTP 200, no crashes; duplicate React keys for Wellbeing/Performance noted in debug report (non-crashing)
+- [Phase 28-playwright-e2e-test-suite]: Amended badge test uses test.skip — seed answer UUIDs fail Zod uuid() validation (variant bits 6xxx vs RFC4122 required [89ab]xxx); documented fix path in deferred-items
+- [Phase 28-playwright-e2e-test-suite]: debug spec targets dev server (port 4301) via adminPage fixture; session summary locally clean: HTTP 200, no crashes; neon_websocket hypothesis matched Next.js HMR ws:// (not Neon)
 
 ### Pending Todos
 
@@ -123,6 +126,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-13T09:59:16.831Z
-Stopped at: Completed 28-playwright-e2e-test-suite plan 02 — auth, dashboard, sessions specs all green (17 tests); session summary HTTP 200 confirmed
+Last session: 2026-03-13T10:19:28.743Z
+Stopped at: Completed 28-playwright-e2e-test-suite plan 03 — corrections RBAC spec (8 pass 1 skip), debug spec with JSON report, session summary clean locally
 Resume file: None

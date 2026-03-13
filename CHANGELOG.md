@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## [Unreleased]
 
 ### Added
+- `src/app/api/sessions/[id]/corrections/route.ts`: fire-and-forget `sendCorrectionEmails` hook wired after `withTenantContext` — resolves report/manager/admin context via adminDb then calls correction email sender (phase 26-03)
 - `src/lib/notifications/correction-email.ts`: `sendCorrectionEmails` and `wasRecentlySent` — correction email sender with 5-minute dedup, tenant locale, report+admin fan-out, inactive admin exclusion, report-also-admin dedup (phase 26-02)
 - `src/lib/email/templates/correction-notification.tsx`: `CorrectionNotificationEmail` React Email template — follows pre-meeting-reminder.tsx pattern, accepts pre-interpolated string props (phase 26-01)
 - `messages/en/emails.json` + `messages/ro/emails.json`: `sessionCorrection` block with 6 keys (subject, heading, greeting, body, buttonLabel, footer) — translation parity enforced (phase 26-01)

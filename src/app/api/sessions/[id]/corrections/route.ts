@@ -3,16 +3,20 @@ import { ZodError } from "zod";
 import { eq, and } from "drizzle-orm";
 import { auth } from "@/lib/auth/config";
 import { withTenantContext } from "@/lib/db/tenant-context";
+import { adminDb } from "@/lib/db";
 import { logAuditEvent } from "@/lib/audit/log";
 import { computeSessionScore } from "@/lib/utils/scoring";
 import { canCorrectSession } from "@/lib/auth/rbac";
 import { correctionInputSchema } from "@/lib/validations/correction";
+import { sendCorrectionEmails } from "@/lib/notifications/correction-email";
 import {
   sessions,
   meetingSeries,
   sessionAnswers,
   sessionAnswerHistory,
   templateQuestions,
+  users,
+  tenants,
 } from "@/lib/db/schema";
 
 /**
@@ -200,7 +204,13 @@ export async function POST(
           },
         });
 
-        return { sessionId, newScore };
+        return {
+          sessionId,
+          newScore,
+          reportId: series.reportId,
+          managerId: series.managerId,
+          sessionNumber: sessionRecord.sessionNumber,
+        };
       }
     );
 
@@ -223,6 +233,56 @@ export async function POST(
           );
       }
     }
+
+    // Fire-and-forget: resolve email context then send correction notification emails
+    (async () => {
+      const tenantId = session.user.tenantId;
+
+      // Fetch report user, manager user, active admins, and tenant locale
+      const [reportRow, managerRow, tenantRow, adminRows] = await Promise.all([
+        adminDb
+          .select({ id: users.id, email: users.email, firstName: users.firstName, lastName: users.lastName, isActive: users.isActive })
+          .from(users)
+          .where(and(eq(users.id, result.reportId), eq(users.tenantId, tenantId)))
+          .limit(1),
+        adminDb
+          .select({ id: users.id, email: users.email, firstName: users.firstName, lastName: users.lastName, isActive: users.isActive })
+          .from(users)
+          .where(and(eq(users.id, result.managerId), eq(users.tenantId, tenantId)))
+          .limit(1),
+        adminDb
+          .select({ contentLanguage: tenants.contentLanguage })
+          .from(tenants)
+          .where(eq(tenants.id, tenantId))
+          .limit(1),
+        adminDb
+          .select({ id: users.id, email: users.email, firstName: users.firstName, lastName: users.lastName, isActive: users.isActive })
+          .from(users)
+          .where(and(eq(users.tenantId, tenantId), eq(users.role, "admin"), eq(users.isActive, true))),
+      ]);
+
+      if (!reportRow[0] || !managerRow[0]) {
+        console.error("[corrections] Could not resolve report/manager for email — skipping");
+        return;
+      }
+
+      const locale = tenantRow[0]?.contentLanguage ?? "en";
+      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+      const sessionUrl = `${baseUrl}/sessions/${result.sessionId}`;
+
+      await sendCorrectionEmails({
+        tenantId,
+        sessionId: result.sessionId,
+        sessionNumber: result.sessionNumber,
+        reportUser: reportRow[0],
+        managerUser: managerRow[0],
+        activeAdmins: adminRows,
+        sessionUrl,
+        locale,
+      });
+    })().catch((err) =>
+      console.error("[corrections] Failed to send correction notification emails:", err)
+    );
 
     return NextResponse.json({
       sessionId: result.sessionId,
